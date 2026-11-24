@@ -9,6 +9,7 @@ def test_hand_example_and_zero():
     assert result['annual_net_saving'] == 800
     assert result['payback_years'] == 5
     assert abs(result['npv'] - (-4000 + sum(800 / 1.08**y for y in range(1, 11)))) < 1e-9
+    assert finance(1e-13, 0, 4000, 0, False)['payback_years'] is None
     assert finance(200, 0, 4000, 200, False)['payback_years'] is None
     assert finance(100, 0, 4000, 200, False)['payback_years'] is None
 
@@ -18,9 +19,11 @@ def test_demand_toggle_and_ci():
     assert paired_ci([2, 2, 2]) == (2, 2, 2)
 
 
-def test_actual_evidence_fails_closed():
+def test_actual_paired_results():
     rows = build()
     assert len(rows) == 144
-    assert rows.boundary.eq('NOT_VERIFIED').all()
-    assert rows.annual_net_saving_usd.isna().all()
-    assert rows.reason.str.contains('time series missing').all()
+    assert rows.boundary.eq('SIM_ASSUMED_PROFILE').all()
+    assert rows.annual_net_saving_usd.notna().all()
+    assert (rows.n_pairs >= 2).all()
+    assert (rows.n_pairs + rows.n_tt_excluded == 18).all()
+    assert rows.loc[~rows.demand_enabled, 'annual_peak_saving_usd'].eq(0).all()

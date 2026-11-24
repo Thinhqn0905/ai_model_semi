@@ -36,3 +36,14 @@ capacity/SoH, observable from early-phase V/I) -> train F06 remaining-duration a
 DS05 with chronological/cell-level splits; (3) bench_v2 S3 samples phase durations and powers from DS05 cells,
 and P uses in-progress M2 observations, P0 uses recipe nominal. AI value = P0 - P on bench_v2 with paired CI.
 If that is ~0 too, recommend optimisation-only (mentor: "recommend the simpler solution").
+
+## D003 (2026-11-25, lead) — WP05 Go/No-Go and first AI control result
+Oracle campaign runs/oracle_v1 (SIM_ASSUMED_PROFILE, n=10, 18 paired instances per cell, 95 % bootstrap CI):
+- S1 converter burn-in and S2 dynamic load: ORACLE == B1p-OPT exactly (0.00 kWh) -> NO-GO for shared DC on converter burn-in.
+- S3 storage / bidirectional cycling: ORACLE beats B1p-OPT by 5.59 kWh (6.1 %), CI [5.33, 5.79], 18/18 at flex 1.0
+  (4.2 % already at flex 0 = topology alone); peak 23.7 vs 40.8 kW. -> GO for the S3 cell type.
+Rolling runs/rolling_v1 (S3, flex 0.25): P beats B1p-OPT by 4.3 kWh (4.7 %, 18/18) but P is WORSE than P0 by 0.9 kWh
+(-1.0 %, 0/18) and its peak is higher: the in-progress estimator on i.i.d. deviations hurts (D002 control). Kept as a negative
+result; AI is judged on bench v2 (DS06, measured DS05 cycles) with a reliability gate (AI-G10).
+DS05 note: Cumulative_Time is in 10-s units (verified against REAL_TIME on 3 use cases); loader fixed before any use.
+Target cell recommendation to the user: regenerative cycling of storage / bidirectional power modules (S3), not converter burn-in.

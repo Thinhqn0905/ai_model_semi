@@ -1,0 +1,10 @@
+{
+ "proc": "/content/ds05_proc",
+ "stride": 15,
+ "max_train": 250000,
+ "seed": 0,
+ "n_samples": 166301,
+ "n_train_used": 118808,
+ "n_test": 22178,
+ "split": "per use case chronological 70/15/15"
+}

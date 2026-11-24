@@ -15,18 +15,19 @@ tasks, justified). Accounts: default, A, B, C, E. Never codex-D.
 | 8 | WP01 DS02 audit+loader | A | done | tests/test_ds02.py |
 | 9 | WP01 DS03 efficiency curves | B | done | 300+ TIDA-010938 points |
 | 10 | WP01 DS04 audit+loader | C | done | tests/test_ds04.py |
-| 11 | WP00 legacy reproduction + OPT baselines | E | in_progress | runs/legacy |
+| 11 | WP00 legacy reproduction + OPT baselines | E | done | exact repro, runs/legacy |
 | 12 | WP04 benchmark generator (S1/S2/S3) | default | done | bench_v1, 270 inst |
 | 13 | WP10 economics module | A | done | tests/test_economics.py |
 | 14 | WP06 E10 DS04 forecasting baselines | C | done | runs/forecast_ds04 |
 | 15 | WP11 dashboard (6 pages, AppTest) | A | done | tests/test_dashboard_data.py |
 | 16 | WP05 E04-E06 oracle campaign + Go/No-Go | lead | done | runs/oracle_v1: S1/S2 NO-GO, S3 GO |
 | 17 | WP02 target-cell decision | USER | blocked | D001 options |
-| 18 | WP01 DS05 audit | worker | blocked | DS05 download (~3-4h, 2026-11-25) |
+| 18 | WP01 DS05 download+process on Colab | lead | done | 14,755 cycles, Drive semiexpo/ds05_proc |
 | 19 | WP07 rolling P0/P replanner + replay | lead | in_progress | rolling.py smoke OK |
 | 19b | WP09.2 bus twin, WP10.2 water, WP00 assumption/metric audit | C/C/A | done | |
 | 19c | W5: figures F01-F15 (A), sensitivity (B), failure injection (C), AI framework DS02/DS04 (default) | workers | in_progress | |
-| 19d | AI core: DS06 v2 + Model A/B/C + ablation P0..P5 | lead | in_progress | needs DS05 |
+| 19d | AI core: DS05 Branch C bench (Colab), DS06 bench v2, AI engine, P0..P4 ablation | lead | in_progress | code+tests done, runs on Colab |
+| 19e | W7: DS03 grounding (A), business case (E), failure verify (C), traceability+report (default), sensitivity (B) | workers | in_progress | |
 | 20 | WP08 full ladder, WP09 sensitivity/twin/failure | todo | todo | |
 
 Timeline target (plan IX): 25/11 data audit, 26/11 electrical, 27/11 bench v1, 28/11 oracle Go/No-Go,
