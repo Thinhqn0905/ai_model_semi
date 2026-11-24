@@ -1,0 +1,24 @@
+# ReGenATE report draft
+
+## Context and gap
+Regenerative test equipment already returns energy. ReGenATE asks whether production-aware scheduling can increase reuse that existing regeneration leaves on the table; the incremental grid energy at the cell meter versus existing regeneration is the primary outcome (Instruction/Mentor_Feedback.md, SOURCE_REPORTED). Scope is a selected test cell; site savings remain NOT_VERIFIED.
+
+## Physics decision
+For converter burn-in, if each station can reuse its recovered power internally and its instantaneous return does not exceed its own demand, no residual source remains for another station. Under the stated equal-efficiency and no-cap conditions, a shared link cannot add energy savings over in-rack reuse. Storage or bidirectional cycling can create separate source and sink phases, allowing residual transfer subject to losses and overlap (docs/decisions.md, ANALYTIC_UNIT_TEST). Target-cell selection remains open.
+
+## Method
+Use the project energy ledger at the cell boundary and an exact small-instance MILP oracle. Compare a matched ladder from no recovery through regeneration, in-rack reuse, shared-link scheduling, rolling nominal optimization, forecast-assisted optimization and oracle. Match instances, profiles, limits and tardiness; report paired confidence intervals, peak, matching, throughput and excursions. The bus twin screens plans; shadow replay models operational events and retains the existing plan on rejection. Neither establishes physical protection or site performance (docs/system_spec.md; reports/product/replay.md; reports/safety/bus_twin.md, SIM_ASSUMED_PROFILE).
+
+## Data
+DS01 supplies scheduling context; DS02 supplies LVDC observations; DS03 supplies equipment and efficiency grounding; DS04 supplies manufacturing forecasting benchmarks; DS05 supplies battery cycling traces for data-grounded experiments. These domains are not interchangeable with a measured semiconductor test cell (docs/ai_plan.md; reports/data/ds01_report.md; reports/data/ds02_report.md; reports/data/ds03_report.md; reports/data/ds04_report.md, NOT_VERIFIED for site transfer).
+
+## Results and gaps
+The assumed-profile oracle campaign reports a no-go for converter burn-in and a conditional go for storage/bidirectional cycling, relative to optimized in-rack reuse (docs/decisions.md; runs/oracle_v1, SIM_ASSUMED_PROFILE). The rolling ladder includes paired comparisons and intervals; its forecast-assisted policy performed worse than the nominal policy in the i.i.d. control, so it does not establish an AI benefit (reports/benchmark/rolling_v1.md; runs/rolling_v1, SIM_ASSUMED_PROFILE). Report energy versus the regeneration baseline separately from the in-rack kill test.
+
+DS05 forecasting on measured battery cycles shows model skill against a history-based baseline; interval calibration and downstream energy benefit remain open (reports/ai/branch_C_ds05.md; results/ai_ds05_branchC, LOCAL_RUN on MEASURED data). Data-grounded ladder and AI increment: [[PENDING: results/v2_ladder]] (NOT_VERIFIED). The flexibility sweep is descriptive: rolling and oracle differ in constraints and solve budget, and some cases are missing (reports/benchmark/rolling_flex.md, SIM_ASSUMED_PROFILE). Datasheet-derived efficiency proxies reduce the analytical conversion advantage; assumed import symmetry and link loss remain unverified (reports/electrical/grounding.md; runs/oracle_grounded/results.csv, SIM_ASSUMED_PROFILE + DATASHEET). Some grounded oracle solutions are incumbents rather than certified optima. Failure injection exercises fallback and rejection logic in simulation, not protection hardware (reports/safety/failure_injection.md; runs/fail_v1, SIM_ASSUMED_PROFILE). The business case uses a behind-meter export-credit base and assumed duty cycle, tariff mix and capital costs; its modeled base cases have negative net present value. Unknown installation, operating and requalification costs and the absence of schedule-specific billing limit the decision (reports/economics/business_case_v1.md; runs/biz_v1/business_case.csv, SIM_ASSUMED_PROFILE + ASSUMED).
+
+## Limitations and roadmap
+The simulated profiles, limited instances, unvalidated time scales, approximate twin and absent site quality records limit transfer. Obtain measured station profiles, flexibility, efficiency, meter and quality data. Begin read-only shadow evaluation; advance to a pilot only after incremental energy after losses, test integrity, engineering acceptance, protection, vendor compatibility and economics are established (Instruction/Mentor_Feedback.md; reports/safety/bus_twin.md, NOT_VERIFIED for site acceptance).
+
+## Water
+Water is a separate workstream. No quantitative water savings are established without cooling-loop and water metering (reports/economics/water_method.md, NOT_VERIFIED).

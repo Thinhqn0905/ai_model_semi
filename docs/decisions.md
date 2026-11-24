@@ -47,3 +47,10 @@ Rolling runs/rolling_v1 (S3, flex 0.25): P beats B1p-OPT by 4.3 kWh (4.7 %, 18/1
 result; AI is judged on bench v2 (DS06, measured DS05 cycles) with a reliability gate (AI-G10).
 DS05 note: Cumulative_Time is in 10-s units (verified against REAL_TIME on 3 use cases); loader fixed before any use.
 Target cell recommendation to the user: regenerative cycling of storage / bidirectional power modules (S3), not converter burn-in.
+
+## D004 (2026-11-25, lead) — AI-EXP12 on measured cycles: optimisation carries the result
+DS06 (bench v2, DS05 measured cycles, n=100 paired, reports/ai/ai_exp12_ds06.md): kill test PASSED (ORACLE -11.6 % vs
+B1p-OPT, CI [1.04, 1.15] kWh, 100/100; P0 peak -20 %). Forecast variants P1..P4 are 0.2-0.3 % WORSE than P0 (CI excludes 0);
+perfect-forecast headroom over P0 is only 1.1 %. Decision: energy KPI -> recommend P0 (optimisation-only, mentor p6);
+AI is kept only if it improves PEAK under a peak-aware optimizer (third lexicographic level added to milp.solve, tested in
+results/v2_peak). Forecast accuracy (Branch C) is reported separately and never presented as an energy saving.
