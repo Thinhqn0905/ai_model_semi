@@ -25,6 +25,7 @@ TRACE_PER_SLOT = SLOT     # 1-min bins per 15-min slot
 class AIEngine:
     def __init__(self, bundle, rated_kw=None, scale=1.0):
         self.m, self.feats, self.uc = bundle["models"], bundle["feats"], bundle["uc_codes"]
+        self.cqr = bundle.get("cqr", {})              # conformal widening of P10/P90 (AI-G04), 0 if absent
         self.rated, self.scale = rated_kw, scale
 
     @classmethod
@@ -37,8 +38,9 @@ class AIEngine:
         return np.array([[f.get(c, np.nan) for c in self.feats]], float)
 
     def _q(self, target, X):
-        out = np.array([self.m[(target, q)].predict(np.nan_to_num(X, nan=-1.0))[0] for q in (0.1, 0.5, 0.9)])
-        return np.sort(out)
+        out = np.sort(np.array([self.m[(target, q)].predict(np.nan_to_num(X, nan=-1.0))[0] for q in (0.1, 0.5, 0.9)]))
+        w = self.cqr.get(target, 0.0)
+        return np.array([out[0] - w, out[1], out[2] + w])
 
     def predict(self, telemetry, elapsed_min, prev_cycle, use_case):
         """telemetry arrays are module-level kW (as in training); outputs are module-level, multiply by scale outside."""

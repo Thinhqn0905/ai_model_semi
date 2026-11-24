@@ -125,8 +125,9 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
     if len(tr) > max_train:
         tr = tr.sample(max_train, random_state=seed)
     te = df[df.split == "test"]
+    va = df[df.split == "val"]
     preds, metrics, runtime = [], [], []
-    store = {}
+    store, cqr = {}, {}
     targets = [(f"y_{c}_h{h}", f"prev_{c}_h{h}", f"{c}_l1") for c in ("ch", "ds") for h in HORIZONS] + \
               [("y_rem_min", "prev_rem_min", None)]
     from sklearn.linear_model import Ridge
@@ -158,6 +159,16 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
         lo, mid, hi = np.sort(np.vstack([q[0.1], q[0.5], q[0.9]]), axis=0)          # no quantile crossing
         runtime.append(dict(target=y, model="AI10_lgbm_quantile", fit_s=time.time() - t0, predict_ms=np.nan))
         cand["AI10_lgbm_quantile"] = dict(p10=lo, p50=mid, p90=hi)
+        # AI-G04: split-conformal quantile regression (CQR) on the validation split, applied to test
+        m_va = va[y].notna(); Xv, Yv = va.loc[m_va, feats].fillna(-1).to_numpy(), va.loc[m_va, y].to_numpy()
+        if len(Yv) > 50:
+            v_lo, v_hi = np.sort(np.vstack([store[(y, 0.1)].predict(Xv), store[(y, 0.9)].predict(Xv)]), axis=0)
+            sc = np.maximum(v_lo - Yv, Yv - v_hi)
+            qhat = float(np.quantile(sc, min(1.0, np.ceil((len(sc) + 1) * 0.8) / len(sc))))
+        else:
+            qhat = 0.0
+        cqr[y] = qhat
+        cand["AI10_lgbm_quantile_cqr"] = dict(p10=lo - qhat, p50=mid, p90=hi + qhat)
         scale = max(np.mean(np.abs(Yt)), 1e-9)
         mae_pers = np.mean(np.abs(cand["AI00_prev_cycle"]["p50"] - Yt))
         for name, c in cand.items():
@@ -176,7 +187,7 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
                                  base=cand["AI00_prev_cycle"]["p50"]))
         print(y, "done", flush=True)
     import joblib
-    joblib.dump(dict(models=store, feats=feats, uc_codes=dict(zip(df.use_case.astype("category").cat.categories,
+    joblib.dump(dict(models=store, cqr=cqr, feats=feats, uc_codes=dict(zip(df.use_case.astype("category").cat.categories,
                                                                    range(df.use_case.nunique())))), out / "ai_models.joblib")
     pd.DataFrame(metrics).assign(boundary="LOCAL_RUN(DS05 MEASURED)").to_csv(out / "model_metrics.csv", index=False)
     pd.DataFrame(runtime).to_csv(out / "runtime_metrics.csv", index=False)
