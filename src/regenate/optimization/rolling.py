@@ -42,10 +42,10 @@ def estimate_running(inst, jid, trace, dt_h, n_grid=41):
 
 
 class Replanner:
-    def __init__(self, inst, mode="P0", slot_h=0.25, prm=None, flex=1.0, time_limit=10.0, prior=None, profile_fn=None):
+    def __init__(self, inst, mode="P0", slot_h=0.25, prm=None, flex=1.0, time_limit=10.0, prior=None, profile_fn=None, peak_stage=False):
         """profile_fn(jid, run_obs_or_None) -> (p_in, p_rec, p_aux) predicted FULL-job slot profile (bench v2 / AI
         variants). When given it replaces predict()/_profile(); mode is then only a label."""
-        self.profile_fn = profile_fn
+        self.profile_fn = profile_fn; self.peak_stage = peak_stage
         self.inst, self.mode, self.slot, self.prm = inst, mode, slot_h, prm or ElecParams()
         self.flex, self.time_limit = flex, time_limit
         self.J = inst["jobs"].set_index("job_id")
@@ -92,14 +92,14 @@ class Replanner:
             jobs.append(Job(rel, max(rel, lat), (r.due_h - t0) / sl, pi, pr, ax)); ids.append(j)
         K = max(j.latest + j.dur for j in jobs) + 1
         res = solve(jobs, len(self.S), K, "DC", self.prm, sl, time_limit=self.time_limit,
-                    fixed={i: 0 for i in range(n_fixed)})
+                    fixed={i: 0 for i in range(n_fixed)}, peak_stage=self.peak_stage)
         if not res.starts:                                            # widen windows to deadlines only
             for jb, j in zip(jobs[n_fixed:], queued):
                 r = self.J.loc[j]
                 jb.latest = max(jb.release, int((r.deadline_h - pred[j][0] - t0) // sl))
             K = max(j.latest + j.dur for j in jobs) + 1
             res = solve(jobs, len(self.S), K, "DC", self.prm, sl, time_limit=self.time_limit,
-                        fixed={i: 0 for i in range(n_fixed)})
+                        fixed={i: 0 for i in range(n_fixed)}, peak_stage=self.peak_stage)
         self.n_solves += 1; self.solve_s += res.info.get("solve_s", 0.0)
         if not res.starts:
             raise RuntimeError(f"replan infeasible: {res.status}")

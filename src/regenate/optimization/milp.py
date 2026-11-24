@@ -57,8 +57,9 @@ def _coeffs(job, topology, prm):
 
 
 def solve(jobs, S, K, topology="DC", prm=None, dt_h=0.25, idle_kw=0.0, cap=None,
-          tt_first=True, tt_slack=1e-6, time_limit=60.0, fixed=None):
-    """fixed: {job_index: start_slot} frozen decisions (rolling horizon)."""
+          tt_first=True, tt_slack=1e-6, time_limit=60.0, fixed=None, peak_stage=False, e_tol=1e-4):
+    """fixed: {job_index: start_slot} frozen decisions (rolling horizon).
+    peak_stage: third lexicographic level — minimise peak M0 import s.t. TT <= TT* and energy <= E*(1+e_tol)."""
     prm = prm or ElecParams()
     cap = np.full(K, S, float) if cap is None else np.asarray(cap, float)
     fixed = fixed or {}
@@ -174,13 +175,29 @@ def solve(jobs, S, K, topology="DC", prm=None, dt_h=0.25, idle_kw=0.0, cap=None,
     r2 = milp(energy_obj, constraints=cons, integrality=integ, bounds=bounds, options=opts)
     if r2.x is None:
         return Result([], np.inf, np.inf, f"energy-stage:{r2.message}")
-    z = r2.x
+    z = r2.x; peak_info = {}
+    if peak_stage:                                     # append imp[k] (K) and peak (1) columns
+        from scipy.sparse import hstack
+        cons_l = cons if isinstance(cons, list) else [cons]
+        pad = lambda M: hstack([csr_matrix(M), csr_matrix((M.shape[0], K + 1))]).tocsr()
+        ext = [LinearConstraint(pad(c.A), c.lb, c.ub) for c in cons_l]
+        I = csr_matrix((np.ones(K), (np.arange(K), np.arange(K))), shape=(K, K))
+        ext.append(LinearConstraint(hstack([-ACM, I, csr_matrix((K, 1))]).tocsr(), const_ac, np.inf))
+        ext.append(LinearConstraint(hstack([csr_matrix((K, n)), -I, csr_matrix(np.ones((K, 1)))]).tocsr(), 0, np.inf))
+        ext.append(LinearConstraint(pad(csr_matrix(energy_obj)), -np.inf, r2.fun + e_tol * abs(r2.fun) + 1e-6))
+        c3 = np.zeros(n + K + 1); c3[-1] = 1
+        b3 = Bounds(np.r_[lb, np.zeros(K + 1)], np.r_[ub, np.full(K + 1, np.inf)])
+        r3 = milp(c3, constraints=ext, integrality=np.r_[integ, np.zeros(K + 1)], bounds=b3, options=opts)
+        if r3.x is not None:
+            z = r3.x[:n]; peak_info = dict(peak_kw_planned=float(r3.fun), peak_status=r3.message)
+        else:
+            peak_info = dict(peak_status=f"peak-stage failed: {r3.message}")
     starts = [win[j][int(np.argmax(z[xi[j]]))] for j in range(len(jobs))]
     tt = float(sum(max(0.0, s + jb.dur - jb.due) for s, jb in zip(starts, jobs)))
-    net = float(r2.fun + const_ac * K * dt_h)
+    net = float(energy_obj @ z + const_ac * K * dt_h)
     gap = float(getattr(r2, "mip_gap", 0.0) or 0.0)
     return Result(starts, tt, net, "optimal" if r2.status == 0 else r2.message, gap,
-                  dict(tt_star=tt_star, n_bin=nx))
+                  dict(tt_star=tt_star, n_bin=nx, **peak_info))
 
 
 def assign_stations(starts, durs, S):

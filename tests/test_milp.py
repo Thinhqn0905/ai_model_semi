@@ -59,3 +59,14 @@ def test_fixed_starts_respected():
     assert r.status == "optimal" and r.starts[0] == 0
     assert (r.tt, r.net_kwh) >= (free.tt, free.net_kwh - 1e-9)     # freezing can only cost
     assert solve(jobs, 2, 14, "DC", fixed={0: 3}).status.startswith("tt-stage")   # infeasible by hand check
+
+
+def test_peak_stage_keeps_energy_and_lowers_peak():
+    jobs = jobs_mixed(); S, K, idle = 2, 14, 0.2
+    base = solve(jobs, S, K, "DC", dt_h=DT, idle_kw=idle)
+    pk = solve(jobs, S, K, "DC", dt_h=DT, idle_kw=idle, peak_stage=True)
+    assert pk.tt <= base.tt + 1e-9 and pk.net_kwh <= base.net_kwh * (1 + 1e-4) + 1e-6
+    peak = lambda r: ledger(*render_slots(jobs, r.starts, assign_stations(r.starts, [j.dur for j in jobs], S), S, K, idle),
+                            DT, "DC")["peak_import_kw"]
+    assert peak(pk) <= peak(base) + 1e-6
+    assert abs(pk.info["peak_kw_planned"] - peak(pk)) < 1e-6          # planned peak == ledger peak

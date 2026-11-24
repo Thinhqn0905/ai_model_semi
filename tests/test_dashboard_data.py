@@ -40,7 +40,7 @@ def test_dashboard_pages(tmp_path):
     at = AppTest.from_file(Path("app/dashboard.py").resolve(), default_timeout=30).run()
     at.sidebar.text_input[0].set_value(str(tmp_path)).run()
     for page in ('Overview', 'Baseline ladder', 'Schedule', 'Energy',
-                 'Engineer approval', 'Finance'):
+                 'Engineer approval', 'Finance', 'AI forecasting'):
         at.sidebar.radio[0].set_value(page).run()
         assert not at.exception, (page, list(at.exception))
         assert any('MOCK' in warning.value for warning in at.warning)
@@ -57,7 +57,7 @@ def test_dashboard_missing_proposals(tmp_path):
     at = AppTest.from_file(Path("app/dashboard.py").resolve(), default_timeout=30).run()
     at.sidebar.text_input[0].set_value(str(tmp_path)).run()
     for page in ('Overview', 'Baseline ladder', 'Schedule', 'Energy',
-                 'Engineer approval', 'Finance'):
+                 'Engineer approval', 'Finance', 'AI forecasting'):
         at.sidebar.radio[0].set_value(page).run()
         assert not at.exception, (page, list(at.exception))
         assert any('Not available yet' in item.value for item in at.info)
@@ -74,7 +74,29 @@ def test_oracle_campaign_if_present():
     at = AppTest.from_file(Path('app/dashboard.py').resolve(), default_timeout=30).run()
     at.sidebar.text_input[0].set_value(str(campaign)).run()
     for page in ('Overview', 'Baseline ladder', 'Schedule', 'Energy',
-                 'Engineer approval', 'Finance'):
+                 'Engineer approval', 'Finance', 'AI forecasting'):
         at.sidebar.radio[0].set_value(page).run()
         assert not at.exception, (page, list(at.exception))
         assert any('SIM_ASSUMED_PROFILE' in warning.value for warning in at.warning)
+
+
+def test_rolling_campaign_pages_and_stored_data():
+    from streamlit.testing.v1 import AppTest
+
+    at = AppTest.from_file(Path('app/dashboard.py').resolve(), default_timeout=30).run()
+    assert str(at.sidebar.selectbox[0].value).replace('\\', '/') == 'runs/rolling_v1'
+    assert at.sidebar.selectbox[1].value == 'S3'
+    assert any('SIM_ASSUMED_PROFILE' in warning.value for warning in at.warning)
+    for page in ('Overview', 'Baseline ladder', 'Schedule', 'Energy',
+                 'Engineer approval', 'Finance', 'AI forecasting'):
+        at.sidebar.radio[0].set_value(page).run()
+        assert not at.exception, (page, list(at.exception))
+    assert any('LOCAL_RUN' in warning.value for warning in at.warning)
+    assert any('AI-EXP12' in caption.value for caption in at.caption)
+    at.sidebar.radio[0].set_value('Finance').run()
+    shown = at.dataframe[0].value
+    source = pd.read_csv('runs/biz_v1/business_case.csv')
+    expected = source[(source.alpha == at.selectbox[0].value) &
+                      (source.capex_factor == at.selectbox[1].value) &
+                      (source.demand_enabled == at.selectbox[2].value)]
+    pd.testing.assert_frame_equal(shown.reset_index(drop=True), expected.reset_index(drop=True))
