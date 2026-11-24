@@ -26,3 +26,6 @@ missing-input skip) and generate_all_figures runs on runs/oracle_v1 producing at
 ## Run 2 (lead)
 - pytest temp dir: always run `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_figs tests/test_figures.py`.
 - F06: build the source/sink/matched input yourself from runs/oracle_v1/schedules.parquet via regenate.evaluation.oracle_campaign.load + regenate.data.generator.render (truth=True) for one S3 instance, ORACLE vs B1p-OPT; write it to runs/oracle_v1/timeseries.parquet with the section-10 columns (boundary SIM_ASSUMED_PROFILE). Add the F14 synthetic test.
+
+## Run 3 (lead)
+F14: write the Plotly Sankey with `fig.write_html(...)` only (no Kaleido/static image); the test checks the .html file. Everything else is done — do not redo it. Rerun the gate with --basetemp runs/tmp_pytest_figs.

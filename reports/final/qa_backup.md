@@ -118,3 +118,20 @@ Each answer is bounded by the cited evidence. Simulation is not site validation;
 35. **Tiết kiệm nước bao nhiêu? / How much water is saved?**
    - VI: Chưa xác minh; cần đo lưu lượng, chênh nhiệt, tải nhiệt và nước chiller/tháp giải nhiệt. [Mentor](../../Instruction/Mentor_Feedback.md); [Report](../../reports/final/report_draft.md) — NOT_VERIFIED.
    - EN: Unknown; cooling flow, temperature difference, heat load and chiller/tower water must be measured. [Mentor](../../Instruction/Mentor_Feedback.md); [Report](../../reports/final/report_draft.md) — NOT_VERIFIED.
+
+## Run 2: calibration and electrical sizing
+
+36. **T?i ?u ??nh mang l?i g?? / What does peak-aware optimization add?**
+   - VI: Tr?n 50 c?p DS06, b??c t?i ?u ??nh gi?m ??nh P0 trung b?nh 0,449 kW (CI 95% [0,120; 0,830]), kh?ng ??i ?i?n n?ng ??ng k?; kh?ng bi?n th? AI n?o c?i thi?n ??nh v?i CI lo?i tr? 0. [DS06](../../reports/ai/ai_exp12_ds06.md) ? SIM_DATA_PROFILE; site NOT_VERIFIED.
+   - EN: Across 50 paired DS06 instances, the peak stage reduced mean P0 peak by 0.449 kW (95% CI [0.120, 0.830]) with no significant energy change; no AI variant improved peak with a CI excluding zero. [DS06](../../reports/ai/ai_exp12_ds06.md) ? SIM_DATA_PROFILE; site NOT_VERIFIED.
+37. **CQR c? ??m b?o th?i ?i?m ho?n th?nh? / Does CQR guarantee completion time?**
+   - VI: Kh?ng; CQR hi?u chu?n tr?n t?p validation, nh?ng coverage kho?ng 80% cho th?i l??ng c?n l?i ch? ??t 75,5% tr?n test; P90 kh?ng ph?i gi?i h?n b?o ??m. [Branch C](../../reports/ai/branch_C_ds05.md) ? LOCAL_RUN on MEASURED data; site NOT_VERIFIED.
+   - EN: No; CQR calibrates on validation, but the nominal 80% remaining-duration interval covers 75.5% on test; P90 is not a guaranteed bound. [Branch C](../../reports/ai/branch_C_ds05.md) ? LOCAL_RUN on MEASURED data; site NOT_VERIFIED.
+38. **T?ng k?ch th??c AFE c? ?? ?? bus an to?n? / Is a larger AFE sufficient for bus safety?**
+   - VI: Ch?a; m? ph?ng cho th?y l?ch k?ch th??c AFE v? v?n c? qu? d?ng ho?c th?p ?p khi t?ng c?ng su?t. D?ng link, ??ng h?c v? b?o v? ??c l?p c?n ???c thi?t k? v? ki?m ch?ng; c?ng su?t AC ledger ch? l? proxy. [Bus KPI](../../reports/safety/bus_stability_kpi.md) ? SIM_ASSUMED_PROFILE; hardware NOT_VERIFIED.
+   - EN: No; the simulation indicates an AFE sizing mismatch and still reports overcurrent or undervoltage with larger capacity. Link current, dynamics and independent protection require design and validation; AC ledger power is only a sizing proxy. [Bus KPI](../../reports/safety/bus_stability_kpi.md) ? SIM_ASSUMED_PROFILE; hardware NOT_VERIFIED.
+ 
+ # #   R u n   2   c i t a t i o n   g a t e   ?   L O C A L _ R U N  
+ Q u e s t i o n s :   3 8 ;   b i l i n g u a l   a n s w e r s :   7 6 ;   m i s s i n g   c i t a t i o n   o r   b o u n d a r y :   0 ;   b r o k e n   l i n k s :   0 .  
+ R e s u l t :   P A S S .   S c o p e :   d o c u m e n t   s t r u c t u r e   a n d   l o c a l   c i t a t i o n   l i n k s   o n l y ;   u n d e r l y i n g   c l a i m s   r e t a i n   t h e i r   s t a t e d   b o u n d a r i e s .  
+ 

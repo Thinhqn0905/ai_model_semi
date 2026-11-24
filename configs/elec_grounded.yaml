@@ -1,0 +1,8 @@
+﻿# DS03 stage proxies at nominal load fraction 0.5; see grounding.md.
+eta_sup_ac: 0.9742965
+eta_sup_dc: 0.9931666666666666
+eta_rl_ac: 0.974133
+eta_rl_dc: 0.993
+eta_afe_imp: 0.981
+eta_afe_exp: 0.981
+eta_link: 0.99

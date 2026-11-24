@@ -32,3 +32,13 @@ Findings
   same rolling MILP: `results/v2_ladder/*` (P0 vs P1..P4).
 - Domain limit: DS05 modules are ~0.24 kW second-life EV modules on a cycler, not semiconductor DUTs; they are used because
   they are measured bidirectional source/sink cycles (the S3 cell type selected by D001/D003).
+
+## AI-G04 calibration: split-conformal quantile regression (CQR) on the validation split
+Source: Drive `MyDrive/semiexpo/ai_runs/ds05_cqr2/model_metrics.csv` (same data/split/seed; P50 unchanged).
+| Target | coverage80 before | after CQR |
+|---|---|---|
+| sink +1 / +4 / +16 slots | 0.815 / 0.774 / 0.780 | 0.858 / 0.823 / 0.828 |
+| source +1 / +4 / +16 slots | 0.804 / 0.754 / 0.773 | 0.842 / 0.792 / 0.797 |
+| remaining duration | 0.720 | 0.755 |
+Power intervals now meet the nominal 80 % within ~2 points; remaining-duration intervals stay under-covered (val->test drift in
+time-ordered cycles), so P90 duration must not be used as a guaranteed bound — AI-G04 PARTIAL for Model B.

@@ -21,20 +21,20 @@ tasks, justified). Accounts: default, A, B, C, E. Never codex-D.
 | 14 | WP06 E10 DS04 forecasting baselines | C | done | runs/forecast_ds04 |
 | 15 | WP11 dashboard (6 pages, AppTest) | A | done | tests/test_dashboard_data.py |
 | 16 | WP05 E04-E06 oracle campaign + Go/No-Go | lead | done | runs/oracle_v1: S1/S2 NO-GO, S3 GO |
-| 17 | WP02 target-cell decision | USER | blocked | D001 options |
+| 17 | WP02 target-cell decision | USER | blocked | recommend S3 storage/bidirectional cycling |
 | 18 | WP01 DS05 download+process on Colab | lead | done | 14,755 cycles, Drive semiexpo/ds05_proc |
-| 19 | WP07 rolling P0/P replanner + replay | lead | in_progress | rolling.py smoke OK |
+| 19 | WP07 rolling P0/P replanner + replay | lead | done | rolling_v1, DS06 |
 | 19b | WP09.2 bus twin, WP10.2 water, WP00 assumption/metric audit | C/C/A | done | |
 | 19c | W5: figures F01-F15 (A), sensitivity (B), failure injection (C), AI framework DS02/DS04 (default) | workers | in_progress | |
-| 19d | AI core: DS05 Branch C bench (Colab), DS06 bench v2, AI engine, P0..P4 ablation | lead | in_progress | code+tests done, runs on Colab |
+| 19d | AI core: DS05 Branch C bench (Colab), DS06 bench v2, AI engine, P0..P4 ablation | lead | done | D004, D005 |
 | 19e | W7: DS03 grounding (A), business case (E), failure verify (C), traceability+report (default), sensitivity (B) | workers | in_progress | |
 | 20 | WP08 ladder v1 (rolling_v1) + DS06 ladder n=100 (AI-EXP12) | lead/E | done | D003, D004 |
 | 21 | WP09 sensitivity (sens_v1), failure injection, grounding | B/C/A | done | S1=0 everywhere; S3 gain 3-12 kWh by eta_afe |
 | 22 | WP10 business case (alpha=1 base) | E | done | energy alone: no payback; demand charge needed |
-| 23 | Peak-aware 3rd lexicographic level + DS06 run | lead | in_progress | Colab v2_peak |
-| 24 | CQR calibration (AI-G04) | lead | in_progress | Colab ds05_cqr2 |
-| 25 | Bus twin KPI (AFE sizing finding) | C | in_progress | W10_TWINCHK run 2 |
-| 26 | Deliverables: figures, slides pptx, README/runbook, Q&A, traceability | A/B/E/default | in_progress | |
+| 23 | Peak-aware 3rd lexicographic level + DS06 run | lead | done | D005, P0 peak -3.9 % at equal energy |
+| 24 | CQR calibration (AI-G04) | lead | done | power coverage 0.79-0.86, duration 0.755 |
+| 25 | Bus twin KPI (AFE sizing finding) | C | done | reports/safety/bus_stability_kpi.md |
+| 26 | Deliverables: figures, slides pptx, README/runbook, Q&A, traceability | A/B/E/default | done | reports/final |
 
 Timeline target (plan IX): 25/11 data audit, 26/11 electrical, 27/11 bench v1, 28/11 oracle Go/No-Go,
 29/11 P0/P end-to-end, 30/11 main experiments, 01/12 integration, 02/12 freeze.

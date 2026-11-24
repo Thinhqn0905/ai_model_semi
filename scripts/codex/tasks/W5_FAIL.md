@@ -27,3 +27,6 @@ Gate: `python -m pytest -q tests/test_failures.py` all failure cases pass (use s
 
 ## Run 2 (lead)
 Finish: AFE validator integrated as an `approve` gate (ledger afe_violation_steps>0 -> reject), delay case asserts another queued job was re-planned and frozen jobs unchanged. Use --basetemp runs/tmp_pytest_fail.
+
+## Run 3 (lead)
+Only verify the solver-timeout case: replanner sleeps 2 s with max_solve_s=0.5 -> fallback logged, plan kept. Run the full gate once.

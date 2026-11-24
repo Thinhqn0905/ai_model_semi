@@ -7,7 +7,6 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from regenate.economics.model import incremental_case
 from regenate.evaluation.mock_results import METHODS
 
 TITLE = 'ReGenATE — Intelligent Energy Coordination for Regenerative Test Cells'
@@ -39,16 +38,31 @@ def append_decision(campaign, instance, method, decision, reason):
 def main():
     st.set_page_config(page_title='ReGenATE', layout='wide')
     st.title(TITLE)
-    campaign = Path(st.sidebar.text_input('Campaign folder', 'runs/mock_dashboard'))
-    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance'])
+    campaigns = sorted(p for p in Path('runs').glob('*') if p.is_dir() and ((p / 'ladder.csv').exists() or (p / 'results.csv').exists()))
+    default = campaigns.index(Path('runs/rolling_v1')) if Path('runs/rolling_v1') in campaigns else 0
+    selected = st.sidebar.selectbox('Campaign', campaigns, index=default, format_func=str) if campaigns else None
+    override = st.sidebar.text_input('Campaign folder override', '')
+    campaign = Path(override) if override else selected
+    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance', 'AI forecasting'])
     try:
-        results = pd.read_csv(campaign / 'results.csv')
-        schedules = pd.read_parquet(campaign / 'schedules.parquet')
-        ts = pd.read_parquet(campaign / 'timeseries.parquet')
+        if campaign is None: raise ValueError('No campaign found')
+        source = campaign / ('ladder.csv' if (campaign / 'ladder.csv').exists() else 'results.csv')
+        results = pd.read_csv(source)
+        schedules = pd.read_parquet(campaign / 'schedules.parquet') if (campaign / 'schedules.parquet').exists() else pd.DataFrame()
+        ts = pd.read_parquet(campaign / 'timeseries.parquet') if (campaign / 'timeseries.parquet').exists() else pd.DataFrame()
     except (OSError, ValueError) as exc:
         st.error(f'Cannot load campaign: {exc}'); st.caption(FOOTER); return
     boundaries = results.boundary.fillna('NOT_VERIFIED').astype(str).unique()
     st.warning('Evidence boundary: ' + ', '.join(boundaries))
+    if 'scenario' in results and results.scenario.notna().any():
+        scenarios = sorted(results.scenario.dropna().unique())
+        scenario = st.sidebar.selectbox('Scenario', scenarios, index=scenarios.index('S3') if 'S3' in scenarios else 0)
+        results = results[results.scenario == scenario]
+    if 'flex' in results and results.flex.nunique() > 1:
+        flex = st.sidebar.selectbox('Flexibility', sorted(results.flex.dropna().unique()))
+        results = results[results.flex == flex]
+        if 'flex' in schedules: schedules = schedules[schedules.flex == flex]
+        if 'flex' in ts: ts = ts[ts.flex == flex]
     instances = sorted(results.instance_id.unique())
     instance = st.sidebar.selectbox('Instance', instances)
     methods = [m for m in METHODS if m in results.method.unique()]
@@ -74,6 +88,11 @@ def main():
             st.info('Schedule comparison not available yet.')
             st.caption(FOOTER)
             return
+        if schedules.empty:
+            st.info('Schedule data not available yet.')
+            st.caption(FOOTER)
+            return
+        if 'shift_h' not in schedules: schedules['shift_h'] = float('nan')
         original = st.selectbox('Original method', originals)
         proposed = st.selectbox('Proposed method', methods, index=methods.index('P') if 'P' in methods else 0)
         frame = schedules[(schedules.instance_id == instance) & schedules.method.isin([original, proposed])].copy()
@@ -81,6 +100,10 @@ def main():
         st.plotly_chart(px.bar(frame, x='duration_h', y='job_id', base='start_h', color='method', facet_row='method', hover_data=['station', 'shift_h'], orientation='h', barmode='overlay'), use_container_width=True)
         st.dataframe(frame[['method', 'job_id', 'station', 'start_h', 'end_h', 'shift_h']])
     elif page == 'Energy':
+        if ts.empty:
+            st.info('Time series data not available yet.')
+            st.caption(FOOTER)
+            return
         selected = st.multiselect('Methods', methods, default=[m for m in ('B1', 'P') if m in methods])
         frame = ts[(ts.instance_id == instance) & ts.method.isin(selected)].melt(id_vars=['t_h', 'method'], value_vars=['p_import_kw', 'p_export_kw', 'direct_kw'], var_name='flow', value_name='kW')
         st.plotly_chart(px.line(frame, x='t_h', y='kW', color='flow', line_dash='method'), use_container_width=True)
@@ -94,25 +117,30 @@ def main():
             except ValueError as exc: st.error(str(exc))
         log = campaign / 'decision_log.csv'
         if log.exists(): st.dataframe(pd.read_csv(log))
+    elif page == 'Finance':
+        path = Path('runs/biz_v1/business_case.csv')
+        if not path.exists():
+            st.info('Business case data not available yet.')
+        else:
+            finance = pd.read_csv(path)
+            st.warning('Finance evidence boundary: ' + ', '.join(finance.boundary.fillna('NOT_VERIFIED').astype(str).unique()))
+            for column, label in [('alpha', 'Export credit fraction'), ('capex_factor', 'CAPEX factor'), ('demand_enabled', 'Demand charge enabled')]:
+                options = sorted(finance[column].dropna().unique())
+                choice = st.selectbox(label, options)
+                finance = finance[finance[column] == choice]
+            st.dataframe(finance)
+            st.caption('Payback and NPV are taken directly from the business case CSV; blank payback means no value was recorded.')
     else:
-        price = st.sidebar.number_input('Import price per kWh', min_value=0., value=0.1)
-        alpha = st.sidebar.selectbox('Export credit fraction', [0., .5, 1.])
-        hours = st.sidebar.number_input('Operating hours per year', min_value=0., value=4000.)
-        capex = st.sidebar.number_input('Incremental CAPEX', min_value=0., value=10000.)
-        opex = st.sidebar.number_input('Annual incremental OPEX', min_value=0., value=0.)
-        method = st.selectbox('Proposed method', methods, index=methods.index('P') if 'P' in methods else 0)
-        try:
-            def run(m):
-                x = ts[(ts.instance_id == instance) & (ts.method == m)].sort_values('t_h')
-                t = x.t_h.to_numpy(); delta = np.diff(t)
-                if len(t) < 2 or not np.allclose(delta, delta[0]) or delta[0] <= 0: raise ValueError('Time grid must be regular with at least two steps')
-                return {'p_import': x.p_import_kw.to_numpy(), 'p_export': x.p_export_kw.to_numpy(), 'dt_h': float(delta[0]), 'times': list(t % 24)}
-            cfg = {'tariff': {'import_price': dict.fromkeys(['off_peak', 'normal', 'peak'], price), 'alpha_ex': alpha}, 'operating_hours_per_year': hours, 'horizon_years': 10, 'discount_rate': 0.}
-            case = incremental_case(run('B1'), run(method), capex, opex, cfg)
-            st.metric('Annual saving (input currency)', f"{case['annual_saving']:.2f}")
-            st.write('Payback: ' + (f"{case['simple_payback_y']:.2f} years" if case['simple_payback_y'] is not None else 'payback not reached'))
-            st.caption('Illustrative annualisation of this instance; enter site-specific costs and operating hours.')
-        except (ValueError, KeyError) as exc: st.error(str(exc))
+        path = Path('results/ai_ds05_branchC/model_metrics.csv')
+        if not path.exists():
+            st.info('Forecast metrics not available yet.')
+        else:
+            metrics = pd.read_csv(path)
+            st.warning('Forecast evidence boundary: ' + ', '.join(metrics.boundary.fillna('NOT_VERIFIED').astype(str).unique()))
+            st.dataframe(metrics.pivot(index='target', columns='model', values='skill_vs_prev_cycle'))
+            st.write('Coverage vs nominal 0.8')
+            st.dataframe(metrics.loc[metrics.coverage80.notna(), ['target', 'model', 'coverage80']])
+            st.caption('Forecast accuracy is not the energy claim; AI-EXP12 is a separate evaluation.')
     st.caption(FOOTER)
 
 if __name__ == '__main__': main()
