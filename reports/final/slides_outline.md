@@ -12,7 +12,7 @@ Pitch: ?Regenerative hardware already saves energy. ReGenATE asks whether produc
 | Forecast | Trajectory and uncertainty; F01, F02, F03 | [[PENDING: reports/figures/F01.png]]; [[PENDING: reports/figures/F02.png]]; [[PENDING: reports/figures/F03.png]]; NOT_VERIFIED |
 | Transfer | Cross-domain forecasting; F04 | [[PENDING: reports/figures/F04.png]]; NOT_VERIFIED |
 | Oracle and ladder | Incremental cell energy against regeneration with paired intervals; F08 | reports/figures/F08.png; runs/oracle_v1, SIM_ASSUMED_PROFILE |
-| AI value | Matched nominal versus forecast and negative control; F09 | reports/benchmark/rolling_v1.md, SIM_ASSUMED_PROFILE; reports/ai/branch_C_ds05.md, LOCAL_RUN on MEASURED data; [[PENDING: results/v2_ladder]]; [[PENDING: reports/figures/F09.png]] |
+| AI value | Measured-cycle kill test and AI variants worse than nominal; recommend optimization-only for energy; peak test pending; F09 | reports/benchmark/rolling_v1.md, SIM_ASSUMED_PROFILE; reports/ai/ai_exp12_ds06.md; docs/decisions.md D004, SIM_DATA_PROFILE; [[PENDING: results/v2_peak]]; [[PENDING: reports/figures/F09.png]] |
 | Robustness | Sensitivity and forecast errors; F10, F11, F12 | [[PENDING: reports/figures/F10.png]]; [[PENDING: reports/figures/F11.png]]; [[PENDING: reports/figures/F12.png]]; NOT_VERIFIED |
 | Safety | Bus screening, failure responses and independent protection; F07 | reports/safety/failure_injection.md, SIM_ASSUMED_PROFILE; [[PENDING: reports/figures/F07.png]] |
 | Deployment | Latency and operational constraints; F15 | [[PENDING: reports/figures/F15.png]]; NOT_VERIFIED |

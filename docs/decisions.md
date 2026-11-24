@@ -54,3 +54,8 @@ B1p-OPT, CI [1.04, 1.15] kWh, 100/100; P0 peak -20 %). Forecast variants P1..P4 
 perfect-forecast headroom over P0 is only 1.1 %. Decision: energy KPI -> recommend P0 (optimisation-only, mentor p6);
 AI is kept only if it improves PEAK under a peak-aware optimizer (third lexicographic level added to milp.solve, tested in
 results/v2_peak). Forecast accuracy (Branch C) is reported separately and never presented as an energy saving.
+
+## D005 (2026-11-25, lead) — Peak-aware optimizer adopted; AI not adopted for scheduling decisions
+Third lexicographic level (min peak at equal TT and energy, milp.solve peak_stage) lowers P0 peak by 3.9 % (CI excludes 0) at no
+energy cost on DS06 (n=50). AI variants P1..P4 do not beat P0 on energy (n=100 and n=50) or peak (n=50). Product configuration:
+P0 + peak stage; AI forecasts shown to engineers (expected completion, uncertainty) behind AI-G10. Evidence: reports/ai/ai_exp12_ds06.md.

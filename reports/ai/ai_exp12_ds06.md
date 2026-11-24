@@ -45,3 +45,26 @@ Peak vs B1p-OPT: P0 -2.90 kW (-20.4 %), ORACLE -4.04 kW (-28.4 %).
 4. Why the AI variants lose (hypotheses to verify): slot-level P50 interpolation between horizons +1/+4/+16 smooths phase
    transitions that the recipe shape keeps; AI is applied only to running jobs while queued jobs (most of the decision)
    use the recipe in every variant.
+
+## Flexibility 1.0 (max shift = full 4 h window), n = 26 (run stopped early for time; partial but paired)
+Source: Drive `MyDrive/semiexpo/ai_runs/v2_flex1/results.csv`. 35/104 one-shot MILPs hit the 20 s limit (incumbents).
+- Kill test: B1p-OPT -> ORACLE 1.307 kWh [1.204, 1.419] = **-13.3 %**, 26/26.
+- Peak: P0 -5.73 kW [3.95, 7.46] = **-40.1 %** vs B1p-OPT; ORACLE -48.9 %.
+- AI vs P0: P1 -0.035 [-0.069, -0.004] kWh, P2 -0.024 [-0.042, -0.006], P3 -0.034 [-0.074, +0.005], P4 -0.049 [-0.094, -0.010];
+  peaks worse (P3 -1.63 kW, P4 -1.48 kW, CIs exclude 0). Perfect-forecast headroom over P0: 0.153 kWh (1.8 %).
+More scheduling flexibility increases the shared-DC value (energy -11.6 % -> -13.3 %, peak -20 % -> -40 %), still carried by the
+optimizer; forecasting does not add value with the current integration.
+
+## Peak-aware optimizer (third lexicographic level), flex 0.25, n = 50
+Source: Drive `MyDrive/semiexpo/ai_runs/v2_peak/results.csv`; paired against the energy-only run on the same 50 instances.
+- Peak-aware level lowers peak at unchanged energy: P0 -0.449 kW [0.120, 0.830] (-3.9 %), energy change -0.001 kWh [-0.011, +0.008];
+  ORACLE -0.595 kW (-5.8 %); B3 -0.603 kW (-5.1 %).
+- Peak vs B1p-OPT with the peak-aware optimizer: P0 -3.26 kW (-22.8 %), ORACLE -4.58 kW (-32.0 %). Kill test unchanged: -11.1 %.
+- AI vs P0 (peak-aware): kWh P1 -0.020 [-0.040, -0.000], P2 -0.014 [-0.031, +0.003], P3 -0.016 [-0.036, +0.005], P4 -0.030
+  [-0.052, -0.009]; peak P1 -0.38 [-1.25, +0.46], P2 +0.18 [-0.48, +0.81], P3 -0.35 [-1.30, +0.58], P4 -0.51 [-1.49, +0.47].
+  No AI variant improves energy or peak with a CI excluding 0.
+
+## Final AI verdict (AI-G08/G09)
+Recommended production configuration: **P0 + peak-aware rolling MILP** (optimisation-only). Forecasting models are kept as
+operational information (Model B station-available time, MAE 87 vs 261 min for the recipe) and as a monitored candidate behind
+the AI-G10 gate, not as a source of claimed energy or peak savings.

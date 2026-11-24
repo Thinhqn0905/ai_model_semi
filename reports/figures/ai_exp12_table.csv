@@ -1,0 +1,6 @@
+variant,kwh,kwh_lo,kwh_hi,peak_kw,peak_lo,peak_hi,kwh_wins,peak_wins,boundary
+P1 power AI,-0.018,-0.03,-0.005,-0.34,-0.83,0.13,27/100,33/100,SIM_DATA_PROFILE
+P2 duration AI,-0.019,-0.031,-0.007,-0.25,-0.73,0.23,22/100,35/100,SIM_DATA_PROFILE
+P3 joint,-0.024,-0.038,-0.009,-0.57,-1.08,-0.06,27/100,34/100,SIM_DATA_PROFILE
+"P4 joint, P90 duration",-0.026,-0.041,-0.012,-0.4,-1.0,0.2,27/100,37/100,SIM_DATA_PROFILE
+ORACLE (perfect forecast),0.094,0.077,0.112,1.14,0.57,1.72,94/100,65/100,SIM_DATA_PROFILE
