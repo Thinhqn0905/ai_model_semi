@@ -22,3 +22,7 @@ Read: AGENTS.md, docs/system_spec.md (7, 10), docs/decisions.md, runs/oracle_v1/
   `boundary` column) in a corner caption.
 Gate: `python -m pytest -q tests/test_figures.py` (each plot function on a tiny synthetic frame labelled MOCK writes a file;
 missing-input skip) and generate_all_figures runs on runs/oracle_v1 producing at least F05, F06, F08, F13.
+
+## Run 2 (lead)
+- pytest temp dir: always run `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_figs tests/test_figures.py`.
+- F06: build the source/sink/matched input yourself from runs/oracle_v1/schedules.parquet via regenate.evaluation.oracle_campaign.load + regenate.data.generator.render (truth=True) for one S3 instance, ORACLE vs B1p-OPT; write it to runs/oracle_v1/timeseries.parquet with the section-10 columns (boundary SIM_ASSUMED_PROFILE). Add the F14 synthetic test.

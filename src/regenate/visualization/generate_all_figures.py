@@ -21,7 +21,7 @@ def main():
     if p.exists():
         df=pd.read_parquet(p); df=df[df.provenance.eq('DATASHEET')].copy(); df['boundary']='VENDOR_REPORTED'; plot_efficiency.f05(df,out/'F05'); print(f'F05 written {out / "F05"} boundary=VENDOR_REPORTED')
     else: print(f'F05 SKIP missing {p}')
-    run('F06','timeseries.parquet',plot_energy_matching.f06)
+    run('F06','timeseries.parquet',plot_energy_matching.f06, lambda df: df[df.method.eq('ORACLE')].copy() if 'method' in df else df)
     run('F07','bus_transients.csv',plot_bus_transients.f07)
     run('F08','results.csv',plot_ablation.f08)
     run('F09','ablation_results.csv',plot_ablation.f09)
@@ -40,3 +40,4 @@ def main():
     run('F14','ledger_totals.csv',plot_sankey.f14)
     run('F15','runtime_metrics.csv',plot_pareto.f15)
 if __name__=='__main__': main()
+

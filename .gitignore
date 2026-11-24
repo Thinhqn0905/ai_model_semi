@@ -1,9 +1,9 @@
 # raw / restricted / large data stay out of git (pulled on Colab from source or Drive)
-DS0*/
-predict_ai_electrics/
-doc/
-data/
-runs/
+/DS0*/
+/predict_ai_electrics/
+/doc/
+/data/
+/runs/
 *.pdf
 *.crdownload
 __pycache__/

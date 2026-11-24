@@ -19,7 +19,7 @@ def run_case(case, iid):
     inst = load(iid)
     assign, starts = fifo_schedule(inst)
     initial = {j: (assign[j], starts[j]) for j in assign}
-    observed = []
+    observed, approvals = [], []
     base = Replanner(inst, mode='P0', flex=0.25, time_limit=10)
     events, approve, limit = [], None, 60
     def capture(obs):
@@ -36,6 +36,20 @@ def run_case(case, iid):
     elif case == 'test_delay':
         job = min(starts, key=starts.get)
         events = [(0, 'delay', {'job_id': job, 'duration_h': 2})]
+        def approve(old, new, obs):
+            frozen = set(obs['running']) | set(obs['done'])
+            approvals.append({'frozen_unchanged': all(new[j] == old[j] for j in frozen),
+                              'frozen_count': len(frozen),
+                              'other_queued_changed': any(new[j] != old[j] for j in obs['queued'] if j != job)})
+            return True
+    elif case == 'afe_saturation':
+        def approve(old, new, obs):
+            a = {j: v[0] for j, v in new.items()}
+            st = {j: v[1] for j, v in new.items()}
+            violations = ledger(*render(inst, a, st, inst['dt_h'], truth=True), inst['dt_h'],
+                                'DC', ElecParams(P_afe_max=0.01))['afe_violation_steps']
+            approvals.append(int(violations))
+            return violations == 0
     elif case == 'engineer_reject':
         approve = lambda *_: False
     elif case == 'solver_timeout':
@@ -46,7 +60,7 @@ def run_case(case, iid):
     elif case == 'replanner_exception':
         def replanner(obs):
             raise RuntimeError('injected failure')
-    elif case in ('afe_saturation', 'bus_overvoltage'):
+    elif case == 'bus_overvoltage':
         replanner = None
     replay = Replay(inst, initial, replanner, period_h=2, approve=approve, events=events, max_solve_s=limit)
     realised, log = replay.run()
@@ -69,15 +83,18 @@ def run_case(case, iid):
         window = log[(log.event == 'replan') & (log.t_h < 2)]
         ok = len(window) > 0 and not window.accepted.any() and all(window.reason == 'mes_disconnect')
     elif case == 'afe_saturation':
-        ok = totals['afe_violation_steps'] > 0
-        details['validator_rejected'] = bool(ok)
+        details['candidate_afe_violation_steps'] = approvals
+        details['validator_rejected'] = bool(approvals and max(approvals) > 0 and 'engineer_reject' in reasons)
+        ok = details['validator_rejected'] and replay.plan == initial
     elif case == 'bus_overvoltage':
         twin = check_plan([[100, 100]], [[0, 0]], 1)
         details['twin'] = twin
         ok = not twin['approved'] and any(v[1] == 'overvoltage' for v in twin['violations'])
     elif case == 'test_delay':
-        ok = st[job] >= 2 and bool(observed) and no_overlap
+        ok = (st[job] >= 2 and no_overlap and any(x['other_queued_changed'] for x in approvals)
+              and any(x['frozen_count'] for x in approvals) and all(x['frozen_unchanged'] for x in approvals))
         details['delayed_job'] = job
+        details['approval_checks'] = approvals
         details['replans_accepted'] = int(((log.event == 'replan') & log.accepted).sum())
     elif case == 'engineer_reject':
         ok = 'engineer_reject' in reasons and all(sorted((j for j in a if a[j] == s), key=st.get) == sorted((j for j in assign if assign[j] == s), key=starts.get) for s in set(assign.values()))

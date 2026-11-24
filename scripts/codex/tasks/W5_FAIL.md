@@ -24,3 +24,6 @@ Each row writes runs/fail_v1/<case>.json (decision log, realised plan summary, l
 fmea_v2.md: update slide-16 FMEA (S/O/D/RPN) with ReGenATE-specific modes, link each to the test above, remove
 "speed change" as a mitigation (not a ReGenATE decision).
 Gate: `python -m pytest -q tests/test_failures.py` all failure cases pass (use small time limits; total < 10 min).
+
+## Run 2 (lead)
+Finish: AFE validator integrated as an `approve` gate (ledger afe_violation_steps>0 -> reject), delay case asserts another queued job was re-planned and frozen jobs unchanged. Use --basetemp runs/tmp_pytest_fail.

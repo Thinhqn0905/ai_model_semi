@@ -24,3 +24,6 @@ Read: AGENTS.md, docs/system_spec.md (2, 8), src/regenate/forecasting/{baselines
 Gate: `python -m pytest -q tests/test_ai_framework.py` (window causality: every feature timestamp < every target timestamp;
 split disjointness; metrics on hand example; TCN overfits a tiny sine to low loss) and both runs/ai/ds02/model_metrics.csv
 and runs/ai/ds04/model_metrics.csv exist. Keep total runtime < 40 min.
+
+## Run 2 (lead)
+Finish the contract: calibration over nominal 0.1..0.9 (fit quantiles 0.1,0.2,..,0.9 for M5 or derive from TCN quantile head), index-based windows for DS02 (no full materialisation), DS04 features as in ds04_bench, small validation grid per model with equal budget. Rerun both branches. Use --basetemp runs/tmp_pytest_ai.

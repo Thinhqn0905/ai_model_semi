@@ -27,22 +27,25 @@ def run_benchmark(task, models, out_dir):
     out=Path(out_dir); out.mkdir(parents=True,exist_ok=True)
     predictions=[]; metrics=[]; runtime=[]; logs=[]; calibration=[]
     for item in task:
-        X=np.asarray(item['X'],dtype=float); y=np.asarray(item['y'],dtype=float); split=np.asarray(item['split']); tr=np.flatnonzero(split=='train'); val=np.flatnonzero(split=='val'); te=np.flatnonzero(split=='test')
+        X=item['X']; y=np.asarray(item['y'],dtype=float); split=np.asarray(item['split']); tr=np.flatnonzero(split=='train'); val=np.flatnonzero(split=='val'); te=np.flatnonzero(split=='test')
         if not len(tr) or not len(val) or not len(te): raise ValueError('missing train, validation or test')
         if len(tr)>30000: tr=np.random.default_rng(0).choice(tr,30000,replace=False)
         scale=float(np.quantile(np.abs(y[tr]),.99)); scale=scale if scale>0 else np.nan
         persistence=mae(y[te],X[te,-1]); dataset=item['dataset']; h=item['horizon']; name=item['task']
         for model_id,factory in models.items():
-            model=factory(); start=perf_counter(); model.fit(X[tr],y[tr],X[val],y[val]); fit=perf_counter()-start
+            start=perf_counter(); candidates=[]
+            for variant in (0,1):
+                candidate=factory(variant); candidate.fit(X[tr],y[tr],X[val],y[val]); candidates.append((mae(y[val],candidate.predict(X[val])['p50']),variant,candidate))
+            _, selected, model=min(candidates,key=lambda z:z[0]); fit=perf_counter()-start
             start=perf_counter(); pred=model.predict(X[te]); pred_ms=(perf_counter()-start)*1000/len(te)
             err=mae(y[te],pred['p50']); row=dict(dataset=dataset,task=name,model=model_id,horizon=h,mae=err,rmse=rmse(y[te],pred['p50']),nmae=err/scale,skill_vs_persistence=1-err/persistence if persistence else np.nan,pinball10=pinball(y[te],pred['p10'],.1),pinball50=pinball(y[te],pred['p50'],.5),pinball90=pinball(y[te],pred['p90'],.9),coverage80=interval_coverage(y[te],pred['p10'],pred['p90']),n_test=len(te),scale_p99_train=scale)
             metrics.append(row)
             try: size=len(pickle.dumps(model))/1024
             except Exception: size=np.nan
             runtime.append(dict(dataset=dataset,task=name,model=model_id,horizon=h,fit_s=fit,predict_ms_per_sample=pred_ms,model_size_kb=size))
-            logs.append(dict(dataset=dataset,task=name,model=model_id,horizon=h,n_train=len(tr),n_val=len(val),budget='one fixed configuration',epochs=getattr(getattr(model,'est',None),'epochs_run',None)))
-            for q in (.1,.5,.9): calibration.append(dict(dataset=dataset,task=name,model=model_id,horizon=h,nominal=q,empirical=float(np.mean(y[te]<=pred['p%02d'%int(q*100)]))))
-            predictions.append(pd.DataFrame(dict(dataset=dataset,task=name,model=model_id,group=np.asarray(item['group'])[te],t=np.asarray(item['t'])[te],horizon_step=h,y=y[te],**pred)))
+            logs.append(dict(dataset=dataset,task=name,model=model_id,horizon=h,n_train=len(tr),n_val=len(val),budget='two candidates; validation MAE',selected=selected,epochs=getattr(getattr(model,'est',None),'epochs_run',None)))
+            for q in np.arange(1,10)/10: calibration.append(dict(dataset=dataset,task=name,model=model_id,horizon=h,nominal=q,empirical=float(np.mean(y[te]<=pred['p%02d'%int(q*100)]))))
+            predictions.append(pd.DataFrame(dict(dataset=dataset,task=name,model=model_id,group=np.asarray(item['group'])[te],t=np.asarray(item['t'])[te],horizon_step=h,y=y[te],**{k:pred[k] for k in ('p10','p50','p90')})))
             print(f'LOCAL_RUN {dataset} h={h} {model_id}',flush=True)
     pd.concat(predictions,ignore_index=True).to_parquet(out/'forecast_predictions.parquet',index=False)
     m=pd.DataFrame(metrics); m.to_csv(out/'model_metrics.csv',index=False); m.to_csv(out/'horizon_metrics.csv',index=False)
@@ -51,4 +54,4 @@ def run_benchmark(task, models, out_dir):
 def report(out, path, description):
     df=pd.read_csv(Path(out)/'model_metrics.csv'); cols=['dataset','horizon','model','nmae','skill_vs_persistence','coverage80']; df=df[cols].round(4)
     lines=['| '+' | '.join(cols)+' |','| '+' | '.join(['---']*len(cols))+' |']+['| '+' | '.join(map(str,r))+' |' for r in df.itertuples(index=False,name=None)]
-    Path(path).write_text('# Forecast benchmark\n\nLOCAL_RUN; source observations MEASURED; forecasts and metrics DERIVED. '+description+'\n\nNMAE uses the training-target p99 absolute power, not rated power. One fixed configuration per model; no hyperparameter selection. M0 persistence point uses last observation, with training residual quantiles. Only the three directly predicted quantiles are calibrated.\n\n'+'\n'.join(lines)+'\n',encoding='utf8')
+    Path(path).write_text('# Forecast benchmark\n\nLOCAL_RUN; source observations MEASURED; forecasts and metrics DERIVED. '+description+'\n\nNMAE uses the training-target p99 absolute power, not rated power. Two candidate configurations per model selected by validation MAE; M0 and M1 repeat their deterministic configuration. M0 persistence point uses last observation, with training residual quantiles. Calibration uses nine quantiles; TCN intermediate quantiles are linearly interpolated between its three heads.\n\n'+'\n'.join(lines)+'\n',encoding='utf8')

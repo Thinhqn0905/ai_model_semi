@@ -26,3 +26,9 @@ def test_figures(tmp_path,fn,data):
 def test_missing_inputs_skip(tmp_path,capsys,monkeypatch):
     from regenate.visualization.generate_all_figures import main
     monkeypatch.chdir(tmp_path); monkeypatch.setattr('sys.argv',['figures','--campaign','missing','--out','out']); main(); assert 'SKIP missing' in capsys.readouterr().out
+
+def test_f14_sankey(tmp_path):
+    from regenate.visualization.plot_sankey import f14
+    f14(frame(source=['source'], target=['sink'], value=[1]), tmp_path/'sankey')
+    assert (tmp_path/'sankey.png').is_file()
+    assert (tmp_path/'sankey.pdf').is_file()
