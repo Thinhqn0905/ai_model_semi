@@ -3,7 +3,7 @@ CC BY 4.0, doi:10.17028/rd.lboro.28732490.v2. Six use cases (TOU, PV, PV-TOU, EF
 EV module (2 cells in series, ~8 V) per use case, cycles stored as CSV inside "Sweat Test Data.zip".
 
 Streams every cycle CSV straight from the zip (no extraction) and writes
-  ds05_traces/<use_case>.parquet : use_case, period, cycle_file, t_s (Cumulative_Time), p_charge_w, p_discharge_w,
+  ds05_traces/<use_case>.parquet : use_case, period, cycle_file, t_s (= Cumulative_Time * 10 s), p_charge_w, p_discharge_w,
                                    v, i, v_cell1, v_cell2, t_amb_c   (mean over `step_s` bins; MEASURED)
   ds05_cycles.parquet            : one row per cycle file (energies, durations, voltages, temperature; DERIVED)
 Sign: POWER > 0 = charging (station is a SINK), POWER < 0 = discharging (station is a SOURCE, energy returned).
@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+TIME_UNIT_S = 10.0
 USECOLS = ["POWER", "CURRENT", "VOLTAGE", "STEP_MODE", "STATUS_IDX", "Cumulative_Time", "REAL_TIME",
            "Cell1", "Cell2", "Ambient Temperature"]
 
@@ -28,7 +29,8 @@ def parse_cycle(raw, step_s=60.0):
     """(trace bins DataFrame, summary dict) for one cycle CSV given as bytes."""
     df = pd.read_csv(io.BytesIO(raw), usecols=lambda c: c in USECOLS, low_memory=False)
     df = df.dropna(subset=["Cumulative_Time", "POWER"]).sort_values("Cumulative_Time")
-    t = df["Cumulative_Time"].to_numpy(float); p = df["POWER"].to_numpy(float)
+    # Cumulative_Time is in 10-s units: verified on Day Ahead / FFR / TOU against wall-clock REAL_TIME (ratio 10.000)
+    t = df["Cumulative_Time"].to_numpy(float) * TIME_UNIT_S; p = df["POWER"].to_numpy(float)
     if len(t) < 2:
         return None, None
     dt = np.diff(t, append=t[-1]); dt = np.clip(dt, 0, 60.0)       # gaps > 60 s are not integrated (logging pauses)
@@ -45,12 +47,13 @@ def parse_cycle(raw, step_s=60.0):
     summ["rte"] = e_dis / e_ch if e_ch > 0 else np.nan
     df["p_charge_w"] = np.clip(p, 0, None); df["p_discharge_w"] = np.clip(-p, 0, None)
     df["bin"] = np.floor((t - t[0]) / step_s).astype(int)
-    agg = {"Cumulative_Time": "first", "p_charge_w": "mean", "p_discharge_w": "mean", "VOLTAGE": "mean", "CURRENT": "mean"}
+    df["t_s"] = t
+    agg = {"t_s": "first", "p_charge_w": "mean", "p_discharge_w": "mean", "VOLTAGE": "mean", "CURRENT": "mean"}
     for c in ("Cell1", "Cell2", "Ambient Temperature"):
         if c in df:
             agg[c] = "mean"
     tr = df.groupby("bin").agg(agg).reset_index(drop=True).rename(columns={
-        "Cumulative_Time": "t_s", "VOLTAGE": "v", "CURRENT": "i", "Cell1": "v_cell1", "Cell2": "v_cell2",
+        "VOLTAGE": "v", "CURRENT": "i", "Cell1": "v_cell1", "Cell2": "v_cell2",
         "Ambient Temperature": "t_amb_c"})
     return tr, summ
 

@@ -6,7 +6,7 @@ from regenate.data.ds05 import build, parse_cycle
 
 
 def fake_cycle(n=600, p_ch=200.0, p_dis=150.0):
-    t = np.arange(n) * 3.0
+    t = np.arange(n) * 3.0 / 10.0                       # file stores Cumulative_Time in 10-s units
     p = np.where(t < 600, p_ch, np.where(t < 1200, 0.0, -p_dis))
     return pd.DataFrame({"POWER": p, "CURRENT": p / 8, "VOLTAGE": 8.0, "STEP_MODE": 2, "STATUS_IDX": 1,
                          "Cumulative_Time": t, "REAL_TIME": "x", "Cell1": 4.0, "Cell2": 4.0,
