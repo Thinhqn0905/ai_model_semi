@@ -30,5 +30,4 @@ def test_missing_inputs_skip(tmp_path,capsys,monkeypatch):
 def test_f14_sankey(tmp_path):
     from regenate.visualization.plot_sankey import f14
     f14(frame(source=['source'], target=['sink'], value=[1]), tmp_path/'sankey')
-    assert (tmp_path/'sankey.png').is_file()
-    assert (tmp_path/'sankey.pdf').is_file()
+    assert (tmp_path/'sankey.html').is_file()

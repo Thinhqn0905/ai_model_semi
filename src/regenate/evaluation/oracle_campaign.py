@@ -55,7 +55,10 @@ def capacity(inst, K, slot_h):
 
 def true_dur(inst, jid):
     """Realised duration on the render grid (phase steps of the generator), hours."""
-    dt = inst["dt_h"]; d = float(inst["jobs"].set_index("job_id").loc[jid, "dur_true_h"])
+    dt = inst["dt_h"]
+    if "traces" in inst:                     # bench v2: length of the measured cycle on the grid
+        return int(np.ceil(len(inst["traces"][jid][0]) * inst["trace_dt_h"] / dt - 1e-9)) * dt
+    d = float(inst["jobs"].set_index("job_id").loc[jid, "dur_true_h"])
     return int(sum(_phase_steps(inst["recipe"], d, dt))) * dt
 
 

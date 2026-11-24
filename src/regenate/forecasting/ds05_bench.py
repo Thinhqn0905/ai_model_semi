@@ -53,8 +53,27 @@ def _slot_mean(a, b, h):
     return a[s:s + SLOT].mean() if s + SLOT <= len(a) else np.nan
 
 
+def features_at(ch, ds, v, ta, b, prev):
+    """Decision-time features at bin b of a running cycle (only bins < b) + previous cycle of the module."""
+    pch, pds = (prev[0], prev[1]) if prev is not None else (None, None)
+    f = dict(elapsed_min=b, v_last=v[b - 1], t_amb=ta[b - 1])
+    for k in LAGS:
+        f[f"ch_l{k}"] = ch[b - k] if b - k >= 0 else np.nan
+        f[f"ds_l{k}"] = ds[b - k] if b - k >= 0 else np.nan
+    lo15, lo60 = max(0, b - 15), max(0, b - 60)
+    f["ch_m15"], f["ds_m15"] = ch[lo15:b].mean(), ds[lo15:b].mean()
+    f["ch_m60"], f["ds_m60"] = ch[lo60:b].mean(), ds[lo60:b].mean()
+    f["e_ch_sofar"], f["e_ds_sofar"] = ch[:b].sum() / 60, ds[:b].sum() / 60
+    f["prev_len_min"] = len(pch) if pch is not None else np.nan
+    for h in HORIZONS:
+        f[f"prev_ch_h{h}"] = _slot_mean(pch, b, h) if pch is not None else np.nan
+        f[f"prev_ds_h{h}"] = _slot_mean(pds, b, h) if pds is not None else np.nan
+    f["prev_rem_min"] = (len(pch) - b) if pch is not None else np.nan
+    return f
+
+
 def make_samples(cyc, arrs, stride=15, min_hist=60):
-    """Rows of features + targets (Model A per horizon, Model B remaining duration / energies)."""
+    """Rows of features + targets (Model A per horizon, Model B remaining duration)."""
     rows = []
     for uc, g in cyc.groupby("use_case"):
         prev = None
@@ -63,22 +82,12 @@ def make_samples(cyc, arrs, stride=15, min_hist=60):
             if a is None:
                 prev = None; continue
             ch, ds, v, ta = a; L = len(ch)
-            pch, pds = (prev[0], prev[1]) if prev is not None else (None, None)
             for b in range(min_hist, L - SLOT, stride):
-                f = dict(use_case=uc, cycle_file=r.cycle_file, split=r.split, ord=r.ord, elapsed_min=b,
-                         v_last=v[b - 1], t_amb=ta[b - 1], has_prev=pch is not None)
-                for k in LAGS:
-                    f[f"ch_l{k}"] = ch[b - k]; f[f"ds_l{k}"] = ds[b - k]
-                f["ch_m15"], f["ds_m15"] = ch[b - 15:b].mean(), ds[b - 15:b].mean()
-                f["ch_m60"], f["ds_m60"] = ch[b - 60:b].mean(), ds[b - 60:b].mean()
-                f["e_ch_sofar"], f["e_ds_sofar"] = ch[:b].sum() / 60, ds[:b].sum() / 60
-                f["prev_len_min"] = len(pch) if pch is not None else np.nan
+                f = dict(use_case=uc, cycle_file=r.cycle_file, split=r.split, ord=r.ord, has_prev=prev is not None,
+                         **features_at(ch, ds, v, ta, b, prev))
                 for h in HORIZONS:
                     f[f"y_ch_h{h}"] = _slot_mean(ch, b, h); f[f"y_ds_h{h}"] = _slot_mean(ds, b, h)
-                    f[f"prev_ch_h{h}"] = _slot_mean(pch, b, h) if pch is not None else np.nan
-                    f[f"prev_ds_h{h}"] = _slot_mean(pds, b, h) if pds is not None else np.nan
                 f["y_rem_min"] = L - b
-                f["prev_rem_min"] = (len(pch) - b) if pch is not None else np.nan
                 rows.append(f)
             prev = a
     return pd.DataFrame(rows)
@@ -91,12 +100,14 @@ def feature_cols(df):
     return [c for c in df.columns if not c.startswith("y_") and c not in FEATS_DROP] + ["uc_code"]
 
 
-def _lgb_q(X, y, Xv, q, seed=0):
+def _lgb_q(X, y, Xv, q, seed=0, store=None, key=None):
     import lightgbm as lgb
     m = lgb.LGBMRegressor(objective="quantile", alpha=q, n_estimators=400, learning_rate=0.05, num_leaves=63,
                           min_child_samples=50, subsample=0.8, subsample_freq=1, colsample_bytree=0.8,
                           random_state=seed, verbose=-1)
     m.fit(X, y)
+    if store is not None:
+        store[(key, q)] = m
     return m.predict(Xv)
 
 
@@ -115,6 +126,7 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
         tr = tr.sample(max_train, random_state=seed)
     te = df[df.split == "test"]
     preds, metrics, runtime = [], [], []
+    store = {}
     targets = [(f"y_{c}_h{h}", f"prev_{c}_h{h}", f"{c}_l1") for c in ("ch", "ds") for h in HORIZONS] + \
               [("y_rem_min", "prev_rem_min", None)]
     from sklearn.linear_model import Ridge
@@ -142,7 +154,7 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
                                                                          predict_ms=1e3 * (time.time() - t0) / max(len(Xt), 1)))
             cand[name] = dict(p50=p)
         t0 = time.time()
-        q = {qq: _lgb_q(X, Y, Xt, qq, seed) for qq in QS}
+        q = {qq: _lgb_q(X, Y, Xt, qq, seed, store, y) for qq in QS}
         lo, mid, hi = np.sort(np.vstack([q[0.1], q[0.5], q[0.9]]), axis=0)          # no quantile crossing
         runtime.append(dict(target=y, model="AI10_lgbm_quantile", fit_s=time.time() - t0, predict_ms=np.nan))
         cand["AI10_lgbm_quantile"] = dict(p10=lo, p50=mid, p90=hi)
@@ -163,6 +175,9 @@ def run(proc, out, stride=15, max_train=400_000, seed=0):
         preds.append(keep.assign(target=y, y=Yt, p10=best["p10"], p50=best["p50"], p90=best["p90"],
                                  base=cand["AI00_prev_cycle"]["p50"]))
         print(y, "done", flush=True)
+    import joblib
+    joblib.dump(dict(models=store, feats=feats, uc_codes=dict(zip(df.use_case.astype("category").cat.categories,
+                                                                   range(df.use_case.nunique())))), out / "ai_models.joblib")
     pd.DataFrame(metrics).assign(boundary="LOCAL_RUN(DS05 MEASURED)").to_csv(out / "model_metrics.csv", index=False)
     pd.DataFrame(runtime).to_csv(out / "runtime_metrics.csv", index=False)
     pd.concat(preds).to_parquet(out / "forecast_predictions.parquet", index=False)

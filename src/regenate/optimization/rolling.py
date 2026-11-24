@@ -42,8 +42,10 @@ def estimate_running(inst, jid, trace, dt_h, n_grid=41):
 
 
 class Replanner:
-    def __init__(self, inst, mode="P0", slot_h=0.25, prm=None, flex=1.0, time_limit=10.0, prior=None):
-        assert mode in ("P0", "P")
+    def __init__(self, inst, mode="P0", slot_h=0.25, prm=None, flex=1.0, time_limit=10.0, prior=None, profile_fn=None):
+        """profile_fn(jid, run_obs_or_None) -> (p_in, p_rec, p_aux) predicted FULL-job slot profile (bench v2 / AI
+        variants). When given it replaces predict()/_profile(); mode is then only a label."""
+        self.profile_fn = profile_fn
         self.inst, self.mode, self.slot, self.prm = inst, mode, slot_h, prm or ElecParams()
         self.flex, self.time_limit = flex, time_limit
         self.J = inst["jobs"].set_index("job_id")
@@ -64,20 +66,27 @@ class Replanner:
         running = obs["running"]; queued = [j for j in obs["queued"] if j not in running]
         if not queued:
             return {}
-        pred = {j: self.predict(j, running.get(j)) for j in list(running) + queued}
-        key = (tuple(sorted(queued)), tuple(sorted((j, round(v[0], 6), round(v[1], 6)) for j, v in pred.items() if j in running)))
+        if self.profile_fn is not None:
+            prof = {j: self.profile_fn(j, running.get(j)) for j in list(running) + queued}
+            pred = {j: (len(prof[j][0]) * sl, 1.0) for j in prof}
+            key = (tuple(sorted(queued)), tuple(sorted((j, len(prof[j][0]), round(float(np.sum(prof[j][0]) - np.sum(prof[j][1])), 4))
+                                                      for j in running)))
+        else:
+            prof = None
+            pred = {j: self.predict(j, running.get(j)) for j in list(running) + queued}
+            key = (tuple(sorted(queued)), tuple(sorted((j, round(v[0], 6), round(v[1], 6)) for j, v in pred.items() if j in running)))
         if key == self._key:
             return {}                                                 # nothing new -> keep plan
         jobs, ids, free = [], [], {s: 0 for s in self.S}
         for j, ro in running.items():                                 # fixed: remaining profile, start now
-            d, k = pred[j]; pi, pr, ax = _profile(self.inst, j, d, k, sl)
+            d, k = pred[j]; pi, pr, ax = prof[j] if prof else _profile(self.inst, j, d, k, sl)
             e = int(round(ro["elapsed_h"] / sl)); rem = max(1, len(pi) - e)
             pi, pr, ax = (np.pad(a, (0, max(0, e + rem - len(a))))[e:e + rem] for a in (pi, pr, ax))
             jobs.append(Job(0, 0, (self.J.loc[j, "due_h"] - t0) / sl, pi, pr, ax)); ids.append(j)
             free[ro["station"]] = rem
         n_fixed = len(jobs)
         for j in queued:
-            r = self.J.loc[j]; d, k = pred[j]; pi, pr, ax = _profile(self.inst, j, d, k, sl)
+            r = self.J.loc[j]; d, k = pred[j]; pi, pr, ax = prof[j] if prof else _profile(self.inst, j, d, k, sl)
             rel = max(0, math.ceil((r.release_h - t0) / sl - 1e-9))
             lat = int(math.floor((min(r.deadline_h - d, r.release_h + self.flex * r.max_shift_h) - t0) / sl + 1e-9))
             jobs.append(Job(rel, max(rel, lat), (r.due_h - t0) / sl, pi, pr, ax)); ids.append(j)

@@ -54,9 +54,9 @@ def run_case(case, iid):
         approve = lambda *_: False
     elif case == 'solver_timeout':
         def replanner(obs):
-            time.sleep(0.002)
+            time.sleep(2)
             return {}
-        limit = 0.001
+        limit = 0.5
     elif case == 'replanner_exception':
         def replanner(obs):
             raise RuntimeError('injected failure')

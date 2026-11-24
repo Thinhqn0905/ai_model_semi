@@ -81,6 +81,14 @@ def campaign(bench, oracle_csv, out, report, ids, workers=8, flex=0.25, slot=0.2
     for method in ['B0','B1','B1-OPT','B1p','B1p-OPT','B2','B3','P0','P','ORACLE']:
         x = summary[summary.method == method]
         lines.append(f"| {method} | {len(x)} | {x.net_kwh.mean():.4g} | {x.peak_import_kw.mean():.4g} | {x.matching_ratio.mean():.4g} | {x.TT_h.mean():.4g} | {x.makespan_h.mean():.4g} | {x.completed_jobs.mean():.4g} | {x.violations.sum():.4g} |")
+    lines += ['', 'Per-method means and 95% bootstrap intervals over instances (SIM_ASSUMED_PROFILE):', '', '| Method | Metric | mean | 95% CI | n |', '|---|---|---:|---:|---:|']
+    for method in ['B0','B1','B1-OPT','B1p','B1p-OPT','B2','B3','P0','P','ORACLE']:
+        x = summary[summary.method == method]
+        for metric in ['net_kwh', 'peak_import_kw', 'matching_ratio', 'TT_h', 'makespan_h', 'completed_jobs', 'violations']:
+            values = x[metric].dropna().to_numpy()
+            ci = paired_ci(values, np.zeros(len(values)))
+            lines.append(f"| {method} | {metric} | {ci['mean']:.4g} | [{ci['lo']:.4g}, {ci['hi']:.4g}] | {ci['n']} |")
+    lines += ['', 'Limitations: oracle solves use a 60 s limit versus 10 s per rolling solve; the replanner can widen flex windows to deadlines and omits downtime from optimization, although replay enforces downtime. Comparisons are descriptive and not fully matched on compute budget or planning constraints.']
     for title, table in [('Equal tardiness', equal), ('All instances (tardiness may differ)', all_rows)]:
         lines += ['', '## '+title, '', '| Comparison | n | mean kWh | 95% paired bootstrap CI |', '|---|---:|---:|---:|']
         for r in table.itertuples():

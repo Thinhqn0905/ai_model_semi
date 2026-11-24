@@ -82,6 +82,9 @@ def job_slot_profile(inst, job, slot_h):
 
 
 def render(inst, assign, starts_h, dt_h, truth=True):
+    if "traces" in inst:                     # lead: bench v2 (DS06) jobs replay measured DS05 cycles
+        from regenate.data.bench_v2 import render_traces
+        return render_traces(inst, assign, starts_h, dt_h, truth)
     if dt_h <= 0: raise ValueError("dt_h must be positive")
     jobs=inst["jobs"]; stations=inst["stations"]; recipe=inst["recipe"]
     profiles=[]; end=0
