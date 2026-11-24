@@ -1,0 +1,11 @@
+{
+  "config": {
+    "seed": 7,
+    "boundary": "MOCK"
+  },
+  "code_hash_sha256": "462773d06a49cdb06d9a94fc3ab95ac8e61560fa65a7bcfb290d70c3750537df",
+  "command": "make_mock_campaign('D:\\\\Subject_ProjectClass\\\\semipox\\\\app\\\\test_temp\\\\pytest-of-ADMIN\\\\pytest-1\\\\test_mock_schema0', 7)",
+  "timestamps": {
+    "created_utc": "2026-11-24T16:53:55.012965+00:00"
+  }
+}

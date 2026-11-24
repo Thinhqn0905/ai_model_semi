@@ -1,0 +1,113 @@
+name,value,unit,module,provenance,source,grounding_candidate,sensitivity_priority
+eta_sup_ac,0.92,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+eta_sup_dc,0.97,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+eta_rl_ac,0.94,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+eta_rl_dc,0.97,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+eta_afe_imp,0.97,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+eta_afe_exp,0.97,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+eta_link,0.99,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+P_link_max,inf,kW,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,high
+P_afe_max,inf,kW,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+allow_export,True,boolean,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+cop,3.0,dimensionless,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+hvac_on_dump,True,boolean,electrical.ledger,ASSUMED,src/regenate/electrical/ledger.py:ElecParams,data/processed/efficiency_points.parquet (TIDA-010938 curves); site equipment and HVAC measurements,medium
+v_nom,400.0,V,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+v_min,380.0,V,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+v_max,420.0,V,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+capacitance_f,0.04,F,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+p_afe_max_kw,20.0,kW,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+k_droop_kw_per_v,2.0,kW/V,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+tau_afe_s,0.08,s,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+v_chop,415.0,V,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+p_chop_max_kw,15.0,kW,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+i_link_max_a,80.0,A,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+p_link_max_kw,32.0,kW,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+ramp_kw_per_s,20.0,kW/s,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+loss_fraction,0.0,dimensionless,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+dt_s,0.001,s,simulation.bus_twin,ASSUMED,src/regenate/simulation/bus_twin.py:TwinParams,DS02 LVDC traces and site converter specifications,medium
+unit_h,1.0,h/abstract unit,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+n,"[10, 20]",dimensionless,configs.bench_v1,SYNTHETIC,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+tau,"[0.2, 0.5, 0.8]",dimensionless,configs.bench_v1,SYNTHETIC,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+reps,"[0, 1, 2]",dimensionless,configs.bench_v1,SYNTHETIC,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+scenarios,"['S1', 'S2', 'S3']",dimensionless,configs.bench_v1,SYNTHETIC,configs/bench_v1.yaml,DS01 instances or site production and station traces,high
+seeds,"[0, 1, 2, 3, 4]",dimensionless,configs.bench_v1,SYNTHETIC,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+n_stations,8,dimensionless,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+p_rated_kw,6.0,kW,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,high
+sigma_dur,0.1,dimensionless,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+cycle_scale,1.0,dimensionless,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,high
+aux_kw,0.2,kW,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+downtime_probability_per_day,0.05,1/day,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+downtime_mean_h,1.0,h,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+release_delay_mean_h,0.5,h,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+max_shift_h,24.0,h,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+dt_h,0.25,h,configs.bench_v1,ASSUMED,configs/bench_v1.yaml,DS01 instances or site production and station traces,medium
+S1.0.ramp_up.dur_frac,0.1,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.0.ramp_up.p_in_frac,0.5,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.0.ramp_up.p_rec_frac,0.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.1.stress.dur_frac,0.8,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.1.stress.p_in_frac,1.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.1.stress.p_rec_frac,0.9,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.2.ramp_down.dur_frac,0.1,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.2.ramp_down.p_in_frac,0.5,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S1.2.ramp_down.p_rec_frac,0.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.0.load_step.dur_frac,0.25,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.0.load_step.p_in_frac,0.25,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.0.load_step.p_rec_frac,0.2125,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.1.load_step.dur_frac,0.25,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.1.load_step.p_in_frac,0.5,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.1.load_step.p_rec_frac,0.44,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.2.load_step.dur_frac,0.25,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.2.load_step.p_in_frac,0.75,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.2.load_step.p_rec_frac,0.6825,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.3.load_step.dur_frac,0.25,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.3.load_step.p_in_frac,1.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S2.3.load_step.p_rec_frac,0.94,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.0.charge.dur_frac,0.004705882352941177,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.0.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.0.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.1.discharge.dur_frac,0.009411764705882354,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.1.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.1.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.2.charge.dur_frac,0.007058823529411766,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.2.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.2.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.3.discharge.dur_frac,0.007058823529411766,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.3.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.3.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.4.charge.dur_frac,0.014117647058823528,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.4.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.4.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.5.discharge.dur_frac,0.0023529411764705885,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.5.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.5.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.6.charge.dur_frac,0.0023529411764705885,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.6.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.6.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.7.discharge.dur_frac,0.0023529411764705885,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.7.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.7.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.8.charge.dur_frac,0.0023529411764705885,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.8.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.8.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.9.discharge.dur_frac,0.0023529411764705885,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.9.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.9.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.10.charge.dur_frac,0.47764705882352937,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.10.charge.p_in_frac,1.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.10.charge.p_rec_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.11.discharge.dur_frac,0.468235294117647,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.11.discharge.p_in_frac,0.0,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.11.discharge.p_rec_frac,0.6984887178754042,dimensionless,data.recipes,DERIVED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.12.rest.dur_frac,0.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.12.rest.p_in_frac,0.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+S3.12.rest.p_rec_frac,0.0,dimensionless,data.recipes,ASSUMED,src/regenate/data/recipes.py; data/processed/provenance_ds03.json,time-aligned site station power profiles; data/processed/ds03_edc_cycles.parquet,high
+tariff.import_price.off_peak,1274,VND/kWh,configs.economics_v1,DERIVED,configs/economics_v1.yaml; https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf,site electricity supply and export contract,medium
+tariff.import_price.normal,1966,VND/kWh,configs.economics_v1,DERIVED,configs/economics_v1.yaml; https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf,site electricity supply and export contract,medium
+tariff.import_price.peak,3586,VND/kWh,configs.economics_v1,DERIVED,configs/economics_v1.yaml; https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf,site electricity supply and export contract,medium
+tariff.alpha_ex,0,dimensionless,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site electricity supply and export contract,medium
+tariff.demand_charge_per_kw_month,0,VND/kW/month,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site electricity supply and export contract,medium
+FIN-A.capex.server,4220,USD,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site vendor quote including installation and requalification,medium
+FIN-B.capex.server,4220,USD,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site vendor quote including installation and requalification,medium
+FIN-C.capex.meters,4406,USD,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site vendor quote including installation and requalification,medium
+FIN-C.capex.server,4220,USD,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site vendor quote including installation and requalification,medium
+FIN-C.capex.converter bus safety,21838,USD,configs.economics_v1,ASSUMED,configs/economics_v1.yaml,site vendor quote including installation and requalification,medium

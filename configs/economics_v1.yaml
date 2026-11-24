@@ -1,0 +1,29 @@
+﻿# SOURCE_REPORTED EVN production, low voltage <= 1 kV, effective 2026-11-01; VND, excluding VAT.
+# Billing voltage is a site assumption; verify the actual supply contract.
+tariff:
+  currency: VND
+  import_price: {off_peak: 1274, normal: 1966, peak: 3586}
+  alpha_ex: 0  # ASSUMED; no export contract established
+  demand_charge_per_kw_month: 0  # ASSUMED; verify site contract
+  source: https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf
+  hours_source: https://www.evn.com.vn/d/vi-VN/news/Quyet-dinh-so-963QD-BCT-ve-khung-gio-cao-diem-thap-diem-va-gio-binh-thuong-cua-he-thong-dien-quoc-gia--60-2025-507803
+# ASSUMED USD slide-16 estimates; do not combine with VND tariff without explicit conversion.
+financial_currency: USD
+cases:
+  FIN-A:
+    description: software-only on existing regen-to-AC
+    capex: [{name: server, amount: 4220, provenance: ASSUMED slide 16 estimate}]
+    opex: []
+  FIN-B:
+    description: optimisation on existing shared DC
+    capex: [{name: server, amount: 4220, provenance: ASSUMED slide 16 estimate}]
+    opex: []
+  FIN-C:
+    description: full retrofit
+    capex:
+      - {name: meters, amount: 4406, provenance: ASSUMED slide 16 estimate}
+      - {name: server, amount: 4220, provenance: ASSUMED slide 16 estimate}
+      - {name: converter bus safety, amount: 21838, provenance: ASSUMED slide 16 estimate}
+    opex: []
+# Missing OPEX, retrofit installation and requalification estimates are NOT_VERIFIED, not free.
+

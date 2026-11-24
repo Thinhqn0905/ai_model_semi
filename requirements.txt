@@ -1,0 +1,15 @@
+numpy>=2.0
+pandas>=2.2
+pyarrow
+scipy
+scikit-learn
+lightgbm
+ortools
+highspy
+simpy
+pyyaml
+pytest
+streamlit
+plotly
+pdfplumber
+pypdf

@@ -1,0 +1,3 @@
+﻿# Offline dashboard
+
+Generate a synthetic campaign from the repository root with `python -c "from regenate.evaluation.mock_results import make_mock_campaign; make_mock_campaign('runs/mock_dashboard', 0)"` with `src` on PYTHONPATH. Launch with `python -m streamlit run app/dashboard.py --server.headless true`. Choose a campaign folder in the sidebar. MOCK is synthetic demonstration data, not measured or simulated project evidence. Decisions are recorded locally; rejecting a proposal leaves the original plan active and does not control a MES. Finance is illustrative and depends on editable assumptions.

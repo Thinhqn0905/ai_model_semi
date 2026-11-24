@@ -1,0 +1,14 @@
+# raw / restricted / large data stay out of git (pulled on Colab from source or Drive)
+DS0*/
+predict_ai_electrics/
+doc/
+data/
+runs/
+*.pdf
+*.crdownload
+__pycache__/
+.pytest_cache/
+*.parquet
+*.zip
+.claude/settings.local.json
+reports/product/*.log
