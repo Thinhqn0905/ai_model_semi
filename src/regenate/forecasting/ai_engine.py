@@ -15,6 +15,9 @@ Scheduler variants (same rolling MILP; only the information differs):
   P3 joint (P1 power for next 4 h, P2 length)
   P4 robust joint (P3 with Model B P90 remaining -> station released later, conservative)
 Queued jobs use the nominal recipe in every variant (no telemetry before start).
+Run 3 diagnostic variants (same rolling MILP; information decomposition, not deployable):
+  P1*..P4*  the P1..P4 integration fed with PERFECT forecasts (true slot means / true remaining) -> integration loss
+  TR_RUN    true full profile for running jobs only; TR_Q true profile for queued jobs only; TR_ALL rolling oracle
 """
 import numpy as np
 from regenate.forecasting.ds05_bench import HORIZONS, SLOT, features_at
@@ -72,15 +75,29 @@ def _warp(a, n):
     return np.interp(np.linspace(0, len(a) - 1, n), np.arange(len(a)), a)
 
 
+def _perfect(trace, b, k):
+    """Perfect forecast in the engine's output format: true slot-mean power at HORIZONS and true remaining minutes."""
+    ch, ds = (np.asarray(x, float) / k for x in trace)
+    sm = lambda a, h: a[b + (h - 1) * SLOT: b + h * SLOT].mean() if b + (h - 1) * SLOT < len(a) else 0.0
+    rem = max(len(ch) - b, SLOT)
+    return dict(sink_power={h: np.full(3, sm(ch, h)) for h in HORIZONS}, source_power={h: np.full(3, sm(ds, h)) for h in HORIZONS},
+                remaining_duration=np.full(3, float(rem)), prediction_valid=True)
+
+
 def make_profile_fn(inst, variant, engine=None, dt_h=0.25):
     """profile_fn(jid, run_obs) for regenate.optimization.rolling.Replanner on a bench-v2 instance."""
     from regenate.data.bench_v2 import job_profile
     J = inst["jobs"].set_index("job_id"); k = inst["meta"]["modules_per_station"]
     spm = int(round(dt_h / inst["trace_dt_h"]))       # trace bins per slot
 
+    base, perfect = variant.rstrip("*"), variant.endswith("*")
+
     def fn(jid, run_obs):
         nom = job_profile(inst, jid, dt_h, "nominal")
-        if run_obs is None or variant == "P0" or engine is None:
+        if variant.startswith("TR_"):
+            use_truth = {"TR_ALL": True, "TR_RUN": run_obs is not None, "TR_Q": run_obs is None}[variant]
+            return job_profile(inst, jid, dt_h, "truth") if use_truth else nom
+        if run_obs is None or base == "P0" or (engine is None and not perfect):
             return nom
         b = int(round(run_obs["elapsed_h"] / inst["trace_dt_h"]))          # minutes elapsed (observed telemetry)
         e = b // spm                                                       # whole slots elapsed
@@ -90,10 +107,13 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25):
         ch_t, ds_t = ch_t[:b], ds_t[:b]
         v, ta = (np.asarray(x[:b], float) for x in inst["telem"][jid])
         prev = tuple(x / k for x in inst["nominal"][jid])
-        try:
+        if perfect:
+            p = _perfect(inst["traces"][jid], b, k)
+        else:
+          try:
             p = engine.predict(dict(ch=np.r_[ch_t, 0], ds=np.r_[ds_t, 0], v=np.r_[v, v[-1]], t_amb=np.r_[ta, ta[-1]]),
                                b, prev, J.loc[jid, "use_case"])
-        except Exception:
+          except Exception:
             return nom
         if not p["prediction_valid"]:
             return nom
@@ -101,15 +121,15 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25):
         obs_rec = np.array([ds_t[i * spm:(i + 1) * spm].mean() for i in range(e)]) * k
         n_nom_rem = max(1, len(nom[0]) - e)
         rem_q = p["remaining_duration"]
-        if variant in ("P2", "P3"):
+        if base in ("P2", "P3"):
             n_rem = max(1, int(round(rem_q[1] / (spm))))
-        elif variant == "P4":
+        elif base == "P4":
             n_rem = max(1, int(round(rem_q[2] / (spm))))
         else:
             n_rem = n_nom_rem
-        tail_in = _warp(nom[0][e:], n_rem) if variant in ("P2", "P3", "P4") else np.pad(nom[0][e:], (0, max(0, n_rem - n_nom_rem)))[:n_rem]
-        tail_rec = _warp(nom[1][e:], n_rem) if variant in ("P2", "P3", "P4") else np.pad(nom[1][e:], (0, max(0, n_rem - n_nom_rem)))[:n_rem]
-        if variant in ("P1", "P3", "P4"):
+        tail_in = _warp(nom[0][e:], n_rem) if base in ("P2", "P3", "P4") else np.pad(nom[0][e:], (0, max(0, n_rem - n_nom_rem)))[:n_rem]
+        tail_rec = _warp(nom[1][e:], n_rem) if base in ("P2", "P3", "P4") else np.pad(nom[1][e:], (0, max(0, n_rem - n_nom_rem)))[:n_rem]
+        if base in ("P1", "P3", "P4"):
             m = min(16, n_rem)
             tail_in[:m] = _interp_slots(p["sink_power"], m) * k
             tail_rec[:m] = _interp_slots(p["source_power"], m) * k

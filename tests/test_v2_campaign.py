@@ -59,3 +59,17 @@ def test_ai_variants_profiles_and_run():
     assert len(p4[0]) >= len(p2[0])                                   # P90 remaining is longer than P50
     rows, _ = run_one(inst, StubEngine(), flex=0.5, time_limit=10, methods=["P0", "P1", "P3", "P4"])
     assert {r["method"] for r in rows} == {"P0", "P1", "P3", "P4"} and all(r["violations"] == 0 for r in rows)
+
+
+def test_diagnostic_variants_perfect_and_truth():
+    from regenate.data.bench_v2 import job_profile
+    from regenate.forecasting.ai_engine import make_profile_fn
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 3, n_jobs=4, n_stations=2, split="train")
+    tru = job_profile(inst, 0, 0.25, "truth")
+    assert np.allclose(make_profile_fn(inst, "TR_RUN")(0, dict(elapsed_h=1.0))[0], tru[0])
+    assert np.allclose(make_profile_fn(inst, "TR_RUN")(0, None)[0], job_profile(inst, 0, 0.25, "nominal")[0])
+    p2 = make_profile_fn(inst, "P2*")(0, dict(elapsed_h=1.0))
+    assert len(p2[0]) == len(tru[0])                                  # perfect remaining duration -> true length
+    rows, _ = run_one(inst, None, flex=0.5, time_limit=10, methods=["P0", "P1*", "P2*", "TR_RUN", "TR_ALL"])
+    assert {r["method"] for r in rows} == {"P0", "P1*", "P2*", "TR_RUN", "TR_ALL"} and all(r["violations"] == 0 for r in rows)

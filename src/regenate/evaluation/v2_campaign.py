@@ -18,6 +18,7 @@ from regenate.simulation.replay import Replay
 FIFO_M = {"B0": "B0", "B1": "B1", "B1p": "B1p", "B2": "DC"}
 ONESHOT = {"B1-OPT": ("B1", "truth"), "B1p-OPT": ("B1p", "truth"), "B3": ("DC", "nominal"), "ORACLE": ("DC", "truth")}
 ROLLING = ("P0", "P1", "P2", "P3", "P4")
+DIAG = ("P1*", "P2*", "P3*", "P4*", "TR_RUN", "TR_Q", "TR_ALL")   # Run 3 information decomposition (no model needed)
 
 
 def milp_jobs(inst, which, flex, fifo_starts, sl):
@@ -54,7 +55,7 @@ def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, pe
             assign = dict(zip(ids, stn)); planned = {i: t * sl for i, t in zip(ids, res.starts)}
             starts = execute(inst, assign, planned); extra = dict(status=res.status, mip_gap=res.mip_gap)
         else:
-            if m != "P0" and engine is None:
+            if m in ROLLING[1:] and engine is None:
                 continue
             topo = "DC"
             rp = Replanner(inst, m, sl, prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl), peak_stage=peak_stage)
@@ -84,7 +85,7 @@ def _init(proc, models, kw):
 def _task(seed):
     kw = _G["kw"]
     inst = make_instance(_G["cyc"], _G["arrs"], seed, n_jobs=kw["n_jobs"], n_stations=kw["n_stations"], split=kw["split"])
-    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], peak_stage=kw["peak"])
+    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], prm=ElecParams(**kw["prm"]), methods=kw["methods"], peak_stage=kw["peak"])
 
 
 def main():
@@ -94,8 +95,10 @@ def main():
     ap.add_argument("--n_stations", type=int, default=8); ap.add_argument("--split", default="test")
     ap.add_argument("--flex", type=float, default=0.25); ap.add_argument("--time_limit", type=float, default=20.0)
     ap.add_argument("--workers", type=int, default=4); ap.add_argument("--peak", action="store_true")
+    ap.add_argument("--prm", default="{}", help='JSON ElecParams overrides, e.g. {"P_afe_max":15}')
+    ap.add_argument("--methods", nargs="+", default=None, help="subset; default all FIFO/one-shot/P0..P4; DIAG names allowed")
     a = ap.parse_args()
-    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak)
+    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak, methods=a.methods, prm=json.loads(a.prm))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True); rows, schs = [], []
     with ProcessPoolExecutor(a.workers, initializer=_init, initargs=(a.proc, a.models, kw)) as ex:
         for k, (r, s) in enumerate(ex.map(_task, a.seeds), 1):
