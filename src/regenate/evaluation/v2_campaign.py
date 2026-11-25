@@ -33,17 +33,20 @@ def milp_jobs(inst, which, flex, fifo_starts, sl):
     return out
 
 
-def safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit):
+def safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit, score_prm=None):
     """Initial / fallback plan for rolling methods: a nominal (recipe) one-shot MILP that satisfies the E1 hard limits of plan_prm.
     FIFO is used only if that MILP is infeasible, and the caller records it (FIFO never silently bypasses the electrical screen)."""
     jobs = milp_jobs(inst, "nominal", flex, fs, sl)
     K = max(j.latest + j.dur for j in jobs) + 1
+    kind = "milp_e1"
     res = solve(jobs, len(inst["stations"]), K, "DC", plan_prm, sl, time_limit=time_limit)
+    if not res.starts and score_prm is not None and score_prm is not plan_prm:      # margin infeasible -> hard limits without margin
+        res = solve(jobs, len(inst["stations"]), K, "DC", score_prm, sl, time_limit=time_limit); kind = "milp_e1_nomargin"
     if not res.starts:
         return {j: (fa[j], fs[j]) for j in fa}, "fifo_unscreened"
     ids = list(inst["jobs"].job_id); stn = assign_stations(res.starts, [j.dur for j in jobs], len(inst["stations"]))
     starts = execute(inst, dict(zip(ids, stn)), {i: t * sl for i, t in zip(ids, res.starts)})
-    return {j: (int(s), starts[j]) for j, s in zip(ids, stn)}, "milp_e1"
+    return {j: (int(s), starts[j]) for j, s in zip(ids, stn)}, kind
 
 
 def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, peak_stage=False, cycle_pred=None, plan_prm=None):
@@ -73,7 +76,7 @@ def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, pe
                 continue
             topo = "DC"
             rp = Replanner(inst, m, sl, plan_prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl, cycle_pred=cycle_pred), peak_stage=peak_stage)
-            init, init_kind = safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit) if plan_prm is not prm or np.isfinite(plan_prm.P_afe_max) else ({j: (fa[j], fs[j]) for j in fa}, "fifo")
+            init, init_kind = safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit, score_prm=prm) if plan_prm is not prm or np.isfinite(plan_prm.P_afe_max) else ({j: (fa[j], fs[j]) for j in fa}, "fifo")
             real, log = Replay(inst, init, rp, period_h=sl, max_solve_s=3 * time_limit).run()
             assign = {j: v[0] for j, v in real.items()}; starts = {j: v[1] for j, v in real.items()}
             extra = dict(initial_plan=init_kind, n_replans=int((log.event == "replan").sum()),
