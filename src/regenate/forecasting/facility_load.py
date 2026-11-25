@@ -158,7 +158,8 @@ def main():
     for (factory, bucket), g in test.groupby(['factory', 'bucket'], observed=True):
         for model in ['persistence', 'seasonal', 'hist', 'ridge', 'rf', 'xgboost', 'lightgbm', 'q50']:
             # Identical observations for skill and model error.
-            valid = g[['actual_kw', model, 'hist']].dropna(); mae = (valid[model] - valid.actual_kw).abs().mean()
+            valid = g[list(dict.fromkeys(['actual_kw', model, 'hist']))].dropna();   # no duplicate column when model == 'hist'
+            mae = (valid[model] - valid.actual_kw).abs().mean()
             hist_mae = (valid['hist'] - valid.actual_kw).abs().mean()
             peaks = g[g.peak_window & (g.actual_kw >= g.threshold) & g[model].notna()]
             cover = g[['actual_kw', 'q10', 'q90']].dropna()

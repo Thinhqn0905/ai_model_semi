@@ -33,9 +33,23 @@ def milp_jobs(inst, which, flex, fifo_starts, sl):
     return out
 
 
-def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, peak_stage=False, cycle_pred=None):
+def safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit):
+    """Initial / fallback plan for rolling methods: a nominal (recipe) one-shot MILP that satisfies the E1 hard limits of plan_prm.
+    FIFO is used only if that MILP is infeasible, and the caller records it (FIFO never silently bypasses the electrical screen)."""
+    jobs = milp_jobs(inst, "nominal", flex, fs, sl)
+    K = max(j.latest + j.dur for j in jobs) + 1
+    res = solve(jobs, len(inst["stations"]), K, "DC", plan_prm, sl, time_limit=time_limit)
+    if not res.starts:
+        return {j: (fa[j], fs[j]) for j in fa}, "fifo_unscreened"
+    ids = list(inst["jobs"].job_id); stn = assign_stations(res.starts, [j.dur for j in jobs], len(inst["stations"]))
+    starts = execute(inst, dict(zip(ids, stn)), {i: t * sl for i, t in zip(ids, res.starts)})
+    return {j: (int(s), starts[j]) for j, s in zip(ids, stn)}, "milp_e1"
+
+
+def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, peak_stage=False, cycle_pred=None, plan_prm=None):
     from regenate.forecasting.ai_engine import make_profile_fn
     prm = prm or ElecParams(); sl = inst["dt_h"]; S = len(inst["stations"])
+    plan_prm = plan_prm or prm          # planning limits (may carry a safety margin); scoring always uses prm
     methods = methods or (list(FIFO_M) + list(ONESHOT) + list(ROLLING))
     rows, schs = [], []
     fa, fs = fifo(inst)
@@ -58,10 +72,11 @@ def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, pe
             if m in ROLLING[1:] and engine is None:
                 continue
             topo = "DC"
-            rp = Replanner(inst, m, sl, prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl, cycle_pred=cycle_pred), peak_stage=peak_stage)
-            real, log = Replay(inst, {j: (fa[j], fs[j]) for j in fa}, rp, period_h=sl, max_solve_s=3 * time_limit).run()
+            rp = Replanner(inst, m, sl, plan_prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl, cycle_pred=cycle_pred), peak_stage=peak_stage)
+            init, init_kind = safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit) if plan_prm is not prm or np.isfinite(plan_prm.P_afe_max) else ({j: (fa[j], fs[j]) for j in fa}, "fifo")
+            real, log = Replay(inst, init, rp, period_h=sl, max_solve_s=3 * time_limit).run()
             assign = {j: v[0] for j, v in real.items()}; starts = {j: v[1] for j, v in real.items()}
-            extra = dict(n_replans=int((log.event == "replan").sum()),
+            extra = dict(initial_plan=init_kind, n_replans=int((log.event == "replan").sum()),
                          n_rejected=int(((log.event == "replan") & ~log.accepted).sum()), status="rolling")
         r, s = score(inst, m, topo, assign, starts, sl, prm, time.time() - t0)
         rows.append(dict(r, **extra)); schs += s
@@ -88,7 +103,9 @@ def _init(proc, models, kw):
 def _task(seed):
     kw = _G["kw"]
     inst = make_instance(_G["cyc"], _G["arrs"], seed, n_jobs=kw["n_jobs"], n_stations=kw["n_stations"], split=kw["split"])
-    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], prm=ElecParams(**kw["prm"]), methods=kw["methods"], peak_stage=kw["peak"], cycle_pred=_G["cpred"])
+    pp = ElecParams(**kw["plan_prm"]) if kw.get("plan_prm") else None
+    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], prm=ElecParams(**kw["prm"]), methods=kw["methods"], peak_stage=kw["peak"],
+                   cycle_pred=_G["cpred"], plan_prm=pp)
 
 
 def main():
@@ -99,10 +116,11 @@ def main():
     ap.add_argument("--flex", type=float, default=0.25); ap.add_argument("--time_limit", type=float, default=20.0)
     ap.add_argument("--workers", type=int, default=4); ap.add_argument("--peak", action="store_true")
     ap.add_argument("--prm", default="{}", help='JSON ElecParams overrides, e.g. {"P_afe_max":15}')
+    ap.add_argument("--plan_prm", default=None, help='JSON ElecParams for PLANNING only (e.g. AFE margin); scoring uses --prm')
     ap.add_argument("--cycle_pred", default=None, help="cycle_model.py cycle_pred.parquet (variants PQ, PQ5)")
     ap.add_argument("--methods", nargs="+", default=None, help="subset; default all FIFO/one-shot/P0..P4; DIAG names allowed")
     a = ap.parse_args()
-    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak, methods=a.methods, prm=json.loads(a.prm), cycle_pred=a.cycle_pred)
+    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak, methods=a.methods, prm=json.loads(a.prm), cycle_pred=a.cycle_pred, plan_prm=json.loads(a.plan_prm) if a.plan_prm else None)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True); rows, schs = [], []
     with ProcessPoolExecutor(a.workers, initializer=_init, initargs=(a.proc, a.models, kw)) as ex:
         for k, (r, s) in enumerate(ex.map(_task, a.seeds), 1):

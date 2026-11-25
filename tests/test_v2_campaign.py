@@ -119,3 +119,15 @@ def test_pqd_keeps_recipe_energy():
     assert abs(len(pin) - 2 * len(nom[0])) <= 1
     assert abs(pin.sum() - nom[0].sum()) <= 2 * max(pin.max(), nom[0].max())     # energy kept within one partial slot
     assert np.allclose(make_profile_fn(inst, "PQd", cycle_pred={cf: dict(r_dur=1.0, r_ech=5.0, r_eds=5.0)})(0, None)[0], nom[0])
+
+
+def test_safe_initial_plan_respects_e1_and_plan_margin():
+    from regenate.electrical.ledger import ElecParams
+    from regenate.evaluation.v2_campaign import safe_initial
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 8, n_jobs=4, n_stations=2, split="train")
+    fa, fs = fifo(inst)
+    plan, kind = safe_initial(inst, 0.5, 0.25, ElecParams(P_afe_max=50, P_bus_max=60), fa, fs, 10)
+    assert kind == "milp_e1" and set(plan) == set(fa)
+    rows, _ = run_one(inst, None, flex=0.5, time_limit=10, prm=ElecParams(P_afe_max=50), plan_prm=ElecParams(P_afe_max=45), methods=["P0"])
+    assert rows[0]["initial_plan"] == "milp_e1" and rows[0]["violations"] == 0
