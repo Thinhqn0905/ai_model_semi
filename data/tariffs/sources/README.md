@@ -10,3 +10,5 @@ Malaysia tariff schedule URL returned HTTP 404 on direct download; cached search
 - `tnb_tariff.html`: `8ee58a65f42599de3bdf1e403bcbf0a08fe922ed23b75aaf9cdd195f075baf59` (TNB tariff page, accessed 2026-11-25).
 
 - Tariff-TNB-pdf.pdf: Jadual Tarif Elektrik di Semenanjung Bagi Tempoh 1 Julai 2025 Hingga 31 Disember 2027; supplied by the project owner 2026-11-25 from https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf; sha256 e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e; 7 pages; MV/HV rates on p.2.
+
+- tnb_md_definition: https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge (30-min MD; owner-confirmed 2026-11-25; automated archive blocked HTTP 403 -> save a browser copy here).

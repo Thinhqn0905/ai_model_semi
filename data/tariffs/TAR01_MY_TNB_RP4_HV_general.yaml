@@ -7,10 +7,11 @@ billing_interval_minutes:
   value: 30
   unit: min
   source_url: https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge
-  source_page_section: TNB MD definition page (refuses automated access)
-  status: NOT_VERIFIED
-  note: 30-minute MD interval used as instructed by the project owner 2026-11-25;
-    not stated in the tariff schedule PDF
+  source_page_section: TNB "How do you calculate MD charge" page
+  status: VERIFIED
+  access_date: '2026-11-25'
+  note: Confirmed by the project owner from the official TNB page (D018). The page
+    refuses automated download; an archive copy must be saved manually to data/tariffs/sources/tnb_md_definition.(pdf|html).
 interval_mode: aligned
 windows: []
 demand_eligible_periods: null

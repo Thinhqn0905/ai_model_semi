@@ -131,3 +131,13 @@ topology + optimisation, never AI or software-only.
    30-min MD, peak periods and holiday treatment (holidays: sensitivity, not documented in the schedule).
 4. Reference cell (Chroma 17020-type battery cycling) and P0-E1-Peak default scheduler retained (D006, D007).
 5. DS07 results reported with factory-clustered CIs; complete running experiments; preserve negative results.
+
+## D018 (user, 2026-11-25) — Run 4 closure
+1. Reference cell FINAL: Chroma 17020-type regenerative battery module cycling, 48 kW/cell. No further cell selection; mentor confirmation only
+   for semiconductor applicability and site deployment.
+2. Preferred commercial scenario: FIN-B with 5-10 cells behind one MV meter; conditional payback ~3.0 y (5 cells) and 1.2-1.4 y (10 cells) on
+   known CAPEX, with MISSING costs and break-even limits stated (reports/run4/economics_run4.md).
+3. AI retained for ETA and engineer advisory; AI-BILL completed as the last AI experiment; no further AI scheduling experiments if it fails.
+4. 30-minute MD interval officially confirmed by TNB (https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge).
+5. Close Run 4: AFE twin validation, final reports, claims audit, M01-M16 traceability; experimental validation reported separately from
+   industrial site acceptance. No scope expansion.
