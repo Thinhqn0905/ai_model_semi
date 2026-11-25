@@ -82,3 +82,20 @@ AFE makes 10 % of workloads infeasible. Feasibility target (>= 90 % within the e
 | B1 -> P0-E1-Peak | 3.077 [2.967, 3.186] | 100/100 | 4.54 [3.76, 5.31] (-29.8 %) |
 Violations over 100 instances: B2 (FIFO) 13 (AFE shortfall under the 20 kW cap), P0-E1-Peak 1, optimised one-shot 0. Mean tardiness:
 one-shot 0.14 h, P0 0.18 h (rolling P0 does not know true durations).
+
+## Sizing twin screening
+
+PENDING: complete screening output absent locally (`runs/run4/screen_sizing_summary.csv`); expected Drive `MyDrive/semiexpo/ai_runs/run4_rt3/screen_sizing_summary.csv`. Boundary: SIM_DATA_PROFILE, assumed twin parameters; hardware qualification NOT_VERIFIED (`docs/handoff_run4.md`).
+
+## Run 4 sizing twin screening (D018 item 5; Colab runtime 3; Drive `ai_runs/run4_rt3/screen_sizing_summary.csv`)
+Schedules of the sizing MILP runs (same 30 instances) screened with `simulation/screen_v2.py` at the matching AFE size (TwinParams default
+otherwise: 400 V, 380-420 V, 0.04 F, 80 A link). Approval share:
+| AFE kW | bus kW | B2 (FIFO) | P0-E1-Peak | ORACLE-E1-Peak |
+|---|---|---|---|---|
+| 10 | 32 | 0.100 (24 overcurrent+UV, 3 UV) | 0.667 (10 overcurrent+UV) | 1.000 (27 solved) |
+| 15 | 32 | 0.633 (10 overcurrent+UV, 1 UV) | 0.967 (1 UV) | 1.000 |
+| 20 | 16 | 1.000 | 1.000 | 1.000 |
+| 30 | 32 | 1.000 | 1.000 | 1.000 |
+Reading: at the E1 reference sizing (AFE 20 kW) every policy is approved; below it the coordinated optimizer keeps approval far above FIFO
+(15 kW: 97 % vs 63 %; 10 kW: 67 % vs 10 %). Accepted schedules in all cells have zero modelled hard-constraint violations (G04 at simulation
+level); hardware qualification and independent protection remain outside this evidence (site acceptance).
