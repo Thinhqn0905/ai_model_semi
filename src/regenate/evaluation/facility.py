@@ -30,11 +30,16 @@ def load_ds07(zip_path, name):
     return s.reindex(pd.date_range(s.index.min().floor("D"), s.index.max().ceil("D") - pd.Timedelta(minutes=1), freq="min"))
 
 
-def billed_demand(p_1min, interval_min=30, min_cov=0.8):
-    """(kW, window start) max aligned-window mean; windows with < min_cov valid minutes are excluded."""
+def billed_demand(p_1min, interval_min=30, min_cov=0.8, md_window=None):
+    """(kW, window start) max aligned-window mean; windows with < min_cov valid minutes are excluded.
+    md_window = (weekdays, h0, h1): only intervals starting on those weekdays (0=Mon) within [h0, h1) h count, e.g. TNB RP4 MV:
+    'Maximum Demand which occurs during Off-Peak period will not be charged', peak = Mon-Fri 14:00-22:00 (mytnb.com.my/tariff)."""
     g = p_1min.groupby(p_1min.index.floor(f"{interval_min}min"))
     m, c = g.mean(), g.count() / interval_min
     m = m[c >= min_cov]
+    if md_window is not None:
+        days, h0, h1 = md_window; hr = m.index.hour + m.index.minute / 60
+        m = m[m.index.weekday.isin(days) & (hr >= h0) & (hr < h1)]
     return (float(m.max()), m.idxmax()) if len(m) else (np.nan, None)
 
 
@@ -100,10 +105,14 @@ def main():
     ap.add_argument("--facilities", nargs="+", required=True); ap.add_argument("--months", nargs="+", required=True)
     ap.add_argument("--block_h", type=float, default=0.0, help="0 = smallest whole hour >= longest cell trace")
     ap.add_argument("--n_cells", type=int, default=1); ap.add_argument("--interval_min", type=int, default=30)
+    ap.add_argument("--md_window", default="", help='e.g. "0,1,2,3,4:14:22" = Mon-Fri 14-22 h (TNB RP4 MV peak); empty = all hours')
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--bill", action="store_true", help="also ORACLE-BILL re-solve")
     ap.add_argument("--bill_etol", type=float, nargs="+", default=[1e-4], help="energy tolerance of the billing level (sweep)")
     ap.add_argument("--prm", default='{"P_afe_max": 20, "P_bus_max": 32, "dP_step_max": 10}'); ap.add_argument("--out", required=True)
     a = ap.parse_args(); prm = ElecParams(**json.loads(a.prm)); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    mdw = None
+    if a.md_window:
+        d_, h0, h1 = a.md_window.split(":"); mdw = ([int(x) for x in d_.split(",")], float(h0), float(h1))
     cyc, arrs = load_proc(a.proc)
     sch = {}
     for d in a.runs:                                                    # method label = run dir tag + method
@@ -120,7 +129,7 @@ def main():
         bg_all = load_ds07(a.ds07, fac)
         for month in a.months:
             blocks = month_blocks(month, block_h); idx = bg_all[month].index; bg = bg_all[month]
-            md0, t0 = billed_demand(bg, a.interval_min)
+            md0, t0 = billed_demand(bg, a.interval_min, md_window=mdw)
             draws = [draw_instances(ids, len(blocks), a.seed + 1000 * c) for c in range(a.n_cells)]
             cand = {m: [[traces[(i, m)] for i in dr] for dr in draws] for m in methods}
             if a.bill:
@@ -137,8 +146,8 @@ def main():
                         cand[key].append(tr)
             for m, per_cell in cand.items():
                 cell = sum(place(blocks, tr, idx) for tr in per_cell)
-                md, tmd = billed_demand(bg + cell, a.interval_min)
-                rows.append(dict(facility=fac, month=month, method=m, n_cells=a.n_cells, block_h=block_h, n_blocks=len(blocks),
+                md, tmd = billed_demand(bg + cell, a.interval_min, md_window=mdw)
+                rows.append(dict(facility=fac, month=month, method=m, md_window=a.md_window or "all", n_cells=a.n_cells, block_h=block_h, n_blocks=len(blocks),
                                  md_bg_kw=md0, md_kw=md, md_increment_kw=md - md0, md_time=str(tmd), bg_md_time=str(t0),
                                  cell_kwh=float(cell.sum() / 60), cell_peak_kw=float(cell.max()),
                                  coverage=float(bg.notna().mean()), boundary="SIM_DATA_PROFILE cell + MEASURED DS07 facility (not synchronised)"))

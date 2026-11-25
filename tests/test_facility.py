@@ -18,3 +18,11 @@ def test_place_and_blocks():
     s = place(b, [to_minutes([1.0, 2.0])] * 4, idx)
     assert s.sum() == 4 * 15 * 3 and s.iloc[0] == 1.0 and s.iloc[15] == 2.0 and s.iloc[12 * 60] == 1.0
     assert topo_of("B1p-OPT") == "B1p" and topo_of("P0@v2_e1_peak") == "DC"
+
+
+def test_md_window_ignores_offpeak():
+    idx = pd.date_range("2019-03-04 00:00", periods=24 * 60, freq="min")     # a Monday
+    p = pd.Series(100.0, index=idx); p["2019-03-04 03:00":"2019-03-04 03:59"] = 900.0   # off-peak spike
+    p["2019-03-04 15:00":"2019-03-04 15:29"] = 300.0                                     # peak-period interval
+    assert billed_demand(p, 30)[0] == 900.0
+    assert billed_demand(p, 30, md_window=([0, 1, 2, 3, 4], 14, 22))[0] == 300.0
