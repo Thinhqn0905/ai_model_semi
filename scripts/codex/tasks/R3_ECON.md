@@ -22,3 +22,6 @@ Contract:
    first; water qualitative only (needs metering).
 Gate: `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_fin tests/test_fin_options.py` (hand NPV, break-even CAPEX
 gives NPV=0, MISSING item flagged, demand-charge toggle, saving<=0 -> not reached) and runs/run3/econ/fin_v3.csv exists.
+
+## Run 2 (lead)
+eta_AFE sensitivity: use runs/sens_v1 as it is (it gives the shared-DC gain B1p-OPT -> ORACLE vs eta_AFE, not P0): convert that gain to break-even CAPEX per eta point and label it "ORACLE-level gain (upper bound), SIM_ASSUMED_PROFILE". DS06 stays PENDING (lead reruns with --results). Then finish the report and return ALL_PASS if the gate passes.

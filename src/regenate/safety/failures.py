@@ -115,3 +115,83 @@ def run_campaign(out=Path('runs/fail_v1')):
         (out / f'{case}.json').write_text(json.dumps({'boundary': 'SIM_ASSUMED_PROFILE', 'profile': 'bench_v1 S3 assumed/derived recipe', 'cases': rows}, indent=2, default=lambda x: x.tolist() if hasattr(x, 'tolist') else str(x)), encoding='utf-8')
     return results
 
+
+
+
+def run_v2_cases(inst, out=Path('runs/run3/fail')):
+    """Exercise synthetic bench-v2 fallback paths and persist observed evidence."""
+    import numpy as np
+    from regenate.data.bench_v2 import fifo, job_profile, render_traces
+    from regenate.forecasting.ai_engine import make_profile_fn
+
+    out.mkdir(parents=True, exist_ok=True)
+    a, s = fifo(inst)
+    initial = {j: (a[j], s[j]) for j in a}
+    results = {}
+
+    def replay(replanner, approve=None):
+        r = Replay(inst, initial, replanner, period_h=0.25, approve=approve, max_solve_s=5)
+        realised, log = r.run()
+        return r, realised, log
+
+    def metrics(plan):
+        aa = {j: v[0] for j, v in plan.items()}
+        ss = {j: v[1] for j, v in plan.items()}
+        return ledger(*render_traces(inst, aa, ss, inst['dt_h'], True), inst['dt_h'], 'DC', ElecParams())
+
+    def no_overlap(plan):
+        for station in set(v[0] for v in plan.values()):
+            jobs = sorted((j for j in plan if plan[j][0] == station), key=lambda j: plan[j][1])
+            if any(plan[x][1] + true_dur(inst, x) > plan[y][1] + 1e-9 for x, y in zip(jobs, jobs[1:])):
+                return False
+        return True
+
+    def fail(_):
+        raise TimeoutError('injected solver timeout')
+    r, actual, log = replay(fail)
+    reasons = log.reason.fillna('').tolist()
+    results['solver_timeout'] = dict(pass_=r.plan == initial and set(actual) == set(initial) and no_overlap(actual)
+                                    and any('TimeoutError' in x for x in reasons),
+                                    plan_kept=r.plan == initial, all_jobs=set(actual) == set(initial),
+                                    no_overlap=no_overlap(actual), decision_log=log.to_dict('records'))
+
+    class Stub:
+        def __init__(self, mode): self.mode = mode
+        def predict(self, *args):
+            if self.mode == 'exception': raise RuntimeError('injected AI failure')
+            q = np.array([np.nan, np.nan, np.nan])
+            return dict(prediction_valid=self.mode == 'nan', sink_power={h: q for h in (1, 4, 16)},
+                        source_power={h: q for h in (1, 4, 16)}, remaining_duration=np.array([45., 45., 45.]))
+
+    jid = next(iter(initial)); obs = {'elapsed_h': 1.0}
+    nominal = job_profile(inst, jid, inst['dt_h'], 'nominal')
+    def equal_profile(p): return all(np.array_equal(x, y) for x, y in zip(p, nominal))
+    p0 = Replanner(inst, mode='P0', profile_fn=make_profile_fn(inst, 'P0'), time_limit=5)
+    _, p0_plan, _ = replay(p0)
+    outcomes = {}
+    for mode in ('invalid', 'exception'):
+        fn = make_profile_fn(inst, 'P1', Stub(mode))
+        _, plan, logs = replay(Replanner(inst, mode='P1', profile_fn=fn, time_limit=5))
+        outcomes[mode] = dict(nominal_profile=equal_profile(fn(jid, obs)), schedule_equals_p0=plan == p0_plan,
+                              decision_log=logs.to_dict('records'))
+    results['ai_invalid'] = dict(pass_=all(x['nominal_profile'] and x['schedule_equals_p0'] for x in outcomes.values()), outcomes=outcomes)
+    nan_profile = make_profile_fn(inst, 'P1', Stub('nan'))(jid, obs)
+    finite = all(np.isfinite(x).all() for x in nan_profile)
+    results['ai_nan'] = dict(pass_=finite and equal_profile(nan_profile), finite=finite,
+                             nominal_profile=equal_profile(nan_profile),
+                             history='NaN fallback issue found by R3_FAIL; guard fixed by lead')
+
+    base_metrics = metrics(initial)
+    r, realised, log = replay(Replanner(inst, mode='P0', profile_fn=make_profile_fn(inst, 'P0'), time_limit=5), lambda *_: False)
+    actual_metrics = metrics(realised)
+    same = all(np.allclose(actual_metrics[k], base_metrics[k], equal_nan=True) for k in base_metrics
+               if isinstance(base_metrics[k], (int, float, np.number, np.ndarray)))
+    results['engineer_reject_all'] = dict(pass_=r.plan == initial and realised == initial and same
+                                         and 'engineer_reject' in log.reason.tolist(),
+                                         initial_plan_executed=realised == initial, kpis_equal_fifo_dc=same,
+                                         fifo_dc=base_metrics, realised_dc=actual_metrics, decision_log=log.to_dict('records'))
+    for case, row in results.items():
+        row['pass'] = bool(row.pop('pass_'))
+        (out / (case + '.json')).write_text(json.dumps(dict(boundary='SIM_ASSUMED_PROFILE', profile='synthetic bench-v2', **row),
+             indent=2, default=lambda x: x.tolist() if hasattr(x, 'tolist') else str(x)), encoding='utf-8')
+    return results

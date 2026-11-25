@@ -21,3 +21,12 @@ Contract:
 5. Report: simulation-only boundary; independent hardware protection mandatory; what the twin cannot show.
 Gate: `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_twin tests/test_bus_twin.py tests/test_transient.py`
 passes and runs/run3/twin/violations.csv exists.
+
+## Run 2 (lead)
+The failing test expects an undervoltage for a 50 kW step with default TwinParams; first check by hand whether the model really must undervolt (AFE 20 kW + droop + chopper). If physics says no UV, change the test to a case that must undervolt by construction (e.g. sink far above p_afe_max for longer than C can bridge: 0.5*C*(v_nom^2-v_min^2) / excess power) and assert that. Never weaken a test to pass without that justification in a comment. Then complete contract items 2-5 (transient.py, tests, rerun twin_v1 plans, violations.csv, F07_v3, report).
+
+## Run 3 (lead)
+Post-collapse: once v < 0.5*v_min (or energy clamp hits), stop integrating THAT plan, record "collapse" with time and the violation counts up to that point, and do not report currents after it (they are nonphysical). That is a valid screening outcome (REJECT). Then rerun the plans, write violations.csv, and the sizing table: per method the smallest AFE kW (grid 20,30,40,60,80) and link A (80,120,160,240) that gives zero violations, or "none in grid". Finish the report.
+
+## Run 4 (lead)
+Machine is weak: single process, no multiprocessing. Reduce the sizing grid to AFE {20, 40, 80} kW x link {80, 160} A and only the methods B2, B1p-OPT, P0, ORACLE, burst. Run the screening in the foreground to completion (it is allowed to take long), write violations.csv + sizing table, finish the report, run the gate.

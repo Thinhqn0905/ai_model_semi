@@ -1,0 +1,13 @@
+﻿annualisation: {hours_per_year: 6000, cells: 1, instance_hours: 10}
+tariff: {price_usd_kwh: 0.0852, demand_charge: null, demand_sensitivity_usd_kw_month: 4}
+finance: {rate: 0.08, years: 10}
+cases:
+  FIN-A:
+    capex: [{name: server, value: 4220, status: ESTIMATE}, {name: installation, value: null, status: MISSING}, {name: requalification, value: null, status: MISSING}]
+    opex: [{name: annual_support, value: null, status: MISSING}]
+  FIN-B:
+    capex: [{name: server, value: 4220, status: ESTIMATE}, {name: installation, value: null, status: MISSING}, {name: requalification, value: null, status: MISSING}]
+    opex: [{name: annual_support, value: null, status: MISSING}]
+  FIN-C:
+    capex: [{name: meters, value: 4406, status: ESTIMATE}, {name: server, value: 4220, status: ESTIMATE}, {name: converter_bus_safety, value: 21838, status: ESTIMATE}, {name: installation, value: null, status: MISSING}, {name: requalification, value: null, status: MISSING}]
+    opex: [{name: annual_support, value: null, status: MISSING}]

@@ -19,3 +19,6 @@ Contract:
    optimum. Give the share of instances with gap > 0.
 6. List every finding as OK / ISSUE (with file:line) / NOT_VERIFIED. No code fixes; recommend fixes.
 Gate: report exists with sections 1-6; manifest json loads; every ISSUE has a file reference.
+
+## Run 2 (lead)
+Finish sections 2 and 4 completely in this run (every headline number with a local source; every comparison in stats.COMPARISONS plus ORACLE/P0/P1-P4). Do not return CONTINUE for work that is possible with local files; DS06 remote rows stay "REMOTE, rerun on Colab in progress (runs/run3/v2_diag)".

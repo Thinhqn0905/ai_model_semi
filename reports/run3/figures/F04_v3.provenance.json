@@ -1,0 +1,12 @@
+{
+  "boundary": "LOCAL_RUN; source observations MEASURED; metrics DERIVED",
+  "sources": [
+    "results/ai_ds05_branchC/model_metrics.csv",
+    "runs/ai/ds02/model_metrics.csv",
+    "runs/ai/ds04/model_metrics.csv",
+    "runs/forecast_ds04/results.csv"
+  ],
+  "output_table": "runs/run3/xbench/metrics.csv",
+  "command": "python -m regenate.forecasting.xbench",
+  "reruns": []
+}

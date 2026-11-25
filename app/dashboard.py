@@ -43,7 +43,21 @@ def main():
     selected = st.sidebar.selectbox('Campaign', campaigns, index=default, format_func=str) if campaigns else None
     override = st.sidebar.text_input('Campaign folder override', '')
     campaign = Path(override) if override else selected
-    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance', 'AI forecasting'])
+    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance', 'AI forecasting', 'Pipeline run'])
+    if page == 'Pipeline run':
+        import json
+        runs = sorted(p for p in Path('runs/run3/demo').glob('*') if (p / 'summary.json').exists())
+        if not runs:
+            st.info('No pipeline runs available.')
+        else:
+            run = st.selectbox('Pipeline instance', runs, format_func=lambda p: p.name)
+            summary = json.loads((run / 'summary.json').read_text(encoding='utf-8'))
+            st.warning('Evidence boundary: ' + summary.get('boundary', 'NOT_VERIFIED'))
+            st.write('Approvals', summary['approvals'], 'Rejections', summary['rejections'])
+            for label, name in [('Decision log', 'decision_log.csv'), ('Schedule before and after', 'schedule.csv'), ('Ledger', 'ledger.csv')]:
+                st.subheader(label); st.dataframe(pd.read_csv(run / name))
+            st.json(summary)
+        st.caption(FOOTER); return
     try:
         if campaign is None: raise ValueError('No campaign found')
         source = campaign / ('ladder.csv' if (campaign / 'ladder.csv').exists() else 'results.csv')

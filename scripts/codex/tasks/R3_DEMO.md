@@ -1,5 +1,5 @@
 # R3_DEMO — Run 3 offline functional demonstrator pipeline + decision log (mentor M01, M05, M14)
-Account: .codex-E. Effort: medium.
+Account: .codex-A (E quota exhausted until 21:56). Effort: medium.
 Owner files: src/regenate/app/__init__.py, src/regenate/app/pipeline.py, tests/test_pipeline.py, app/dashboard.py,
   runs/run3/demo/**, reports/run3/demonstrator.md
 Read: AGENTS.md, docs/run3_plan.md, docs/system_spec.md, reports/product/dashboard.md, app/dashboard.py,
@@ -17,3 +17,6 @@ Contract:
    before/after, ledger, approvals. Existing pages keep working (AppTest).
 Gate: `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_demo tests/test_pipeline.py tests/test_dashboard_data.py`
 (engineer rejection -> fallback plan kept, ledger balance, one decision-log row per replan) and one demo run dir exists.
+
+## Run 2 (lead)
+Verify bench v2 with ONE instance only (data/ds05_proc exists locally; --split test, seed 0, time_limit <= 10 s, P0 only; the user machine is weak: no campaigns, no training). Install nothing new; tabulate removal is fine. Then run the full CLI with --report once and return ALL_PASS if the gate passes.
