@@ -66,9 +66,11 @@ def build(facility, energy, tariff, cfg, fx=None, hours_factor=1, capex_factor=1
         eb = eb.loc[ea.index]
         if 'TT_h' not in energy or not np.isfinite(ea.TT_h).all() or not np.isfinite(eb.TT_h).all():
             raise ValueError('finite matched tardiness required')
-        if not np.allclose(ea.TT_h, eb.TT_h, atol=1e-8, rtol=0):
-            raise ValueError('unequal tardiness')
-        delta = (ea.net_kwh - eb.net_kwh).mean()
+        eq = np.isclose(ea.TT_h, eb.TT_h, atol=1e-8, rtol=0)      # energy compared at equal production (tardiness) only
+        if eq.sum() == 0:
+            raise ValueError('no instance with equal tardiness')
+        excluded_tt = int((~eq).sum())
+        delta = (ea.net_kwh[eq] - eb.net_kwh[eq]).mean()
         c, missing = costs(cfg['cases'][option])
         cells = int(a.n_cells.iloc[0]) if 'n_cells' in a else 1
         if cells < 1 or ('n_cells' in a and (not (a.n_cells == cells).all() or not (b.n_cells == cells).all())):
@@ -90,7 +92,7 @@ def build(facility, energy, tariff, cfg, fx=None, hours_factor=1, capex_factor=1
                 # Facility protocol: complete 15-hour blocks per calendar month.
                 instances = int(pd.Period(str(month), freq='M').days_in_month * 24 // 15)
             md = x.md_increment_kw - b.loc[(fac, month), 'md_increment_kw']
-            out.append(dict(option=option, baseline=base, method=method, energy_method=emethod,
+            out.append(dict(option=option, baseline=base, method=method, energy_method=emethod, energy_excluded_tt=excluded_tt,
                             facility=fac, month=month, md_delta_kw=md, demand_rate=demand_rate,
                             demand_saving=md*demand_rate, energy_saving=delta*instances*energy_rate*hours_factor*cells, n_cells=cells,
                             instances=instances, currency=currency, boundary=BOUNDARY,
