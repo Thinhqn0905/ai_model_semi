@@ -228,9 +228,9 @@ SIM_DATA_PROFILE cell plus unsynchronized MEASURED DS07 facility; site NOT_VERIF
 | P0-BILL hist | 12 facility-months | -0.57 kW reduction | factory-clustered [-2.56,0.89]; `reports/run4/facility_billing.md` |
 | P0-BILL oracle background | 12 facility-months | 0.94 kW reduction | factory-clustered [-0.80,2.96]; `reports/run4/facility_billing.md` |
 | P0-BILL persistence | 4 facility-months | individual results in source | CI not recorded; `reports/run4/facility_billing.md` |
-| AI-BILL and forecaster accuracy | not available | PENDING | expected `MyDrive/semiexpo/ai_runs/run4_final_summary.md` |
+| AI-BILL learned forecast | 12 facility-months | NO-GO; -0.84 kW vs P0-E1-Peak | factory-clustered [-2.70, 1.31]; D020, `MyDrive/semiexpo/ai_runs/run4_final_summary.md`; SIM_DATA_PROFILE + unsynchronized MEASURED |
 
-Go only if AI beats both historical P0-BILL and P0-E1-Peak with factory-clustered CIs excluding zero; otherwise no-go after evaluation. `docs/handoff_run4.md`, `docs/decisions.md` D017. No result is claimed while pending.
+D020 concludes NO-GO: learned forecast improvement versus historical profile is +0.10 kW [0.00, 0.30], factory-clustered CI; the gate requires improvement against both baselines. Forecaster metrics export was repaired under D021 without retraining; raw verification remains pending.
 
 
 Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized MEASURED DS07, n=4 facility-months; baseline P0-E1-Peak; kW monthly increment, CI not recorded; raw results MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Forge_2 (sha256 f427310b) and MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Metal_1 (sha256 150ec779), source `reports/run4/facility_billing.md`.
@@ -248,40 +248,7 @@ Extended results: ORACLE-E1-Peak vs P0-E1-Peak +0.27 kW [-1.14, 1.98]; hist to o
 
 Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
-Status is based on index evidence only; PASS requires inspection and is not inferred. Original index `reports/figures/INDEX.md`; run-4 index `reports/run4/figures/INDEX.md`; boundary NOT_VERIFIED unless otherwise listed. F01/F02/F11 explicitly missing prediction rows. F16–F32 local run-4 figure files missing; the index lists selected campaign inputs as blocked. Figure file paths and full source data for F16–F32 are not recorded in the index.
-
-| Figure | Path / source data | Status |
-|---|---|---|
-| F01, F02, F11 | no prediction rows; `reports/figures/INDEX.md` | MISSING |
-| F03, F12 | `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED: figure path/inspection not established |
-| F04 | `runs/ai/ds02/model_metrics.csv`, `runs/ai/ds04/model_metrics.csv`, `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED |
-| F05 | `data/processed/efficiency_points.parquet`; VENDOR_REPORTED | NOT_VERIFIED |
-| F06 | `runs/oracle_v1/timeseries.parquet`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F07 | `runs/twin_v1/controls.json`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F08, F14 | `runs/rolling_v1/ladder.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F09 | `reports/ai/ai_exp12_ds06.md`; SIM_DATA_PROFILE | NOT_VERIFIED |
-| F10 | `F10.png/pdf`, `runs/sens_v1/sensitivity_results.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED: location/inspection not established |
-| F13 | `runs/oracle_v1/schedules.parquet`, `runs/oracle_v1/results.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F15 | `results/ai_ds05_branchC/runtime_metrics.csv`, `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED |
-| F16 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F17 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F18 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F19 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F20 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F21 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F22 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F23 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F24 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F25 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F26 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F27 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F28 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F29 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F30 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F31 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F32 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-
-DOCUMENT CHECK: six required sections present; missing metrics and raw source bindings explicitly flagged. Boundary: NOT_VERIFIED.
+Earlier index-only figure statuses are superseded by the final status table below. Drive-generated figures have not been independently retrieved locally.
 
 ### Final figure status (Colab rerun 2026-11-25; files on Drive `MyDrive/semiexpo/ai_runs/run4/figures/` PNG+PDF+SVG+provenance JSON)
 | Figure | Status | Note |
@@ -294,3 +261,6 @@ DOCUMENT CHECK: six required sections present; missing metrics and raw source bi
 | F21, F22, F24, F25, F27, F28, F30, F32 | GENERATED | SIM_DATA_PROFILE (+ MEASURED DS07 for F27/F28/F30) |
 | F26 | BLOCKED | facility background differs between the General and ToU MD rules in the collected files |
 Dashboard screenshots (16 pages, headless Chromium via Playwright): reports/run4/screenshots/ (local repo).
+
+
+Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.

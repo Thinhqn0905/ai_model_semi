@@ -15,3 +15,6 @@ Boundary: NOT_VERIFIED until site records and permissions are received. Public t
 | Shadow-mode access | M05, M08: validate before deployment | Read-only telemetry and MES access, synchronized event logs, engineer review, acceptance criteria and change-control approval | At least one complete production and billing cycle, subject to site agreement | Site operations / OT / security | Shadow go/no-go and engineer acceptance |
 
 No physical intervention or external request is authorized by this document. Site shadow evidence is absent: NOT_VERIFIED (`reports/run3/mentor_compliance_audit.md`).
+
+
+D021 update: request vendor confirmation of the screened-plan and independent protection integration, including infeasible-plan handling, and access to synchronized evidence for the frozen reference architecture. AI scheduling is not proposed for deployment. Boundary: site NOT_VERIFIED; source `docs/decisions.md` D019?D021.

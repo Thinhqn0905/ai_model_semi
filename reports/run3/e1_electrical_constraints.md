@@ -99,3 +99,17 @@ otherwise: 400 V, 380-420 V, 0.04 F, 80 A link). Approval share:
 Reading: at the E1 reference sizing (AFE 20 kW) every policy is approved; below it the coordinated optimizer keeps approval far above FIFO
 (15 kW: 97 % vs 63 %; 10 kW: 67 % vs 10 %). Accepted schedules in all cells have zero modelled hard-constraint violations (G04 at simulation
 level); hardware qualification and independent protection remain outside this evidence (site acceptance).
+
+## Safety closure (D021): fallback screening and the residual P0 violation (Colab runtime 1, Drive `ai_runs/run4/v2_safe_p0`, `v2_safe_chk*`)
+Changes (src/regenate/evaluation/v2_campaign.py `safe_initial`, `--plan_prm`): rolling P0 now starts from, and falls back to, a recipe-based
+one-shot MILP that satisfies the E1 hard limits; fallback chain = MILP with planning margin (AFE 18 kW) -> MILP with the hard limits (20 kW) ->
+FIFO screened on the recipe profiles with the hard limits (`fifo_screened_ok` / `fifo_screened_FAIL` recorded). FIFO is never executed
+unscreened. Scoring always uses the hard limits (AFE 20 kW, bus 32 kW, step 10 kW).
+| Run (n = 100, P0-E1-Peak) | violations | initial plan | energy vs previous P0 | peak vs previous P0 | tardiness vs previous P0 |
+|---|---|---|---|---|---|
+| previous (FIFO start, no margin), `run4_rt2/v2_e1_peak100` | 1 (s62) | FIFO | - | - | - |
+| safety fix (MILP-E1 start, plan margin 18 kW), `run4/v2_safe_p0` | 1 (s62) | 99 milp_e1, 1 FIFO (s53, MILP infeasible; later screened ok) | -0.0017 kWh | -0.149 kW | +0.010 h |
+Residual: instance v2_test_n10_s62 keeps 1 AFE-shortfall step (0.26 kWh, peak 20.62 kW) with planning margins 18, 17 and 16 kW alike; the plan
+is feasible on the recipe, the shortfall comes from the true cycles deviating from the recipe (the ORACLE, which knows the true cycles,
+has 0 violations). No recipe-based plan can guarantee it; it is a hardware-protection case (AFE current limit / station derating) and is
+listed as a residual risk for site acceptance. Simulation acceptance: 99/100 instances violation-free, 0 unscreened fallbacks.

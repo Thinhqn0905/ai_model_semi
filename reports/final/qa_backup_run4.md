@@ -172,3 +172,6 @@ Earlier document gate is superseded; underlying findings require their cited run
 ### Is the TNB rate verified?
 
 **EN:** The later official schedule verification supports the rates and General whole-month versus ToU peak-period demand rules. The registry retains stale conflicting entries; interval alignment, holidays and the actual site contract remain NOT_VERIFIED. Boundary: SOURCE_REPORTED; sources `reports/run4/facility_billing.md`, `reports/run4/economics_run4.md`, `reports/run4/tariff_registry.md`.
+
+
+D021 update: screened nominal MILP is the initial and fallback plan; FIFO is explicitly flagged unscreened if the MILP is infeasible. AI-BILL remains NO-GO after the metrics-export repair without retraining. Simulation does not establish site acceptance. Boundary: SIM_DATA_PROFILE; raw `MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; source `docs/decisions.md` D020?D021.

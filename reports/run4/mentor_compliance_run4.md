@@ -201,13 +201,13 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 > requalification effort). Say clearly when it does not pay back.
 
 **Implemented module:** `reports/run3/economics_v3.md`. **Supporting experiment:** DS06 financial scenarios. **Evidence file:** `reports/run4/economics_run4.md`.
-**Result:** FIN-B multi-cell break-even scenarios are reported in `reports/run4/economics_run4.md`, D017.2: five-cell MV General 3.0 years and ToU 3.3 years on known estimated CAPEX only, SIM_DATA_PROFILE + unsynchronized MEASURED facility + ASSUMED costs and FX; missing costs make these optimistic.
-**Remaining limitation:** SIM_DATA_PROFILE plus MEASURED unsynchronized facility loads, ASSUMED finance; FIN-B outputs are summarized locally; raw `clustered_summary.csv` is reported under Drive `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`. Installation, requalification, support, site tariff and contract remain MISSING; no site payback established. The source verdict says 1?3 cells do not reach 3?5 years but its table gives 3-cell MV General 4.0 years: this inconsistency requires lead reconciliation.
+**Result:** FIN-B multi-cell break-even scenarios are reported in `reports/run4/economics_run4.md`, D017 (item 2): five-cell MV General 3.0 years and ToU 3.3 years on known estimated CAPEX only, SIM_DATA_PROFILE + unsynchronized MEASURED facility + ASSUMED costs and FX; missing costs make these optimistic.
+**Remaining limitation:** SIM_DATA_PROFILE plus MEASURED unsynchronized facility loads, ASSUMED finance; FIN-B outputs are summarized locally; raw `clustered_summary.csv` is reported under Drive `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`. Installation, requalification, support, site tariff and contract remain MISSING; no site payback established. The corrected three-cell paybacks are 4.0 years General and 5.0 years ToU on known CAPEX only; missing costs can extend them beyond the threshold (SIM_DATA_PROFILE plus unsynchronized MEASURED, ASSUMED finance; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/clustered_summary.csv`).
 **Status:** BLOCKED.
 
 ## Run 4 gates G01?G12
 
-These are evidence assessments, not new campaign results. PASS is limited to the boundary stated. Official TNB schedule supports General whole-month and ToU peak-period rules (`reports/run4/tariff_registry.md`); the 30-minute interval is owner-confirmed but documentarily NOT_VERIFIED, and holiday handling remains open. D017 permits multi-cell scenarios as additional counterfactual scope, not site validation.
+These are evidence assessments, not new campaign results. PASS is limited to the boundary stated. Official TNB schedule supports General whole-month and ToU peak-period rules (`reports/run4/tariff_registry.md`); the 30-minute interval is VERIFIED by TNB under D018; the peak window and rates are VERIFIED in the official schedule p.2 (SHA-256 e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e); holiday handling is NOT documented. D017 permits multi-cell scenarios as additional counterfactual scope, not site validation.
 
 | Gate | Status | Evidence and boundary |
 |---|---|---|
@@ -220,8 +220,8 @@ These are evidence assessments, not new campaign results. PASS is limited to the
 | G07 Production AI | FAIL | `reports/run4/ai_production_planning.md`: SIM_DATA_PROFILE downstream. |
 | G08 Electrical constraints | PASS | `reports/run3/e1_electrical_constraints.md`: SIM_DATA_PROFILE simulation only; run `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`. |
 | G09 Twin / protection | PARTIAL | `reports/run3/electrical_feasibility.md`: simulated screening; hardware NOT_VERIFIED. |
-| G10 Facility billing | PARTIAL | `reports/run4/facility_billing.md`: SIM_DATA_PROFILE plus unsynchronized MEASURED facility; P0-BILL extension shows no stable gain; AI-BILL PENDING (`docs/handoff_run4.md`). |
-| G11 Economics | PARTIAL | `reports/run4/economics_run4.md`: FIN-B simulated break-even conditions reported; missing costs and inconsistent 3-cell verdict; site NOT_VERIFIED. |
+| G10 Facility billing | PARTIAL | `reports/run4/facility_billing.md`: SIM_DATA_PROFILE plus unsynchronized MEASURED facility; P0-BILL extension shows no stable gain; AI-BILL NO-GO (D020; `MyDrive/semiexpo/ai_runs/run4_final_summary.md`); independent retrieval NOT_VERIFIED. |
+| G11 Economics | PARTIAL | `reports/run4/economics_run4.md`: FIN-B simulated break-even conditions reported; missing costs; corrected three-cell payback 4.0/5.0 years on known CAPEX only; site NOT_VERIFIED. |
 | G12 Site acceptance | BLOCKED | `reports/run4/mentor_data_request.md`: SHADOW_SITE NOT_VERIFIED. |
 
 ## Five priority open items
@@ -229,8 +229,11 @@ These are evidence assessments, not new campaign results. PASS is limited to the
 1. **User / mentor:** confirm target application and residual station source/sink phases; provide vendor and timing evidence.
 2. **User / mentor:** obtain synchronized station, cell and facility measurements, windows, converter curves and quality records; agree shadow acceptance criteria.
 3. **Lead:** reconcile raw matched comparisons, profile, bus limits and realized tardiness, including paired uncertainty.
-4. **Lead:** retrieve and evaluate pending AI-BILL outputs from the location in `docs/handoff_run4.md`. Reconcile the FIN-B three-cell verdict, tariff interval and full site costs.
-5. **Lead / mentor:** retrieve pending sizing twin screening (`docs/handoff_run4.md`); complete electrical sizing validation, independent protection, FMEA and vendor support; physical evidence and engineer approval close the pilot gate.
+4. **Lead:** independently retrieve reported AI-BILL outputs and establish full site costs; AI-BILL is NO-GO under D020.
+5. **Lead / mentor:** independently retrieve D019 sizing screening and verify D021 safety (`ai_runs/run4/v2_safe_p0`); complete electrical sizing validation, independent protection, FMEA and vendor support; physical evidence and engineer approval close the pilot gate.
 
-Evidence update: the larger-pool ToU peak-level and perfect-information effects are WITHDRAWN, and holiday sensitivity weakens the single-cell result (`reports/run4/facility_billing.md`; SIM_DATA_PROFILE + unsynchronized MEASURED; `ai_runs/run4_rt2/`). FIN-B remains an optimistic conditional case; the source three-cell verdict contradicts its table (`reports/run4/economics_run4.md`). Sizing twin screening remains PENDING (`docs/handoff_run4.md`).
+Evidence update: the larger-pool ToU peak-level and perfect-information effects are WITHDRAWN, and holiday sensitivity weakens the single-cell result (`reports/run4/facility_billing.md`; SIM_DATA_PROFILE + unsynchronized MEASURED; `ai_runs/run4_rt2/`). FIN-B remains an optimistic conditional case; the corrected three-cell table gives 4.0/5.0 years on known CAPEX only. D019 reports candidate AFE 20 / bus 16 kW screening on 30 instances (SIM_DATA_PROFILE; `ai_runs/run4_rt3/v2_size_afe20_bus16`, sha256 9b253122); independent retrieval remains pending.
 
+
+
+Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.

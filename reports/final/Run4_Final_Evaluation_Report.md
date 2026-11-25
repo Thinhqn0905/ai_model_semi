@@ -265,7 +265,7 @@ DS06 replays measured DS05 cycle shapes with assumed scaling and windows: **SIM_
 | B3 | 99 | 8.55 | 11.60 | Not reported |
 | P0 / P1 / P2 / P3 / P4 / ORACLE | 100 | 8.45 / 8.46 / 8.47 / 8.47 / 8.47 / 8.35 | 11.34 / 11.68 / 11.58 / 11.90 / 11.74 / 10.19 | Not reported |
 
-Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4/v2_e1_peak_b`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: unequal tardiness and modeled violations limit this comparison; MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187). P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
+Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4_rt2/v2_e1_peak_b/results.csv`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: unequal tardiness and modeled violations limit this comparison; MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187). P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
 
 Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_DATA_PROFILE; baseline and raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv` (`reports/ai/ai_exp12_ds06.md`). Positive means lower energy or peak than baseline.
 
@@ -365,7 +365,7 @@ Simulation acceptance is limited to the stated evidence and gates; industrial si
 
 SOURCE_REPORTED, geographic counterfactuals, not actual DS07 bills. TNB schedule [official PDF](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf), p.2: General “Setiap kilowatt permintaan maksimum sebulan”; ToU adds “semasa tempoh puncak”. General uses whole-month MD, ToU peak-period MD. The older registry's General peak-only entry is superseded (`reports/run4/facility_billing.md`, `reports/final/report_run4.md`). TNB's [MD page](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge) verifies 30-minute MD (D018); alignment and public-holiday handling remain NOT_VERIFIED.
 
-MV General energy 0.2983 MYR/kWh, demand capacity 29.43 and network 59.84 MYR/kW/month; MV ToU energy peak/off-peak 0.3132/0.2723 MYR/kWh. Registry marks individual rates NOT_VERIFIED while the later economics report marks rates verified: reconciliation needed. HV rate fields and exact quotations beyond the above: NOT_VERIFIED here. Source `reports/run4/tariff_registry.md`, `reports/run4/economics_run4.md`; source schedule `data/tariffs/sources/Tariff-TNB-pdf.pdf`; n/CI not applicable. Vietnam actual rates are NOT_VERIFIED pending exact page; [VN trial](https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112) is TRIAL_NOT_PAYABLE; [Singapore schedule](https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf) contract/excess rates are 14.21/21.32 SGD/kW/month, SOURCE_REPORTED, table 9 (`reports/run4/tariff_registry.md`). Billing-engine test output path NOT_VERIFIED; incomplete calculations exclude charges listed in the registry.
+MV General energy 0.2983 MYR/kWh, demand capacity 29.43 and network 59.84 MYR/kW/month; MV ToU energy peak/off-peak 0.3132/0.2723 MYR/kWh. TNB MV/HV schedule rates and peak window are VERIFIED against p.2 of the owner-supplied official PDF, SHA-256 e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e; holiday treatment is NOT documented. The older registry status is superseded. Source `reports/run4/tariff_registry.md`, `reports/run4/economics_run4.md`; source schedule `data/tariffs/sources/Tariff-TNB-pdf.pdf`; n/CI not applicable. Vietnam actual rates are NOT_VERIFIED pending exact page; [VN trial](https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112) is TRIAL_NOT_PAYABLE; [Singapore schedule](https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf) contract/excess rates are 14.21/21.32 SGD/kW/month, SOURCE_REPORTED, table 9 (`reports/run4/tariff_registry.md`). Billing-engine test output path NOT_VERIFIED; incomplete calculations exclude charges listed in the registry.
 
 ## 11 Economics
 
@@ -380,7 +380,7 @@ FIN-A has no energy value by physics; FIN-B adds software to existing shared har
 | 5 | 1,388 [1,060, 1,707] | 3.0 | 1,288 [752, 1,851] | 3.3 |
 | 10 | 3,482 [2,662, 4,157] | 1.2 | 3,071 [2,310, 3,746] | 1.4 |
 
-General five-cell CAPEX ceilings for 3/5/10 years are USD 4,164/6,940/9,314, respectively; ten-cell USD 10,445/17,408/23,362. Ten-year ceiling is discounted. 10-y NPV at 8 % on known CAPEX (factory-clustered mean, raw `ai_runs/run4/fin_fac_{gen,tou}_fx0.21/clustered_summary.csv`): MV General 1/3/5/10 cells -972/+2,814/+5,094/+19,142 USD; MV ToU -1,334/+1,402/+4,421/+16,388 USD (OPTIMISTIC: missing costs excluded). Monthly savings = annual/12. FX sensitivity is in the raw CSVs; tariff, holiday, missing OPEX and site costs materially affect conclusions (`reports/run4/economics_run4.md`). Corrected: three cells reach a five-year (not three-year) payback on known CAPEX only (MV General 4.0 y, MV ToU 5.0 y); any missing cost removes it (`reports/run4/economics_run4.md`, correction note).
+General five-cell CAPEX ceilings for 3/5/10 years are USD 4,164/6,940/9,314, respectively; ten-cell USD 10,445/17,408/23,362. Ten-year ceiling is discounted. 10-y NPV at 8 % on known CAPEX (factory-clustered mean, raw `ai_runs/run4/fin_fac_{gen,tou}_fx0.21/clustered_summary.csv`): MV General 1/3/5/10 cells -972/+2,814/+5,094/+19,142 USD; MV ToU -1,334/+1,402/+4,421/+16,388 USD (OPTIMISTIC: missing costs excluded). Monthly savings = annual/12. FX sensitivity is in the raw CSVs; tariff, holiday, missing OPEX and site costs materially affect conclusions (`reports/run4/economics_run4.md`). Corrected: three cells reach a five-year (not three-year) payback on known CAPEX only (MV General 4.0 y, MV ToU 5.0 y); additional missing costs can extend the payback beyond that threshold (`reports/run4/economics_run4.md`, correction note).
 
 Complete published FIN-B rows below: B2 -> P0-E1-Peak, n=70, SIM_DATA_PROFILE + unsynchronised MEASURED, ASSUMED FX and annualisation, factory-clustered ranges; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`, `reports/run4/economics_run4.md`. CAPEX ceilings in USD; 10-year ceiling discounted. Missing costs and source inconsistencies above apply.
 
@@ -414,6 +414,23 @@ Values below are paired reductions with 95% CI, SIM_DATA_PROFILE, not additive: 
 
 Peak and billing contributions are joint E1/peak and facility effects, not isolated additive benefits; see sections 8–9. AI energy benefit is not demonstrated: P0 → P5s -0.004 kWh [-0.010, 0.004], SIM_DATA_PROFILE, n=100, raw `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv` (`reports/run3/ai_run3.md`). AI-BILL completed: NO-GO (learned forecast +0.10 kW [0.00, +0.30] vs historical profile, -0.84 [-2.70, +1.31] vs P0-E1-Peak; section 5, D020); no AI adoption claim.
 
+
+Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+
+## Safety closure (D021): fallback screening and the residual P0 violation (Colab runtime 1, Drive `ai_runs/run4/v2_safe_p0`, `v2_safe_chk*`)
+Changes (src/regenate/evaluation/v2_campaign.py `safe_initial`, `--plan_prm`): rolling P0 now starts from, and falls back to, a recipe-based
+one-shot MILP that satisfies the E1 hard limits; fallback chain = MILP with planning margin (AFE 18 kW) -> MILP with the hard limits (20 kW) ->
+FIFO screened on the recipe profiles with the hard limits (`fifo_screened_ok` / `fifo_screened_FAIL` recorded). FIFO is never executed
+unscreened. Scoring always uses the hard limits (AFE 20 kW, bus 32 kW, step 10 kW).
+| Run (n = 100, P0-E1-Peak) | violations | initial plan | energy vs previous P0 | peak vs previous P0 | tardiness vs previous P0 |
+|---|---|---|---|---|---|
+| previous (FIFO start, no margin), `run4_rt2/v2_e1_peak100` | 1 (s62) | FIFO | - | - | - |
+| safety fix (MILP-E1 start, plan margin 18 kW), `run4/v2_safe_p0` | 1 (s62) | 99 milp_e1, 1 FIFO (s53, MILP infeasible; later screened ok) | -0.0017 kWh | -0.149 kW | +0.010 h |
+Residual: instance v2_test_n10_s62 keeps 1 AFE-shortfall step (0.26 kWh, peak 20.62 kW) with planning margins 18, 17 and 16 kW alike; the plan
+is feasible on the recipe, the shortfall comes from the true cycles deviating from the recipe (the ORACLE, which knows the true cycles,
+has 0 violations). No recipe-based plan can guarantee it; it is a hardware-protection case (AFE current limit / station derating) and is
+listed as a residual risk for site acceptance. Simulation acceptance: 99/100 instances violation-free, 0 unscreened fallbacks.
+
 ## 13 Industrial applicability
 
 Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
@@ -439,7 +456,7 @@ Source and boundary: `reports/run4/industrial_use_case_matrix.md`, `docs/target_
 
 Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
-The software-first deployment paths are FIN-A existing regen-to-AC, FIN-B existing compatible shared-energy infrastructure, and FIN-C full retrofit; FIN-B is preferred subject to site evidence (`docs/decisions.md`, D009/D018). The default is P0-E1-Peak with independent protection and twin screening; forecasting is advisory (`docs/decisions.md`, D006/D010/D012). Ledger, scheduler and simulation are documented in `src/regenate/electrical/ledger.py`, `src/regenate/optimization/milp.py`, `src/regenate/optimization/rolling.py`, and `src/regenate/simulation/replay.py` (`reports/run3/metric_audit_v3.md`). The file-backed dashboard provides facility load, tariff inputs, monthly charge estimates, FIN comparison and Markdown export; no live integration is established (`reports/run4/demonstrator_v2.md`). Screenshots: MISSING; no screenshot files are established by the supplied evidence (`reports/run4/figures/INDEX.md`).
+The software-first deployment paths are FIN-A existing regen-to-AC, FIN-B existing compatible shared-energy infrastructure, and FIN-C full retrofit; FIN-B is preferred subject to site evidence (`docs/decisions.md`, D009/D018). The default is P0-E1-Peak with independent protection and twin screening; forecasting is advisory (`docs/decisions.md`, D006/D010/D012). Ledger, scheduler and simulation are documented in `src/regenate/electrical/ledger.py`, `src/regenate/optimization/milp.py`, `src/regenate/optimization/rolling.py`, and `src/regenate/simulation/replay.py` (`reports/run3/metric_audit_v3.md`). The file-backed dashboard provides facility load, tariff inputs, monthly charge estimates, FIN comparison and Markdown export; no live integration is established (`reports/run4/demonstrator_v2.md`). Dashboard screenshots are reported at `reports/run4/screenshots/` (final figure status in part 1); independent local inspection NOT_VERIFIED.
 
 Offline demonstration: pipeline versus B1, n=1, net grid 10.086 versus 13.972 kWh, peak 13.429 versus 13.977 kW, equal tardiness 0 h, 10 completed jobs each and zero reported violations; CI unavailable, SIM_DATA_PROFILE. The source report has no exact raw-result path, so raw binding is NOT_VERIFIED (`reports/run3/demonstrator.md`). Failure injection reports invalid forecasts fall back to nominal and rejection executes FIFO; its test output is `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE (`reports/run3/failure_injection_v2.md`). Solver stage status and missing gaps, matching, and dynamic protection remain unresolved (`reports/run3/metric_audit_v3.md`, `reports/final/report_run4.md`).
 
@@ -491,40 +508,7 @@ All rows: n=100, SIM_DATA_PROFILE, `reports/run3/ai_run3.md`; raw MyDrive/semiex
 
 Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
-Status is based on index evidence only; PASS requires inspection and is not inferred. Original index `reports/figures/INDEX.md`; run-4 index `reports/run4/figures/INDEX.md`; boundary NOT_VERIFIED unless otherwise listed. F01/F02/F11 explicitly missing prediction rows. F16–F32 local run-4 figure files missing; the index lists selected campaign inputs as blocked. Figure file paths and full source data for F16–F32 are not recorded in the index.
-
-| Figure | Path / source data | Status |
-|---|---|---|
-| F01, F02, F11 | no prediction rows; `reports/figures/INDEX.md` | MISSING |
-| F03, F12 | `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED: figure path/inspection not established |
-| F04 | `runs/ai/ds02/model_metrics.csv`, `runs/ai/ds04/model_metrics.csv`, `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED |
-| F05 | `data/processed/efficiency_points.parquet`; VENDOR_REPORTED | NOT_VERIFIED |
-| F06 | `runs/oracle_v1/timeseries.parquet`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F07 | `runs/twin_v1/controls.json`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F08, F14 | `runs/rolling_v1/ladder.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F09 | `reports/ai/ai_exp12_ds06.md`; SIM_DATA_PROFILE | NOT_VERIFIED |
-| F10 | `F10.png/pdf`, `runs/sens_v1/sensitivity_results.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED: location/inspection not established |
-| F13 | `runs/oracle_v1/schedules.parquet`, `runs/oracle_v1/results.csv`; SIM_ASSUMED_PROFILE | NOT_VERIFIED |
-| F15 | `results/ai_ds05_branchC/runtime_metrics.csv`, `results/ai_ds05_branchC/model_metrics.csv` | NOT_VERIFIED |
-| F16 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F17 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F18 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F19 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F20 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F21 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F22 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F23 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F24 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F25 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F26 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F27 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F28 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F29 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F30 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F31 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-| F32 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
-
-DOCUMENT CHECK: six required sections present; missing metrics and raw source bindings explicitly flagged. Boundary: NOT_VERIFIED.
+Earlier index-only figure statuses are superseded by the final status table below. Drive-generated figures have not been independently retrieved locally.
 
 ### Final figure status (Colab rerun 2026-11-25; files on Drive `MyDrive/semiexpo/ai_runs/run4/figures/` PNG+PDF+SVG+provenance JSON)
 | Figure | Status | Note |
@@ -537,6 +521,9 @@ DOCUMENT CHECK: six required sections present; missing metrics and raw source bi
 | F21, F22, F24, F25, F27, F28, F30, F32 | GENERATED | SIM_DATA_PROFILE (+ MEASURED DS07 for F27/F28/F30) |
 | F26 | BLOCKED | facility background differs between the General and ToU MD rules in the collected files |
 Dashboard screenshots (16 pages, headless Chromium via Playwright): reports/run4/screenshots/ (local repo).
+
+
+Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
 
 ## 17 Mentor compliance
 
@@ -586,7 +573,10 @@ Simulation acceptance is limited to the stated evidence and gates; industrial si
 | D015 | Evaluate monthly facility bills with actual tariff rules. |
 | D016 | Separate hardware, topology, scheduling, peak and AI contributions. |
 | D017 | Stop station scheduling AI and anomaly experiments; assess facility billing conditionally. |
-| D018 | Prefer FIN-B at 5?10 cells conditionally; shadow and site acceptance remain open. |
+| D018 | Prefer FIN-B at 5?10 cells conditionally; confirm 30-minute MD; site acceptance remains open. |
+| D019 | Freeze architecture and reference AFE 20 / bus 32 kW; candidate AFE 20 / bus 16 kW; M12 FAIL. |
+| D020 | AI-BILL NO-GO; retain AI for ETA and advisory. |
+| D021 | Freeze architecture; E1-screened nominal fallback and AFE margin, with safety verification pending. |
 
 Source: `docs/decisions.md`; D018 cell range is ASSUMED deployment scenario, baseline and n/CI not applicable, raw site binding NOT_VERIFIED.
 
@@ -632,4 +622,7 @@ The following are reported results, not independently reconciled site outcomes. 
 | B2 to P0 facility demand, ToU, 5 cells | 5.11 kW [2.92, 7.42]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_tou_5cells (sha256 53e74ab0) (`reports/final/report_run4.md`) |
 | B2 to P0 facility demand, General, 10 cells | 15.12 kW [11.48, 18.12]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_gen_10cells (sha256 7d0bf4f6) (`reports/final/report_run4.md`) |
 
-Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: retrieve AI-BILL and sizing results, reconcile claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).
+Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: independently retrieve reported AI-BILL and sizing results, verify D021 safety, reconcile remaining claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).
+
+
+Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
