@@ -139,3 +139,15 @@ raise the month's peak later. Extension to 8 more facility-months and a 5-cell c
   better) -> no billing value; perfect duration (PQd*) -0.07 [-0.36, +0.36] n.s.
 - AI-BILL (learned facility-load forecast in P0-BILL) is only meaningful if P0-BILL with a perfect background beats P0-E1-Peak; so far it
   does not (above). Forecaster code is being prepared (R4_LOADAI); it will be run only if the extended P0-BILL oracle shows a gain.
+
+## Robustness: 100-instance pool (default engine seeds 0-99; runtime 2; Drive `ai_runs/run4_rt2/fac_{gen,tou}_1cell_n100`)
+Same facility-months, block draw from 100 instead of 50 instances, factory-clustered CIs, 1 cell:
+| Comparison | General rule kW | factories | ToU rule kW | factories |
+|---|---|---|---|---|
+| B2 -> P0-E1-Peak | +1.94 [+1.12, +2.80] | 9/10 | +1.93 [+0.69, +3.07] | 8/10 |
+| B1p-OPT -> P0-E1-Peak | +1.94 [+0.57, +3.19] | 8/10 | +2.18 [+0.98, +3.21] | 8/10 |
+| P0 -> P0-E1-Peak | +0.13 [-0.20, +0.48] n.s. | 6/10 | -0.00 [-0.30, +0.30] n.s. | 4/10 |
+| P0-E1-Peak -> ORACLE-E1-Peak | +0.38 [-0.11, +0.88] n.s. | 6/10 | -0.04 [-0.55, +0.48] n.s. | 4/10 |
+The FIN-B software effect (B2 -> P0-E1-Peak, ~1.9 kW per cell) is robust to the instance pool. The two small 50-pool effects under the
+ToU rule (E1+peak level +0.52 kW, perfect cycle information +0.59 kW) are NOT robust (CIs include 0 with the 100 pool): they are
+withdrawn as claims and the "candidate AI opportunity" from perfect cycle information at facility level is not supported.
