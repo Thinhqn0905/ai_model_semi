@@ -11,3 +11,6 @@ rates with page quotes, 30-min MD VERIFIED D018, holiday rule, VN actual/trial, 
 CAPEX/OPEX items with status, monthly/annual savings, payback, NPV, break-even 3/5/10-y, missing costs, sensitivities, 1/3/5/10 cells);
 12 Contribution decomposition (hardware, topology, scheduling, peak, billing, AI; no double counting).
 Gate: file exists with the seven sections; every number has a source path.
+
+## Run 2 (lead)
+Your part exists but is thin. Complete every requested table fully (all rows/models/methods present in the sources), keep the existing structure, fix any number lacking a source path; then return ALL_PASS. Do not stop early.

@@ -9,3 +9,6 @@ PQd*, TR_RUN, TR_Q, TR_ALL, ORACLE: energy/peak/tardiness with paired CIs; infor
 oracle results available + AI-BILL PENDING; forecaster accuracy PENDING; Go/No-Go rule); 16 Visualization index F01-F32 (path, source data,
 PASS/MISSING/N/A from reports/run4/figures/INDEX.md and reports/figures/INDEX.md).
 Gate: file exists with the six sections; every number has a source path.
+
+## Run 2 (lead)
+Your part exists but is thin. Complete every requested table fully (all rows/models/methods present in the sources), keep the existing structure, fix any number lacking a source path; then return ALL_PASS. Do not stop early.

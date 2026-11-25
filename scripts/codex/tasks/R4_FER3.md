@@ -13,3 +13,6 @@ configuration FIN-B 5-10 cells, retained AI functions, rejected approaches, gate
 reports/sources, commercial capabilities, actual incremental contributions, unsupported claims); 20 Executive summary (top 10 quantitative
 achievements, top 5 weaknesses, Go/No-Go decisions, remaining tasks).
 Gate: file exists with the seven sections; every number has a source path.
+
+## Run 2 (lead)
+Your part exists but is thin. Complete every requested table fully (all rows/models/methods present in the sources), keep the existing structure, fix any number lacking a source path; then return ALL_PASS. Do not stop early.
