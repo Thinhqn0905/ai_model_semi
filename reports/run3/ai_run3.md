@@ -70,4 +70,12 @@ Rolling P0 has higher mean tardiness than the one-shot methods that know true du
 E1 n=50: 0.235-0.250 h vs 0.174 h). PQ* (perfect cycle-level duration/energy for queued jobs) removes all of that gap (+0.048 h,
 10/100 instances better, 0 worse), so accurate next-cycle DURATION has throughput value even where it has no energy value. The
 real AI18-gated model does not realise it yet (PQ: -0.005 h). Next experiment: a duration-only queued-job variant (warp length
-only for jobs whose gated prediction deviates, keep recipe energy) evaluated on TT first, energy second. Status: OPEN.
+only for jobs whose gated prediction deviates, keep recipe energy) evaluated on TT first, energy second.
+
+Result (`MyDrive/semiexpo/ai_runs/run3/v2_pqd/results.csv`, n=100, paired vs P0):
+| Variant | TT saved h [CI] | TT better/worse | kWh vs P0 | status |
+|---|---|---|---|---|
+| PQd* (PERFECT duration only, recipe energy) | +0.048 [+0.017, +0.087] | 10 / 0 | -0.002 [-0.015, +0.012] n.s. | ceiling |
+| PQd (AI18-gated model, duration only) | +0.003 [0.000, +0.008] | 2 / 0 | -0.019 [-0.036, -0.005] | FAIL (energy worse) |
+Perfect next-cycle duration recovers the whole tardiness gap with no energy cost; the current model realises ~6 % of it and
+costs energy. Status: tardiness value of duration forecasting **demonstrated as a ceiling, not achieved** by the model.
