@@ -230,7 +230,7 @@ SIM_DATA_PROFILE cell plus unsynchronized MEASURED DS07 facility; site NOT_VERIF
 | P0-BILL persistence | 4 facility-months | individual results in source | CI not recorded; `reports/run4/facility_billing.md` |
 | AI-BILL learned forecast | 12 facility-months | NO-GO; -0.84 kW vs P0-E1-Peak | factory-clustered [-2.70, 1.31]; D020, `MyDrive/semiexpo/ai_runs/run4_final_summary.md`; SIM_DATA_PROFILE + unsynchronized MEASURED |
 
-D020 concludes NO-GO: learned forecast improvement versus historical profile is +0.10 kW [0.00, 0.30], factory-clustered CI; the gate requires improvement against both baselines. Forecaster metrics export was repaired under D021 without retraining; raw verification remains pending.
+D020 concludes NO-GO: learned forecast improvement versus historical profile is +0.10 kW [0.00, 0.30], factory-clustered CI; the gate requires improvement against both baselines. Forecaster metrics export was repaired under D021 without retraining; completed metrics are reported in `reports/final/parts/aibill.md` (MEASURED DS07, Drive `MyDrive/semiexpo/ai_runs/run4/facility_load_metrics/metrics.csv`); independent local retrieval was not performed.
 
 
 Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized MEASURED DS07, n=4 facility-months; baseline P0-E1-Peak; kW monthly increment, CI not recorded; raw results MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Forge_2 (sha256 f427310b) and MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Metal_1 (sha256 150ec779), source `reports/run4/facility_billing.md`.
@@ -263,4 +263,4 @@ Earlier index-only figure statuses are superseded by the final status table belo
 Dashboard screenshots (16 pages, headless Chromium via Playwright): reports/run4/screenshots/ (local repo).
 
 
-Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.

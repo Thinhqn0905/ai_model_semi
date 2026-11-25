@@ -55,3 +55,6 @@ reports/final/slides_outline.md:2
 ```
 
 
+
+
+Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.

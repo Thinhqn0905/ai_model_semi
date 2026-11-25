@@ -122,7 +122,7 @@ Simulation acceptance is limited to the stated evidence and gates; industrial si
 | D018 | Prefer FIN-B at 5?10 cells conditionally; confirm 30-minute MD; site acceptance remains open. |
 | D019 | Freeze architecture and reference AFE 20 / bus 32 kW; candidate AFE 20 / bus 16 kW; M12 FAIL. |
 | D020 | AI-BILL NO-GO; retain AI for ETA and advisory. |
-| D021 | Freeze architecture; E1-screened nominal fallback and AFE margin, with safety verification pending. |
+| D021 | Freeze architecture; E1-screened nominal fallback and AFE margin; simulation verification completed with residual s62 protection case. |
 
 Source: `docs/decisions.md`; D018 cell range is ASSUMED deployment scenario, baseline and n/CI not applicable, raw site binding NOT_VERIFIED.
 
@@ -130,7 +130,7 @@ Source: `docs/decisions.md`; D018 cell range is ASSUMED deployment scenario, bas
 |---|---|---|
 | G01 Reference cell | PARTIAL | `docs/decisions.md`; ASSUMED, site NOT_VERIFIED. |
 | G02 Physics | PARTIAL | `docs/decisions.md`; analytic/unit test, run output NOT_VERIFIED. |
-| G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`; SIM_DATA_PROFILE, matching NOT_VERIFIED. |
+| G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`; SIM_DATA_PROFILE; instance matching bound by `docs/raw_binding_manifest.md`, unequal tardiness remains. |
 | G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`; SIM_DATA_PROFILE, raw MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). |
 | G05 Energy AI | FAIL | `reports/run3/ai_run3.md`; SIM_DATA_PROFILE. |
 | G06 ETA | PASS | `reports/run4/ai_eta.md`; MEASURED, `MyDrive/semiexpo/ai_runs/run4/eta/`. |
@@ -168,7 +168,7 @@ The following are reported results, not independently reconciled site outcomes. 
 | B2 to P0 facility demand, ToU, 5 cells | 5.11 kW [2.92, 7.42]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_tou_5cells (sha256 53e74ab0) (`reports/final/report_run4.md`) |
 | B2 to P0 facility demand, General, 10 cells | 15.12 kW [11.48, 18.12]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_gen_10cells (sha256 7d0bf4f6) (`reports/final/report_run4.md`) |
 
-Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: independently retrieve reported AI-BILL and sizing results, verify D021 safety, reconcile remaining claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).
+Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: reconcile remaining claims and production comparability, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).
 
 
-Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.

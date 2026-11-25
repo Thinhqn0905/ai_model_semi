@@ -167,3 +167,80 @@ all tests passed
 Boundary: LOCAL_RUN, document consistency only.
 
 PASS: M01?M16 statuses match in all three tables; decision references exist; stale AI-BILL/sizing markers absent; P0 violation present in five owned documents. Scope: textual checks only.
+
+## Run 2 safety and binding reconciliation
+
+- File: `reports/final/parts/part1.md`
+  - Old: Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+  - New: Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part1.md`
+  - Old: Forecaster metrics export was repaired under D021 without retraining; raw verification remains pending.
+  - New: Forecaster metrics export was repaired under D021 without retraining; completed metrics are reported in `reports/final/parts/aibill.md` (MEASURED DS07, Drive `MyDrive/semiexpo/ai_runs/run4/facility_load_metrics/metrics.csv`); independent local retrieval was not performed.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part2.md`
+  - Old: Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+  - New: Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part3.md`
+  - Old: Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+  - New: Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part3.md`
+  - Old: E1-screened nominal fallback and AFE margin, with safety verification pending.
+  - New: E1-screened nominal fallback and AFE margin; simulation verification completed with residual s62 protection case.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part3.md`
+  - Old: SIM_DATA_PROFILE, matching NOT_VERIFIED.
+  - New: SIM_DATA_PROFILE; instance matching bound by `docs/raw_binding_manifest.md`, unequal tardiness remains.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/final/parts/part3.md`
+  - Old: Remaining work: independently retrieve reported AI-BILL and sizing results, verify D021 safety, reconcile remaining claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification
+  - New: Remaining work: reconcile remaining claims and production comparability, obtain site/mentor evidence and complete protection and economic qualification
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/run4/mentor_compliance_run4.md`
+  - Old: Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+  - New: Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/run4/mentor_compliance_run4.md`
+  - Old: **Lead:** independently retrieve reported AI-BILL outputs and establish full site costs; AI-BILL is NO-GO under D020.
+  - New: **Lead:** establish full site costs; AI-BILL is NO-GO under D020 and its forecaster metrics are complete (`reports/final/parts/aibill.md`).
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/run4/mentor_compliance_run4.md`
+  - Old: **Lead / mentor:** independently retrieve D019 sizing screening and verify D021 safety (`ai_runs/run4/v2_safe_p0`); complete electrical sizing validation, independent protection, FMEA and vendor support; physical evidence and engineer approval close the pilot gate.
+  - New: **Lead / mentor:** complete electrical sizing validation, independent protection for the residual s62 case, FMEA and vendor support; D019 sizing is bound in `docs/raw_binding_manifest.md` and D021 simulation verification is complete (`ai_runs/run4/v2_safe_p0`); physical evidence and engineer approval close the pilot gate.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `reports/run4/mentor_compliance_run4.md`
+  - Old: independent retrieval remains pending.
+  - New: the Drive binding is recorded in `docs/raw_binding_manifest.md`; independent local retrieval was not performed.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+- File: `docs/traceability.md`
+  - Old: Run 4 default P0 has 1/100 modeled AFE-shortfall violations: instance `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 specifies an E1-screened nominal plan and fallback, FIFO only if infeasible with `initial_plan=fifo_unscreened`, and planning at 18 kW against a 20 kW scoring limit. Verification is pending at `ai_runs/run4/v2_safe_p0`; this is not a safety PASS.
+  - New: Run 4 default P0 had 1/100 modeled AFE-shortfall violations: `v2_test_n10_s62`, one step, 0.259 kWh (SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv`, sha256 57cd90452ba6e187). D021 verification (`MyDrive/semiexpo/ai_runs/run4/v2_safe_p0`; `reports/run3/e1_electrical_constraints.md`, Safety closure) reports 99/100 violation-free and zero unscreened fallbacks. FIFO is screened before execution; s62 remains a hardware-protection case. Industrial protection and site acceptance remain NOT_VERIFIED.
+  - Reason: reconcile with completed safety verification, decision log and Drive evidence.
+
+## Reconciliation check (LOCAL_RUN; document consistency only)
+
+Command: Python standard-library status, decision-ID and safety consistency check over the five owned reports and `docs/decisions.md`.
+
+```text
+PASS decision IDs exist
+PASS M01-M16 status agreement
+PASS G01-G12 status agreement
+PASS no stale safety pending
+PASS safety closure in all five
+PASS figure status table present
+PASS AI-BILL and M12
+PASS change log present
+```
