@@ -158,4 +158,4 @@ Values below are paired reductions with 95% CI, SIM_DATA_PROFILE, not additive: 
 | Rolling B3 → P0 | 99 | 0.018 [0.009, 0.028] |
 | Topology B1p-OPT → B2 | — | NOT_VERIFIED: scheduling also changes |
 
-Peak and billing contributions are joint E1/peak and facility effects, not isolated additive benefits; see sections 8–9. AI energy benefit is not demonstrated: P0 → P5s -0.004 kWh [-0.010, 0.004], SIM_DATA_PROFILE, n=100, raw `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv` (`reports/run3/ai_run3.md`). AI-BILL remains PENDING at `MyDrive/semiexpo/ai_runs/run4_final_summary.md` (`docs/handoff_run4.md`); no AI adoption claim.
+Peak and billing contributions are joint E1/peak and facility effects, not isolated additive benefits; see sections 8–9. AI energy benefit is not demonstrated: P0 → P5s -0.004 kWh [-0.010, 0.004], SIM_DATA_PROFILE, n=100, raw `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv` (`reports/run3/ai_run3.md`). AI-BILL completed: NO-GO (learned forecast +0.10 kW [0.00, +0.30] vs historical profile, -0.84 [-2.70, +1.31] vs P0-E1-Peak; section 5, D020); no AI adoption claim.

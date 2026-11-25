@@ -1,15 +1,17 @@
-# ReGenATE — Run 4 Final Evaluation Report (consolidated)
+# ReGenATE - Run 4 Final Evaluation Report (consolidated)
 
-Generated 2026-11-25 from repository reports (no new experiments). Repository: github.com/Thinhqn0905/ai_model_semi; local D:/Subject_ProjectClass/semipox.
-Evidence categories: MEASURED (DS05 cycles, DS07 facility loads), SIM_DATA_PROFILE (DS06 simulation replaying measured cycles; scaling/windows
-assumed), SIM_ASSUMED_PROFILE (bench_v1 assumed profiles), VENDOR_REPORTED / DATASHEET (Chroma, TI), SOURCE_REPORTED (official tariff
-documents), ASSUMED (annualisation, FX 0.21 USD/MYR, cost estimates), NOT_VERIFIED (missing binding). Drive paths = MyDrive/semiexpo/ai_runs/...
-PENDING at generation time: AI-BILL (learned facility-load forecast in P0-BILL; running on Colab runtime 1, output Drive
-`run4_final_summary.md` + `run4/fac_aibill_*`). Experimental validation (simulation on public/measured data) is reported separately from
-industrial site acceptance (not performed: requires site data, shadow mode, protection qualification, actual costs).
-Missing sections in the source parts: none
+Repository github.com/Thinhqn0905/ai_model_semi; local D:/Subject_ProjectClass/semipox. Raw-result bindings: docs/raw_binding_manifest.md
+(Drive MyDrive/semiexpo/ai_runs/drive_manifest.json). Decisions D001-D019 (docs/decisions.md). Dashboard screenshots: reports/run4/screenshots/
+(16 pages). Prior art: reports/run4/prior_art.md.
+Evidence categories: MEASURED (DS05 cycles, DS07 facility loads), SIM_DATA_PROFILE (DS06), SIM_ASSUMED_PROFILE (bench_v1), VENDOR_REPORTED /
+DATASHEET, SOURCE_REPORTED (official tariff documents), ASSUMED (annualisation, FX 0.21 USD/MYR, cost estimates), NOT_VERIFIED.
+SIMULATION ACCEPTANCE (this report) is separate from INDUSTRIAL SITE ACCEPTANCE (not performed: site data, shadow mode, protection
+qualification, actual costs).
+Missing sections: none
 
 ## 1 Dataset
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 Registry and provenance: `data/manifests/dataset_registry.json`, `reports/run4/dataset_registry.md`. Counts below are SOURCE_REPORTED or MEASURED source observations; CI and baseline not applicable. Unknown fields are NOT_VERIFIED.
 
@@ -25,6 +27,8 @@ Registry and provenance: `data/manifests/dataset_registry.json`, `reports/run4/d
 | DS08 https://doi.org/10.6084/m9.figshare.21893808.v3 | MISSING local data; publication reports 386 customer CSVs, time and interval energy; split not established; external candidate. `reports/run4/ds08_audit.md` |
 
 ## 2 AI benchmark
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 MEASURED observations, derived forecast metrics; no site or energy claim. Full model-by-horizon NMAE, skill and coverage tables are in `reports/ai/branch_A_ds02.md`, `reports/ai/branch_B_ds04.md`, with raw metric paths `runs/ai/ds02/model_metrics.csv`, `runs/ai/ds04/model_metrics.csv`; model definitions and matched splits are in `reports/run3/cross_dataset_benchmark.md`. DS05 model-by-target skill and coverage are in `reports/ai/branch_C_ds05.md`, raw `results/ai_ds05_branchC/*`. Baselines are persistence for DS02/DS04 and previous cycle for DS05. MAE, RMSE, sample counts, latency and model size are NOT_VERIFIED where not recorded in those tables; CI not recorded. Strongest baseline varies by dataset and horizon; do not infer it across incompatible protocols. Model size: not recorded. Additional metrics absent from the source tables remain NOT_VERIFIED.
 
@@ -167,6 +171,8 @@ DS05: `reports/ai/branch_C_ds05.md`; raw `results/ai_ds05_branchC/*`; held-out t
 
 ## 3 AI ETA
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 MEASURED DS05 held-out data; previous-cycle baseline; CI not recorded. Battery cycles are a proxy. `reports/run4/ai_eta.md`; raw `MyDrive/semiexpo/ai_runs/run4/eta/`; TCN raw `ai_runs/run4/eta_tcn/`. RMSE and relative-error summaries not recorded in these tables.
 
 | Task / model | n | MAE min | Skill | Coverage | Latency ms/sample |
@@ -181,9 +187,7 @@ T1 normal MAE previous/AI18 7.9/10.2 min, abnormal 2,240/849 min; T2 normal prev
 
 Additional ETA models and progress bins: MEASURED held-out DS05; baseline previous cycle; CI and subset n not recorded; MAE in minutes, skill and coverage dimensionless; `reports/run4/ai_eta.md`, raw `MyDrive/semiexpo/ai_runs/run4/eta/`, TCN `ai_runs/run4/eta_tcn/` (matched keys NOT_VERIFIED).
 
-| Task | Use case | Model | MAE / RMSE | Skill vs previous | Pinball | Coverage / width | Median APE | Latency |
-|---|---|---|---|---|---|---|---|---|
-| T1 / T2 | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB |
+T1 (total duration before start), test n = 2,210 cycles:
 | Model | MAE | skill | coverage80 | predict ms |
 |---|---|---|---|---|
 | previous cycle (recipe) | 290.7 | 0 | - | 0 |
@@ -199,6 +203,8 @@ Additional ETA models and progress bins: MEASURED held-out DS05; baseline previo
 | quantile LightGBM P50 + CQR | 99.6 | +0.36 | 178.7 | 89.9 | 86.9 | 90.9 (-0.29) | **0.756** | 338 |
 
 ## 4 AI downstream
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 SIM_DATA_PROFILE: measured DS05 cycles with assumed scaling and windows; paired n=100 against P0, positive means reduction; paired 95% CI. Common instances and ledger within each campaign; equality of tardiness is not universal, so the comparisons do not isolate causal effects. Site performance NOT_VERIFIED. `reports/ai/ai_exp12_ds06.md`, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; `reports/run3/root_cause_analysis.md`, `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`; `reports/run3/ai_run3.md`, `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv`, `MyDrive/semiexpo/ai_runs/run3/v2_{pq_gated,pq_ungated,pqstar}/results.csv`, `MyDrive/semiexpo/ai_runs/run3/v2_pqd/results.csv`.
 
@@ -218,34 +224,37 @@ SIM_DATA_PROFILE: measured DS05 cycles with assumed scaling and windows; paired 
 | TR_RUN / TR_Q / TR_ALL | 0.024 [0.013,0.037] / 0.049 [0.035,0.064] / 0.094 [0.077,0.112] | 0.16 [-0.25,0.57] / 0.82 [0.31,1.36] / 1.12 [0.59,1.65] | paired CI not recorded |
 | ORACLE | 0.094 [0.077,0.112] | 1.14 [0.57,1.72] | paired CI not recorded |
 
-Perfect queued and running information are different interventions, not additive causal contributions. P0→P5s CI crosses zero; P0→ORACLE is a ceiling. Independent raw reconciliation remains NOT_VERIFIED. `reports/run4/contribution_decomposition.md`, `reports/run3/metric_audit_v3.md`.
+Perfect queued and running information are different interventions, not additive causal contributions. P0→P5s CI crosses zero; P0→ORACLE is a ceiling. Raw bindings are reconciled by the Drive manifest; MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). `reports/run4/contribution_decomposition.md`, `reports/run3/metric_audit_v3.md`.
 
 ## 5 AI-BILL
+Boundary: SIM_DATA_PROFILE cell + MEASURED DS07 facility (not synchronised); TNB ToU rule (peak-period 30-min MD); 1 cell; 6 factories
+(Forge_1, Forge_2, Metal_1, Metal_3, Paper, Steel_1) x forecaster TEST months 2019-08/09 = 12 facility-months; factory-clustered paired
+bootstrap CI (+ = lower billed-demand increment). Raw: Drive `MyDrive/semiexpo/ai_runs/run4/fac_aibill_*/facility_md.csv`, summary
+`MyDrive/semiexpo/ai_runs/run4_final_summary.md`; forecaster `run4/facility_load/facility_predictor.joblib` (global LightGBM across factories,
+Mar-Jun train, Jul val, Aug-Sep test, 2-h decision stride; src/regenate/forecasting/facility_load.py).
 
-SIM_DATA_PROFILE cell plus unsynchronized MEASURED DS07 facility; site NOT_VERIFIED. `reports/run4/facility_billing.md`; exact raw paths for the causal extended table are not recorded there.
+| Comparison | kW [95 % CI] | months better |
+|---|---|---|
+| P0-BILL hist -> P0-BILL ai (value of the learned forecast) | +0.10 [0.00, +0.30] | 1/12 |
+| P0-E1-Peak -> P0-BILL ai | -0.84 [-2.70, +1.31] n.s. | 5/12 |
+| P0-E1-Peak -> P0-BILL oracle (perfect background) | +2.56 [+0.90, +4.34] | 8/12 |
+| P0-BILL ai -> P0-BILL oracle (headroom missed by AI) | +3.40 [+1.83, +4.76] | 9/12 |
+Per facility-month MD increment, kW (P0-E1-Peak / P0-BILL ai / P0-BILL oracle): Forge_1 Aug 7.53/7.23/2.88, Sep 2.73/7.47/5.63; Forge_2 Aug
+-0.73/-0.73/-0.73, Sep -0.22/6.47/-0.33; Metal_1 Aug 9.21/8.25/0.32, Sep 3.14/1.95/0.93; Metal_3 Aug -3.46/-3.46/-3.46, Sep 7.30/0.00/0.00;
+Paper Aug 2.85/6.12/-0.16, Sep 9.76/8.64/3.01; Steel_1 Aug 1.06/2.68/0.00, Sep 0.00/4.57/0.31.
+Earlier months (2019-05/07, 12 facility-months, reports/run4/facility_billing.md): P0-BILL hist -0.57 [-2.56, +0.89], oracle +0.94 [-0.80, +2.96] vs
+P0-E1-Peak (n.s.); 5-cell P0-BILL worse than P0-E1-Peak by ~6 kW.
+Forecaster accuracy table: NOT AVAILABLE - the metrics phase of facility_load.py failed ("cannot reindex on an axis with duplicate labels",
+Colab runtime 2 log) after the model was trained; not repaired per D019/D020 (no further AI work). Unresolved defect.
 
-| Method | n | Result vs P0-E1-Peak | CI / source |
-|---|---:|---|---|
-| P0-BILL hist | 12 facility-months | -0.57 kW reduction | factory-clustered [-2.56,0.89]; `reports/run4/facility_billing.md` |
-| P0-BILL oracle background | 12 facility-months | 0.94 kW reduction | factory-clustered [-0.80,2.96]; `reports/run4/facility_billing.md` |
-| P0-BILL persistence | 4 facility-months | individual results in source | CI not recorded; `reports/run4/facility_billing.md` |
-| AI-BILL and forecaster accuracy | not available | PENDING | expected `MyDrive/semiexpo/ai_runs/run4_final_summary.md` |
-
-Go only if AI beats both historical P0-BILL and P0-E1-Peak with factory-clustered CIs excluding zero; otherwise no-go after evaluation. `docs/handoff_run4.md`, `docs/decisions.md` D017. No result is claimed while pending.
-
-
-Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized MEASURED DS07, n=4 facility-months; baseline P0-E1-Peak; kW monthly increment, CI not recorded; exact raw result path NOT_VERIFIED, source `reports/run4/facility_billing.md`.
-
-| Facility-month | P0-E1-Peak | hist | persist | oracle background | ORACLE-E1-Peak |
-|---|---:|---:|---:|---:|---:|
-| Forge_2 2019-05 | 0.80 | 3.19 | 4.48 | 1.36 | 0.00 |
-| Forge_2 2019-07 | 0.37 | -1.69 | -1.69 | 2.05 | 0.57 |
-| Steel_1 2019-05 | -0.02 | -0.03 | -0.03 | -0.03 | -0.02 |
-| Steel_1 2019-07 | -3.01 | -3.04 | -3.01 | -3.04 | -4.18 |
-
-Extended results: ORACLE-E1-Peak vs P0-E1-Peak +0.27 kW [-1.14, 1.98]; hist to oracle +1.50 kW [-0.01, 3.15]; n=12 facility-months, factory-clustered CI; raw path NOT_VERIFIED, `reports/run4/facility_billing.md`.
+**Go/No-Go: AI-BILL = NO-GO.** The learned facility-load forecast is indistinguishable from the historical-profile forecast (+0.10 kW, 1/12) and
+does not beat the default engine. A perfect background forecast would give a significant billing gain in the test months (+2.56 kW vs
+P0-E1-Peak) but not in May/July, so billing-aware scheduling is a conditional research lead that needs real facility meter data, not a
+deployable function. Default remains P0-E1-Peak (D006/D019). No further AI scheduling experiments (D018/D019).
 
 ## 6 Energy optimisation ladder B0..ORACLE
+
+Reconciliation (SIM_DATA_PROFILE): baselines are matched by instance within each file; P0 rows match across the diagnostic and Run 3 forecast files. In the Run 2 ladder B3 has one infeasible tardiness-stage instance (99/100 optimal); flex 1.0 has time-limit incumbents for ORACLE 17/26 and B3 18/26, so the reported oracle saving is a lower bound, not a certified optimum: MyDrive/semiexpo/ai_runs/v2_flex1/results.csv (sha256 43b3f53afd3a6284). Rolling P0 has higher mean tardiness than one-shot methods (0.18?0.25 h versus 0.105?0.174 h); energy comparisons are not equal-production unless an equal-tardiness subset is stated. In the merged E1 run B2 has 13/100 violations, P0 1/100, and optimized one-shot 0; PQd has 2/100: MyDrive/semiexpo/ai_runs/run4/v2_wpc_gated (sha256 f346ca242945923d), MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187).
 
 DS06 replays measured DS05 cycle shapes with assumed scaling and windows: **SIM_DATA_PROFILE**, site NOT_VERIFIED. Same ledger and paired instances are intended; differing tardiness and electrical conditions require reconciliation before causal claims (`reports/run3/metric_audit_v3.md`). Means below have no reported CI; raw result `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`, source `reports/ai/ai_exp12_ds06.md`.
 
@@ -256,7 +265,7 @@ DS06 replays measured DS05 cycle shapes with assumed scaling and windows: **SIM_
 | B3 | 99 | 8.55 | 11.60 | Not reported |
 | P0 / P1 / P2 / P3 / P4 / ORACLE | 100 | 8.45 / 8.46 / 8.47 / 8.47 / 8.47 / 8.35 | 11.34 / 11.68 / 11.58 / 11.90 / 11.74 / 10.19 | Not reported |
 
-Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4/v2_e1_peak_b`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: equal-tardiness and feasibility reconciliation NOT_VERIFIED. P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
+Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4/v2_e1_peak_b`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: unequal tardiness and modeled violations limit this comparison; MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187). P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
 
 Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_DATA_PROFILE; baseline and raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv` (`reports/ai/ai_exp12_ds06.md`). Positive means lower energy or peak than baseline.
 
@@ -272,6 +281,12 @@ Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_
 
 ## 7 Electrical feasibility
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
+Reconciliation (SIM_DATA_PROFILE): baselines are matched by instance within each file; P0 rows match across the diagnostic and Run 3 forecast files. In the Run 2 ladder B3 has one infeasible tardiness-stage instance (99/100 optimal); flex 1.0 has time-limit incumbents for ORACLE 17/26 and B3 18/26, so the reported oracle saving is a lower bound, not a certified optimum: MyDrive/semiexpo/ai_runs/v2_flex1/results.csv (sha256 43b3f53afd3a6284). Rolling P0 has higher mean tardiness than one-shot methods (0.18?0.25 h versus 0.105?0.174 h); energy comparisons are not equal-production unless an equal-tardiness subset is stated. In the merged E1 run B2 has 13/100 violations, P0 1/100, and optimized one-shot 0; PQd has 2/100: MyDrive/semiexpo/ai_runs/run4/v2_wpc_gated (sha256 f346ca242945923d), MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187).
+
+D019 retains AFE 20 kW / bus 32 kW as the reference and identifies AFE 20 kW / bus 16 kW as the cost-optimised candidate. On the same 30 simulated instances the candidate has zero violations, 100% twin approval, and unchanged energy and tardiness; raw MyDrive/semiexpo/ai_runs/run4_rt3/v2_size_afe20_bus16 (sha256 9b253122). AFE 10 kW has three infeasible ORACLE cases: MyDrive/semiexpo/ai_runs/run4_rt3/v2_size_afe10_bus32 (sha256 ad65c2b5dcde9508).
+
 | Comparison | Result | Boundary and raw evidence |
 |---|---|---|
 | E0 → E1 twin approval, ORACLE | 98% → 100%, n=50; P0 100% → 100%; CI not reported | SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`, `screen_e1.csv`; `reports/run3/e1_electrical_constraints.md` |
@@ -279,9 +294,9 @@ Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_
 | Sizing, E1 | At 15 kW AFE / 32 kW bus, P0 has 1 violation and twin approval 0.967; at 20 / 16 kW, P0 and B2 have zero violations and approval 1.000; n=30, CI not reported | SIM_DATA_PROFILE; `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md` |
 | 10 kW AFE | ORACLE 27/30 solved; P0 twin approval 0.667; CI not reported | SIM_DATA_PROFILE; same sizing paths |
 
-The sizing report contains both a pending placeholder and a later screening table; independent retrieval of the latter remains PENDING (`docs/handoff_run4.md`). UV and overcurrent are modeled rejection causes; actual voltage/current excursions and protection qualification are NOT_VERIFIED. Twin parameters are assumed; independent protection and engineer approval remain required. Failure injection v1 and v2 report simulation-only passes, respectively `runs/fail_v1/pytest_run3.log` and `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE; case evidence `runs/fail_v1/` and `runs/run3/fail/`, sources `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
+The later sizing screening table is the D019 simulation evidence; its older pending placeholder is superseded. UV and overcurrent are modeled rejection causes; actual voltage/current excursions and protection qualification are NOT_VERIFIED. Twin parameters are assumed; independent protection and engineer approval remain required. Failure injection v1 and v2 report simulation-only passes, respectively `runs/fail_v1/pytest_run3.log` and `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE; case evidence `runs/fail_v1/` and `runs/run3/fail/`, sources `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
 
-Full sizing results, n=30, CI not reported, SIM_DATA_PROFILE; raw `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md`. Screen retrieval remains PENDING as above.
+Full sizing results, n=30, CI not reported, SIM_DATA_PROFILE; raw `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md`. The reported screening is simulation only.
 
 | AFE / bus kW | ORACLE solved; peak kW | P0 violations; peak kW | B2 violations | twin approval B2 / P0 / ORACLE |
 |---|---|---|---|---|
@@ -297,6 +312,8 @@ E0 ? E1 twin approval for B2 is 94% ? 94% and B1p-OPT 92% ? 92%, n=50, CI not re
 
 ## 8 Facility level
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 DS06 simulated cells are added to unsynchronised measured DS07 facility loads, not site savings; **SIM_DATA_PROFILE + MEASURED**, site NOT_VERIFIED. DS08 robustness is MISSING: metadata audit only, no archive or qualifying complete customer subset (`reports/run4/ds08_audit.md`, `data/manifests/ds08_metadata.json`). DS07 uses 10 factories and 70 factory-months; factory-clustered paired 95% CI supersedes month-level CI. Source `reports/run4/facility_billing.md`, raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv` and `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells`.
 
 | Baseline → method | Rule | Mean MD reduction kW [95% CI] | Factories won | n |
@@ -307,7 +324,7 @@ DS06 simulated cells are added to unsynchronised measured DS07 facility loads, n
 
 Median coincidence of cell peak with billed demand is 0.09 for P0-E1-Peak and 0.24 for B2, all-hours, n=70; CI and full win/tie/loss breakdown not reported (`reports/run4/facility_billing.md`, raw `ai_runs/run4/fac_grid_tnb/`). The 100-instance-pool ToU B2 → P0 effect is 1.93 kW [0.69, 3.07], n=70; the earlier peak-level and perfect-information effects are WITHDRAWN because their larger-pool CIs include zero (`ai_runs/run4_rt2/fac_{gen,tou}_1cell_n100`). Holiday-off-peak sensitivity gives 0.97 kW [-0.01, 1.91] for one cell and 3.13 [0.98, 5.20] for five, n=70, factory-clustered CI; raw `ai_runs/run4_rt2/`, source `reports/run4/facility_billing.md`. Holiday treatment is NOT_VERIFIED.
 
-Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, SIM_DATA_PROFILE + unsynchronised MEASURED; General raw path NOT_VERIFIED, ToU raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv`; `reports/run4/facility_billing.md`. Factory ties/losses are not reported and must not be inferred from wins.
+Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, SIM_DATA_PROFILE + unsynchronised MEASURED; General raw MyDrive/semiexpo/ai_runs/run4/fac_grid (sha256 6e669d46a861fe54), ToU raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv`; `reports/run4/facility_billing.md`. Factory ties/losses are not reported and must not be inferred from wins.
 
 | Baseline ? method | General kW [CI], factories won | ToU kW [CI], factories won |
 |---|---|---|
@@ -327,6 +344,8 @@ Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, 
 
 ## 9 Multi-cell
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Independent scheduling behind one meter; same boundary, n=70 and clustered CI as section 8. Raw `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells`; source `reports/run4/facility_billing.md`.
 
 | Cells | Baseline → method | General MD reduction kW [95% CI] | ToU MD reduction kW [95% CI] |
@@ -342,11 +361,15 @@ P0-E1-Peak ? ORACLE-E1-Peak ToU reductions, same n, boundary and raw as above: 1
 
 ## 10 Tariff validation
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 SOURCE_REPORTED, geographic counterfactuals, not actual DS07 bills. TNB schedule [official PDF](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf), p.2: General “Setiap kilowatt permintaan maksimum sebulan”; ToU adds “semasa tempoh puncak”. General uses whole-month MD, ToU peak-period MD. The older registry's General peak-only entry is superseded (`reports/run4/facility_billing.md`, `reports/final/report_run4.md`). TNB's [MD page](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge) verifies 30-minute MD (D018); alignment and public-holiday handling remain NOT_VERIFIED.
 
 MV General energy 0.2983 MYR/kWh, demand capacity 29.43 and network 59.84 MYR/kW/month; MV ToU energy peak/off-peak 0.3132/0.2723 MYR/kWh. Registry marks individual rates NOT_VERIFIED while the later economics report marks rates verified: reconciliation needed. HV rate fields and exact quotations beyond the above: NOT_VERIFIED here. Source `reports/run4/tariff_registry.md`, `reports/run4/economics_run4.md`; source schedule `data/tariffs/sources/Tariff-TNB-pdf.pdf`; n/CI not applicable. Vietnam actual rates are NOT_VERIFIED pending exact page; [VN trial](https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112) is TRIAL_NOT_PAYABLE; [Singapore schedule](https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf) contract/excess rates are 14.21/21.32 SGD/kW/month, SOURCE_REPORTED, table 9 (`reports/run4/tariff_registry.md`). Billing-engine test output path NOT_VERIFIED; incomplete calculations exclude charges listed in the registry.
 
 ## 11 Economics
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 FIN-A has no energy value by physics; FIN-B adds software to existing shared hardware; FIN-C includes unscoped hardware (`docs/decisions.md` D017; `reports/run4/economics_run4.md`). The following FIN-B estimates use B2 → P0-E1-Peak, n=70 facility-months, SIM_DATA_PROFILE + unsynchronised MEASURED, assumed annualisation and FX; factory-clustered ranges; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`. Known site CAPEX USD 4,220 is an estimate; installation, requalification and support are MISSING. Paybacks are optimistic, site NOT_VERIFIED.
 
@@ -378,6 +401,8 @@ HV smaller-cell results are not tabulated in the source; `ai_runs/run4/fin_fac_{
 
 ## 12 Contribution decomposition
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Values below are paired reductions with 95% CI, SIM_DATA_PROFILE, not additive: subsets, information, objectives and tardiness differ; topology-only attribution and raw reconciliation NOT_VERIFIED. Source `reports/run4/contribution_decomposition.md`; raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`.
 
 | Layer and baseline | n | Mean reduction kWh [95% CI] |
@@ -387,9 +412,11 @@ Values below are paired reductions with 95% CI, SIM_DATA_PROFILE, not additive: 
 | Rolling B3 → P0 | 99 | 0.018 [0.009, 0.028] |
 | Topology B1p-OPT → B2 | — | NOT_VERIFIED: scheduling also changes |
 
-Peak and billing contributions are joint E1/peak and facility effects, not isolated additive benefits; see sections 8–9. AI energy benefit is not demonstrated: P0 → P5s -0.004 kWh [-0.010, 0.004], SIM_DATA_PROFILE, n=100, raw `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv` (`reports/run3/ai_run3.md`). AI-BILL remains PENDING at `MyDrive/semiexpo/ai_runs/run4_final_summary.md` (`docs/handoff_run4.md`); no AI adoption claim.
+Peak and billing contributions are joint E1/peak and facility effects, not isolated additive benefits; see sections 8–9. AI energy benefit is not demonstrated: P0 → P5s -0.004 kWh [-0.010, 0.004], SIM_DATA_PROFILE, n=100, raw `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv` (`reports/run3/ai_run3.md`). AI-BILL completed: NO-GO (learned forecast +0.10 kW [0.00, +0.30] vs historical profile, -0.84 [-2.70, +1.31] vs P0-E1-Peak; section 5, D020); no AI adoption claim.
 
 ## 13 Industrial applicability
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 D018 fixes the reference as a Chroma 17020-type regenerative battery module cycling cell, rated 48 kW/cell; DS06 assumes 8 stations, 25 modules/station at 0.24 kW/module, 20 kW AFE, 32 kW link and 10 kW step. These are ASSUMED simulation settings, not vendor specifications; baseline and CI not applicable, n not applicable (`docs/decisions.md`, D007/D018; `reports/final/report_run4.md`; raw configuration binding NOT_VERIFIED). Chroma documents independent charge/discharge channels, reuse to charging channels or mains, recipes and protection (VENDOR_REPORTED; `reports/run4/vendor_reference.md`). Internal bus topology, external access and scheduling rights are NOT_VERIFIED.
 
@@ -410,6 +437,8 @@ Source and boundary: `reports/run4/industrial_use_case_matrix.md`, `docs/target_
 
 ## 14 Product readiness
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 The software-first deployment paths are FIN-A existing regen-to-AC, FIN-B existing compatible shared-energy infrastructure, and FIN-C full retrofit; FIN-B is preferred subject to site evidence (`docs/decisions.md`, D009/D018). The default is P0-E1-Peak with independent protection and twin screening; forecasting is advisory (`docs/decisions.md`, D006/D010/D012). Ledger, scheduler and simulation are documented in `src/regenate/electrical/ledger.py`, `src/regenate/optimization/milp.py`, `src/regenate/optimization/rolling.py`, and `src/regenate/simulation/replay.py` (`reports/run3/metric_audit_v3.md`). The file-backed dashboard provides facility load, tariff inputs, monthly charge estimates, FIN comparison and Markdown export; no live integration is established (`reports/run4/demonstrator_v2.md`). Screenshots: MISSING; no screenshot files are established by the supplied evidence (`reports/run4/figures/INDEX.md`).
 
 Offline demonstration: pipeline versus B1, n=1, net grid 10.086 versus 13.972 kWh, peak 13.429 versus 13.977 kW, equal tardiness 0 h, 10 completed jobs each and zero reported violations; CI unavailable, SIM_DATA_PROFILE. The source report has no exact raw-result path, so raw binding is NOT_VERIFIED (`reports/run3/demonstrator.md`). Failure injection reports invalid forecasts fall back to nominal and rejection executes FIFO; its test output is `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE (`reports/run3/failure_injection_v2.md`). Solver stage status and missing gaps, matching, and dynamic protection remain unresolved (`reports/run3/metric_audit_v3.md`, `reports/final/report_run4.md`).
@@ -426,9 +455,13 @@ Boundary SIM_ASSUMED_PROFILE; `reports/run3/failure_injection_v2.md`. These chec
 
 ## 15 Scientific evidence
 
-DS06 replays measured DS05 battery cycles with assumed scaling and timing: SIM_DATA_PROFILE, not semiconductor-site data. The diagnostic uses seeds 0–99, n=100, paired bootstrap 95% intervals and Drive raw results `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`; remote results are NOT_VERIFIED locally (`reports/run3/root_cause_analysis.md`, `reports/run3/metric_audit_v3.md`). Facility studies use factory-clustered paired bootstrap intervals on unsynchronized MEASURED DS07 and SIM_DATA_PROFILE cells; exact campaign paths `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells` and `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/` (`reports/final/report_run4.md`).
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
-Negative evidence includes station AI energy and production failures, monitoring failure, no stable P0-BILL gain and withdrawn larger-pool effects; AI-BILL is PENDING at `MyDrive/semiexpo/ai_runs/run4_final_summary.md` (`reports/final/report_run4.md`, `docs/handoff_run4.md`). The metric audit identifies incomplete raw reconciliation, possible pairing collapse, unequal tardiness and planning constraints, incomplete solver status and one-shot versus rolling oracle differences; no site savings, safety, FPY or water outcome is established (`reports/run3/metric_audit_v3.md`).
+Reconciliation (SIM_DATA_PROFILE): baselines are matched by instance within each file; P0 rows match across the diagnostic and Run 3 forecast files. In the Run 2 ladder B3 has one infeasible tardiness-stage instance (99/100 optimal); flex 1.0 has time-limit incumbents for ORACLE 17/26 and B3 18/26, so the reported oracle saving is a lower bound, not a certified optimum: MyDrive/semiexpo/ai_runs/v2_flex1/results.csv (sha256 43b3f53afd3a6284). Rolling P0 has higher mean tardiness than one-shot methods (0.18?0.25 h versus 0.105?0.174 h); energy comparisons are not equal-production unless an equal-tardiness subset is stated. In the merged E1 run B2 has 13/100 violations, P0 1/100, and optimized one-shot 0; PQd has 2/100: MyDrive/semiexpo/ai_runs/run4/v2_wpc_gated (sha256 f346ca242945923d), MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187).
+
+DS06 replays measured DS05 battery cycles with assumed scaling and timing: SIM_DATA_PROFILE, not semiconductor-site data. The diagnostic uses seeds 0–99, n=100, paired bootstrap 95% intervals and Drive raw results `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`; manifest binding MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154) (`reports/run3/root_cause_analysis.md`, `reports/run3/metric_audit_v3.md`). Facility studies use factory-clustered paired bootstrap intervals on unsynchronized MEASURED DS07 and SIM_DATA_PROFILE cells; exact campaign paths `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells` and `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/` (`reports/final/report_run4.md`).
+
+Negative evidence includes station AI energy and production failures, monitoring failure, no stable P0-BILL gain and withdrawn larger-pool effects; AI-BILL is NO-GO (section 5, D020; raw `MyDrive/semiexpo/ai_runs/run4_final_summary.md`) (`reports/final/report_run4.md`, `docs/handoff_run4.md`). The metric audit identifies incomplete raw reconciliation, possible pairing collapse, unequal tardiness and planning constraints, incomplete solver status and one-shot versus rolling oracle differences; no site savings, safety, FPY or water outcome is established (`reports/run3/metric_audit_v3.md`).
 
 
 | Diagnostic method | Result versus P0, kWh saved [paired 95% CI] | Evidence |
@@ -452,9 +485,11 @@ All rows: n=100, SIM_DATA_PROFILE; perfect-information diagnostics are not deplo
 | PQ* perfect cycle ratios | 0.008 [-0.007, 0.022] | not significant |
 | TR_Q perfect queued profiles | 0.049 [0.035, 0.064] | diagnostic ceiling |
 
-All rows: n=100, SIM_DATA_PROFILE, `reports/run3/ai_run3.md`; exact raw-result binding NOT_VERIFIED locally. Production AI and automated monitoring also failed their downstream gates (`reports/run4/ai_production_planning.md`, `reports/run4/ai_monitoring.md`; raw monitoring `MyDrive/semiexpo/ai_runs/run4/monitor/`).
+All rows: n=100, SIM_DATA_PROFILE, `reports/run3/ai_run3.md`; raw MyDrive/semiexpo/ai_runs/run3/v2_p5 (sha256 08e1bf44), MyDrive/semiexpo/ai_runs/run3/v2_pq_gated (sha256 9a345636), MyDrive/semiexpo/ai_runs/run3/v2_pq_ungated (sha256 17331443), MyDrive/semiexpo/ai_runs/run3/v2_pqd (sha256 42be5793), MyDrive/semiexpo/ai_runs/run3/v2_pqstar (sha256 0b3e7234). Production AI and automated monitoring also failed their downstream gates (`reports/run4/ai_production_planning.md`, `reports/run4/ai_monitoring.md`; raw monitoring `MyDrive/semiexpo/ai_runs/run4/monitor/`).
 
 ## 16 Visualization index
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 Status is based on index evidence only; PASS requires inspection and is not inferred. Original index `reports/figures/INDEX.md`; run-4 index `reports/run4/figures/INDEX.md`; boundary NOT_VERIFIED unless otherwise listed. F01/F02/F11 explicitly missing prediction rows. F16–F32 local run-4 figure files missing; the index lists selected campaign inputs as blocked. Figure file paths and full source data for F16–F32 are not recorded in the index.
 
@@ -493,6 +528,8 @@ DOCUMENT CHECK: six required sections present; missing metrics and raw source bi
 
 ## 17 Mentor compliance
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Statuses below are inherited concept-level assessments, not fresh passes; each evidence source and gap is documented in `reports/run4/mentor_compliance_run4.md`. PASS is a documentation/decision assessment, with raw-run path NOT_VERIFIED except where identified below; it does not authorize deployment.
 
 | ID | Requirement | Status | Remaining gap |
@@ -508,13 +545,15 @@ Statuses below are inherited concept-level assessments, not fresh passes; each e
 | M09 | Baselines and oracle | PARTIAL | Fairness and solver certificates incomplete  Evidence: `reports/run4/p0_architecture.md`. |
 | M10 | Incremental M0 versus B1 | PARTIAL | Matched site evidence missing  Evidence: `reports/run3/e1_electrical_constraints.md`. |
 | M11 | Quality and throughput | PARTIAL | Site FPY and integrity missing  Evidence: `reports/run3/failure_injection_v2.md`. |
-| M12 | AI incremental value | PASS | Negative results retained; SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`  Evidence: `reports/run3/ai_run3.md`. |
+| M12 | AI incremental value | FAIL | Evaluation completed; matched AI scheduling benefit not demonstrated; SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`  Evidence: `reports/run3/ai_run3.md`. |
 | M13 | Statistics and sensitivity | PARTIAL | Complete raw reconciliation missing  Evidence: `reports/run4/facility_billing.md`. |
 | M14 | Forecast and constrained optimizer | PARTIAL | Calibration and deployment validation missing  Evidence: `reports/run4/ai_eta.md`. |
 | M15 | Electricity before water | PASS | Water metering missing; SOURCE_REPORTED, raw path NOT_VERIFIED  Evidence: `docs/traceability.md`. |
 | M16 | Investment case | BLOCKED | Real costs and site contract missing  Evidence: `reports/run4/economics_run4.md`. |
 
 ## 18 Final decisions
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 | Decision | Disposition |
 |---|---|
@@ -544,7 +583,7 @@ Source: `docs/decisions.md`; D018 cell range is ASSUMED deployment scenario, bas
 | G01 Reference cell | PARTIAL | `docs/decisions.md`; ASSUMED, site NOT_VERIFIED. |
 | G02 Physics | PARTIAL | `docs/decisions.md`; analytic/unit test, run output NOT_VERIFIED. |
 | G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`; SIM_DATA_PROFILE, matching NOT_VERIFIED. |
-| G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`; SIM_DATA_PROFILE, raw binding NOT_VERIFIED. |
+| G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`; SIM_DATA_PROFILE, raw MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). |
 | G05 Energy AI | FAIL | `reports/run3/ai_run3.md`; SIM_DATA_PROFILE. |
 | G06 ETA | PASS | `reports/run4/ai_eta.md`; MEASURED, `MyDrive/semiexpo/ai_runs/run4/eta/`. |
 | G07 Production AI | FAIL | `reports/run4/ai_production_planning.md`; SIM_DATA_PROFILE. |
@@ -558,11 +597,15 @@ Gate statuses are inherited assessments, not fresh validation (`reports/run4/men
 
 ## 19 Research novelty
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Prior work includes the CMC hybrid flow-shop scheduling baseline; vendor equipment already offers regeneration and channel reuse (`CLAUDE.md`, `reports/run4/vendor_reference.md`). The incremental proposal combines production-constrained coordination, explicit M0 accounting, electrical screening and facility billing evaluation; it is a system integration and evaluation, not a claim to invent regenerative hardware or vendor reuse (`reports/run4/contribution_decomposition.md`, `docs/decisions.md`). Shared-link results combine topology and optimization; isolated topology and software effects are NOT_VERIFIED. AI has no demonstrated downstream energy or peak benefit, and no site, fab-wide, water or safety claim is supported (`reports/final/report_run4.md`). The requested `reports/sources` directory is MISSING locally; a complete prior-art comparison and novelty against all publications remain NOT_VERIFIED.
 
 ## 20 Executive summary
 
-The following are reported results, not independently reconciled site outcomes. Each interval is a 95% CI; differences are not additive. Raw Drive results remain NOT_VERIFIED locally.
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
+The following are reported results, not independently reconciled site outcomes. Each interval is a 95% CI; differences are not additive. Drive raw bindings are listed in `docs/raw_binding_manifest.md`.
 
 | Achievement / comparison | Mean and CI; n; boundary; raw path |
 |---|---|
@@ -573,8 +616,8 @@ The following are reported results, not independently reconciled site outcomes. 
 | P0 to rolling truth | 0.094 kWh [0.077, 0.112]; n=100; SIM_DATA_PROFILE; same Drive path (`reports/run3/root_cause_analysis.md`) |
 | P0 to queued truth | 0.049 kWh [0.035, 0.064]; n=100; SIM_DATA_PROFILE; same Drive path (`reports/run3/root_cause_analysis.md`) |
 | P0 to running truth | 0.024 kWh [0.013, 0.037]; n=100; SIM_DATA_PROFILE; same Drive path (`reports/run3/root_cause_analysis.md`) |
-| B2 to P0 facility demand, General, 5 cells | 5.99 kW [4.53, 7.41]; n=70 factory-months (10 factories, factory-clustered CI); SIM_DATA_PROFILE + MEASURED unsynchronized; `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells` (`reports/final/report_run4.md`) |
-| B2 to P0 facility demand, ToU, 5 cells | 5.11 kW [2.92, 7.42]; n=70 factory-months, factory-clustered CI; same boundary and path (`reports/final/report_run4.md`) |
-| B2 to P0 facility demand, General, 10 cells | 15.12 kW [11.48, 18.12]; n=70 factory-months, factory-clustered CI; same boundary and path (`reports/final/report_run4.md`) |
+| B2 to P0 facility demand, General, 5 cells | 5.99 kW [4.53, 7.41]; n=70 facility-months; SIM_DATA_PROFILE + MEASURED unsynchronized; MyDrive/semiexpo/ai_runs/run4/fac_gen_5cells (sha256 1263d44d) (`reports/final/report_run4.md`) |
+| B2 to P0 facility demand, ToU, 5 cells | 5.11 kW [2.92, 7.42]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_tou_5cells (sha256 53e74ab0) (`reports/final/report_run4.md`) |
+| B2 to P0 facility demand, General, 10 cells | 15.12 kW [11.48, 18.12]; n=70 facility-months; same boundary, MyDrive/semiexpo/ai_runs/run4/fac_gen_10cells (sha256 7d0bf4f6) (`reports/final/report_run4.md`) |
 
-Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: retrieve AI-BILL results (sizing twin screening done: reports/run3/e1_electrical_constraints.md), reconcile claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).
+Five principal weaknesses: site evidence absent; baseline matching and raw reconciliation incomplete; learned scheduling benefit failed; electrical protection and vendor access unvalidated; economics omit material site costs (`reports/final/report_run4.md`). Conditional GO for simulation and shadow preparation; NO-GO for site deployment and automatic station AI scheduling. Remaining work: retrieve AI-BILL and sizing results, reconcile claims and matched runs, obtain site/mentor evidence and complete protection and economic qualification (`docs/handoff_run4.md`, `reports/run4/mentor_data_request.md`).

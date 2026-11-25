@@ -178,9 +178,7 @@ T1 normal MAE previous/AI18 7.9/10.2 min, abnormal 2,240/849 min; T2 normal prev
 
 Additional ETA models and progress bins: MEASURED held-out DS05; baseline previous cycle; CI and subset n not recorded; MAE in minutes, skill and coverage dimensionless; `reports/run4/ai_eta.md`, raw `MyDrive/semiexpo/ai_runs/run4/eta/`, TCN `ai_runs/run4/eta_tcn/` (matched keys NOT_VERIFIED).
 
-| Task | Use case | Model | MAE / RMSE | Skill vs previous | Pinball | Coverage / width | Median APE | Latency |
-|---|---|---|---|---|---|---|---|---|
-| T1 / T2 | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB | PENDING_COLAB |
+T1 (total duration before start), test n = 2,210 cycles:
 | Model | MAE | skill | coverage80 | predict ms |
 |---|---|---|---|---|
 | previous cycle (recipe) | 290.7 | 0 | - | 0 |

@@ -148,3 +148,9 @@ configuration AFE 20 kW / bus 32 kW; cost-optimised candidate AFE 20 kW / bus 16
 energy and tardiness unchanged; reports/run3/e1_electrical_constraints.md). M12: AI evaluation is COMPLETE, AI scheduling benefit is NOT
 shown (FAIL) - evaluation done != benefit passed. AI-BILL is the last AI experiment; if it fails no more models are trained. Simulation
 acceptance is reported separately from industrial site acceptance. No scope expansion.
+
+## D020 (lead, 2026-11-25) — AI-BILL final Go/No-Go: NO-GO
+Learned facility-load forecast in P0-BILL: +0.10 kW [0.00, +0.30] vs historical profile (1/12 facility-months), -0.84 [-2.70, +1.31] vs P0-E1-Peak
+(test months 2019-08/09, 6 factories, factory-clustered CI; reports/final/parts/aibill.md). Perfect background would gain +2.56 kW [0.90, 4.34] in
+these months (not in May/July): research lead requiring real facility meters. AI retained only for ETA and engineer advisory; no further AI
+scheduling experiments; forecaster-metrics defect left unresolved and recorded.
