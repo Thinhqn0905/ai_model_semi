@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 from regenate.simulation.bus_twin import TwinParams, check_plan
 
 
@@ -30,3 +30,24 @@ def test_direct_limit_and_invalid_input():
     assert any(v[1] == 'direct_power' for v in result['violations'])
     with pytest.raises(ValueError):
         check_plan([[float('nan')]], [[0]], 1)
+
+
+def test_all_violations_include_duration_and_later_events():
+    # At 100 kW demand, even a fully loaded 20 kW AFE exhausts the
+    # capacitor's nominal-to-minimum energy in 0.0039 s once ramped.
+    result = check_plan([0, 100], [100, 0], 4, all_violations=True)
+    stats = result['violation_stats']
+    assert stats['undervoltage']['count'] > 0
+    assert stats['undervoltage']['duration_s'] > 0
+    assert stats['undervoltage']['first_time_s'] is not None
+    assert stats['ramp']['count'] > 0
+    assert not check_plan([0], [0], 1, all_violations=True)['violations']
+
+
+
+def test_collapse_stops_before_later_power():
+    a = check_plan([0, 0], [100, 500], 4, all_violations=True)
+    b = check_plan([0, 0], [100, 0], 4, all_violations=True)
+    assert a == b
+    assert a['violation_stats']['collapse']['count'] == 1
+    assert a['i_peak'] < 1000

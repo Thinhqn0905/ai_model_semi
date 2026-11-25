@@ -22,7 +22,7 @@ class TwinParams:
     dt_s: float = 0.001
 
 
-def check_plan(p_src_kw, p_sink_kw, slot_s, params=None):
+def check_plan(p_src_kw, p_sink_kw, slot_s, params=None, all_violations=False):
     """Screen station-by-slot DC bus powers; carry state between boundary windows.
 
     Gaps between windows are omitted, so returned times and chopper energy describe
@@ -65,6 +65,7 @@ def check_plan(p_src_kw, p_sink_kw, slot_s, params=None):
     actual_sink = np.zeros(src.shape[0])
     violations = []
     active = set()
+    stats = {}
     for start, stop in windows:
         t = start
         while t < stop - 1e-12:
@@ -76,7 +77,8 @@ def check_plan(p_src_kw, p_sink_kw, slot_s, params=None):
             direct = min(source, demand)
             current = max(source, demand) * 1000 / max(voltage, 1e-12)
             i_peak = max(i_peak, current)
-            ref = np.clip(p.k_droop_kw_per_v * (p.v_nom - voltage), -p.p_afe_max_kw, p.p_afe_max_kw)
+            requested_afe = p.k_droop_kw_per_v * (p.v_nom - voltage)
+            ref = np.clip(requested_afe, -p.p_afe_max_kw, p.p_afe_max_kw)
             afe += dt / p.tau_afe_s * (ref - afe)
             chop = p.p_chop_max_kw * np.clip((voltage - p.v_chop) / (p.v_max - p.v_chop), 0, 1)
             chop_kwh += chop * dt / 3600
@@ -87,13 +89,34 @@ def check_plan(p_src_kw, p_sink_kw, slot_s, params=None):
                       'overvoltage': (voltage > p.v_max, voltage),
                       'overcurrent': (current > p.i_link_max_a, current),
                       'direct_power': (direct > p.p_link_max_kw, direct)}
+            if all_violations:
+                checks.update(afe_import=(requested_afe > p.p_afe_max_kw, requested_afe),
+                              afe_export=(-requested_afe > p.p_afe_max_kw, -requested_afe),
+                              ramp=(bool(np.any(np.abs(src[:, slot] - actual_src) > p.ramp_kw_per_s * dt) or np.any(np.abs(sink[:, slot] - actual_sink) > p.ramp_kw_per_s * dt)), p.ramp_kw_per_s))
             for kind, (bad, value) in checks.items():
+                if all_violations:
+                    stat = stats.setdefault(kind, {'count': 0, 'duration_s': 0.0, 'first_time_s': None})
+                    if bad:
+                        stat['duration_s'] += dt
+                        if kind not in active:
+                            stat['count'] += 1
+                            if stat['first_time_s'] is None:
+                                stat['first_time_s'] = t + dt
                 if bad and kind not in active:
                     violations.append((t + dt, kind, float(value)))
                 if bad:
                     active.add(kind)
                 else:
                     active.discard(kind)
+            if all_violations and (voltage < 0.5 * p.v_min or energy == 0):
+                violations.append((t + dt, 'collapse', float(voltage)))
+                stats['collapse'] = {'count': 1, 'duration_s': 0.0, 'first_time_s': t + dt}
+                break
             t += dt
-    return dict(approved=not violations, v_min=float(v_min), v_max=float(v_max),
-                i_peak=float(i_peak), p_chop_kwh=float(chop_kwh), violations=violations)
+        if all_violations and violations and violations[-1][1] == 'collapse':
+            break
+    result = dict(approved=not violations, v_min=float(v_min), v_max=float(v_max),
+                  i_peak=float(i_peak), p_chop_kwh=float(chop_kwh), violations=violations)
+    if all_violations:
+        result['violation_stats'] = stats
+    return result

@@ -27,3 +27,10 @@ Gate: `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_bill t
 
 ## Run 2 (lead) — evidence standard
 VERIFIED requires: a saved copy of the official document in data/tariffs/sources/ (sha256 in data/tariffs/sources/README.md), the exact quoted text line(s) and the page/table number in the YAML field (quote:, page:). If you cannot download/open the document, the field is NOT_VERIFIED regardless of the reference value in the plan. Re-check every currently VERIFIED field against this standard. Then resolve: Malaysia MD definition (30-min interval, aligned or sliding, peak-period eligibility for MV TOU), MV TOU energy windows, ICPT/AFA surcharges, connected-load charge rule, Vietnam actual tariff (official decision number + rates), Singapore UOS/contracted capacity current schedule. Finish with the gate.
+
+## Run 3 (lead) — facts read by the lead from https://www.mytnb.com.my/tariff (HTTP 200, 2026-11-25; the RP4 PDF URL returns 404, tnb.com.my MD page returns 403 to automated clients)
+- ToU hours: "On Monday to Friday / Peak : 2 PM to 10 PM / Off-Peak : 10 PM to 2 PM"; "On Saturday and Sunday / Off-Peak throughout the day (24 hours)".
+- "for Non-Domestic Medium Voltage and High Voltage customers, Maximum Demand which occurs during Off-Peak period will not be charged."
+- Mapping: old C1/E1/F1 -> "Non-Domestic Medium Voltage General Tariff"; old C2/E2/F2 -> "Non-Domestic Medium Voltage ToU Tariff".
+- "In RP4, the ICPT mechanism has been replaced by the Fuel Adjustment", "updated monthly" (rate via singlebuyer.com.my, not read).
+Record these as VERIFIED (source = that page, quote as above). Rates (energy/capacity/network/retail) stay NOT_VERIFIED unless you obtain the official schedule from another official TNB/Suruhanjaya Tenaga URL (try https://www.st.gov.my and other mytnb.com.my paths). MD interval length stays NOT_VERIFIED unless quoted from an official page. Update billing.py so MD for TNB MV tariffs is computed over the peak window only (Mon-Fri 14:00-22:00). Finish with the gate.

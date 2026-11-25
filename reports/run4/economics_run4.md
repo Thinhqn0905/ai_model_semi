@@ -1,0 +1,5 @@
+﻿# Run 4 facility economics — PENDING_COLAB
+
+Boundary: SIM_DATA_PROFILE cell plus MEASURED DS07 facility loads, not synchronised; tariff and finance assumptions NOT_VERIFIED. The module computes paired facility-month demand deltas, paired DS06 mean energy deltas and annualises seven months by 12/7. Missing costs are excluded and marked OPTIMISTIC; their payback is expressed as a break-even ceiling. Cost estimates are USD, so a user-supplied USD per tariff-currency unit is required for financial results. Without instance counts, the 15-hour block protocol provides an assumed count. Energy is priced at the normal flat rate because per-instance TOU weights are unavailable. Actual instance draws, TOU allocation, exchange rate, complete costs and site billing remain unverified.
+
+PENDING_COLAB: execute on the matched facility and DS06 outputs. The current implementation does not yet provide the required sensitivity sweeps, per-option verdicts or confidence intervals; unavailable option pairs are omitted. Singapore contract and paper trial tariffs are rejected pending a billable model. No investment or payback claim is made.
