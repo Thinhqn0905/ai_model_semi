@@ -120,7 +120,7 @@ def window_mask(index, mdw):
     return np.asarray(index.weekday.isin(mdw[0]) & (hr >= mdw[1]) & (hr < mdw[2]))
 
 
-def run_p0bill_block(inst, prm, bg15, t_block, kind, floor, mdw, interval_slots=2, time_limit=20.0):
+def run_p0bill_block(inst, prm, bg15, t_block, kind, floor, mdw, interval_slots=2, time_limit=20.0, e_tol=0.02):
     """Causal P0-BILL on one block: rolling P0 (recipe profiles) whose peak level minimises billed demand of (forecast bg + cell),
     floor = billed demand reached in the month before the block; off-window intervals never bind."""
     from regenate.data.bench_v2 import fifo
@@ -134,7 +134,7 @@ def run_p0bill_block(inst, prm, bg15, t_block, kind, floor, mdw, interval_slots=
         f = bg_forecast(bg15, t, K, kind); idx = pd.date_range(t, periods=K, freq=f"{SLOT_MIN}min")
         f = np.where(window_mask(idx, mdw), np.nan_to_num(f), -1e6)
         phase = int((t.minute % (interval_slots * SLOT_MIN)) // SLOT_MIN)
-        return dict(peak_bg=f, peak_floor=floor, peak_avg_slots=interval_slots, peak_phase=phase)
+        return dict(peak_bg=f, peak_floor=floor, peak_avg_slots=interval_slots, peak_phase=phase, e_tol=e_tol)
 
     fa, fs = fifo(inst)
     rp = Replanner(inst, "P0", sl, prm, 0.25, time_limit, profile_fn=make_profile_fn(inst, "P0", None, sl), peak_stage=True, bill_fn=bill_fn)
@@ -153,6 +153,7 @@ def main():
     ap.add_argument("--md_window", default="", help='e.g. "0,1,2,3,4:14:22" = Mon-Fri 14-22 h (TNB RP4 MV peak); empty = all hours')
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--bill", action="store_true", help="also ORACLE-BILL re-solve")
     ap.add_argument("--p0bill", nargs="*", default=[], help="causal P0-BILL with background forecast kinds: oracle persist hist")
+    ap.add_argument("--p0bill_etol", type=float, default=0.02)
     ap.add_argument("--bill_etol", type=float, nargs="+", default=[1e-4], help="energy tolerance of the billing level (sweep)")
     ap.add_argument("--prm", default='{"P_afe_max": 20, "P_bus_max": 32, "dP_step_max": 10}'); ap.add_argument("--out", required=True)
     a = ap.parse_args(); prm = ElecParams(**json.loads(a.prm)); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -197,14 +198,14 @@ def main():
             if a.p0bill:
                 bg15 = bg_all.resample(f"{SLOT_MIN}min").mean()               # whole record: forecasts look back across months
                 for kind in a.p0bill:
-                    key = f"P0-BILL:{kind}"; cand[key] = []
+                    key = f"P0-BILL:{kind}@etol{a.p0bill_etol:g}"; cand[key] = []
                     for dr in draws:
                         tr, so_far = [], pd.Series(0.0, index=idx)
                         for t, i in zip(blocks, dr):
                             past = (bg + so_far)[:t - pd.Timedelta(minutes=1)]
                             fl = billed_demand(past, a.interval_min, md_window=mdw)[0] if len(past) else 0.0
                             s_ = run_p0bill_block(insts[i], prm, bg15, t, kind, 0.0 if np.isnan(fl) else fl, mdw,
-                                                  a.interval_min // SLOT_MIN)
+                                                  a.interval_min // SLOT_MIN, e_tol=a.p0bill_etol)
                             x = to_minutes(cell_net_slots(insts[i], s_, prm)); tr.append(x)
                             so_far = so_far.add(place([t], [x], idx), fill_value=0.0)
                         cand[key].append(tr)
