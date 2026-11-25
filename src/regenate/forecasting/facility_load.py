@@ -40,9 +40,9 @@ def features(series, t, horizon, factory_id):
     return np.asarray(values, dtype=float)
 
 
-def make_rows(series, factory_id, scale, start, end):
+def make_rows(series, factory_id, scale, start, end, stride_min=15):
     rows, targets, times, horizons = [], [], [], []
-    for t in pd.date_range(start, end, freq='15min', inclusive='left'):
+    for t in pd.date_range(start, end, freq=f'{stride_min}min', inclusive='left'):   # shortcut: decision-time subsampling for speed
         for h in range(1, 61):
             target = t + (h - 1) * SLOT
             # Keep each target within its decision-time split.
@@ -83,6 +83,7 @@ def build_models():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ds07', required=True); ap.add_argument('--out', required=True)
+    ap.add_argument('--stride_min', type=int, default=15, help='decision-time spacing for training/evaluation rows (block starts always kept)')
     args = ap.parse_args(); out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(args.ds07) as z:
         names = sorted(Path(n).stem for n in z.namelist() if n.startswith('Data_list/Factories/') and n.endswith('.csv'))
@@ -93,7 +94,7 @@ def main():
     scales = {name: float(s.loc['2019-03-01':'2019-06-30'].median()) for name, s in series.items()}
     if any(not np.isfinite(v) or v <= 0 for v in scales.values()):
         raise ValueError('Each factory needs a positive training median')
-    batches = [make_rows(series[n], ids[n], scales[n], '2019-03-01', '2019-07-01')[:2] for n in names]
+    batches = [make_rows(series[n], ids[n], scales[n], '2019-03-01', '2019-07-01', args.stride_min)[:2] for n in names]
     X = np.concatenate([b[0] for b in batches]); y = np.concatenate([b[1] for b in batches])
     models = build_models()
     for model in models.values():
@@ -107,7 +108,8 @@ def main():
             # Block starts match facility.month_blocks, including monthly reset.
             start = pd.Timestamp(month + '-01')
             end = start + pd.offsets.MonthBegin(1)
-            for t in pd.date_range(start, end, freq='15min', inclusive='left'):
+            bstarts = set(month_blocks(month, 15))
+            for t in sorted(set(pd.date_range(start, end, freq=f'{args.stride_min}min', inclusive='left')) | bstarts):
                 idx = pd.date_range(t, periods=60, freq='15min')
                 forecasts = {'persistence': bg_forecast(s, t, 60, 'persist'), 'hist': bg_forecast(s, t, 60, 'hist'),
                              'seasonal': s.reindex(idx - pd.Timedelta(weeks=1)).to_numpy()}
