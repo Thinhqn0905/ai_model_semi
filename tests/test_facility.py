@@ -1,0 +1,20 @@
+import numpy as np
+import pandas as pd
+from regenate.evaluation.facility import billed_demand, place, month_blocks, to_minutes, topo_of
+
+
+def test_billed_demand_aligned_and_coverage():
+    idx = pd.date_range("2019-03-01", periods=120, freq="min")
+    p = pd.Series(100.0, index=idx); p.iloc[40:50] = 400.0           # 10-min spike inside the 30-59 window
+    md, t = billed_demand(p, 30)
+    assert md == np.mean([100.0] * 10 + [400.0] * 10 + [100.0] * 10) and t == idx[30]
+    q = p.copy(); q.iloc[30:60] = np.nan; q.iloc[30:33] = 400.0      # 10 % coverage window is excluded
+    assert billed_demand(q, 30)[0] == 100.0
+
+
+def test_place_and_blocks():
+    idx = pd.date_range("2019-03-01", periods=48 * 60, freq="min")
+    b = month_blocks("2019-03", 12)[:4]
+    s = place(b, [to_minutes([1.0, 2.0])] * 4, idx)
+    assert s.sum() == 4 * 15 * 3 and s.iloc[0] == 1.0 and s.iloc[15] == 2.0 and s.iloc[12 * 60] == 1.0
+    assert topo_of("B1p-OPT") == "B1p" and topo_of("P0@v2_e1_peak") == "DC"

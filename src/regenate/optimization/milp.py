@@ -57,9 +57,14 @@ def _coeffs(job, topology, prm):
 
 
 def solve(jobs, S, K, topology="DC", prm=None, dt_h=0.25, idle_kw=0.0, cap=None,
-          tt_first=True, tt_slack=1e-6, time_limit=60.0, fixed=None, peak_stage=False, e_tol=1e-4):
+          tt_first=True, tt_slack=1e-6, time_limit=60.0, fixed=None, peak_stage=False, e_tol=1e-4,
+          peak_bg=None, peak_floor=0.0, peak_avg_slots=1, peak_phase=0):
     """fixed: {job_index: start_slot} frozen decisions (rolling horizon).
-    peak_stage: third lexicographic level — minimise peak M0 import s.t. TT <= TT* and energy <= E*(1+e_tol)."""
+    peak_stage: third lexicographic level — minimise peak M0 import s.t. TT <= TT* and energy <= E*(1+e_tol).
+    Billing-aware peak (Run 4, P0-BILL): peak >= mean over each aligned billing interval of (cell import + peak_bg[k]);
+    peak_bg = facility background kW per slot (None -> 0), peak_avg_slots = slots per billing interval (e.g. 2 for 30 min at
+    15-min slots), peak_phase = slots already elapsed in the first interval, peak_floor = monthly billed demand already reached
+    (intervals below it cost nothing)."""
     prm = prm or ElecParams()
     cap = np.full(K, S, float) if cap is None else np.asarray(cap, float)
     fixed = fixed or {}
@@ -189,10 +194,13 @@ def solve(jobs, S, K, topology="DC", prm=None, dt_h=0.25, idle_kw=0.0, cap=None,
         ext = [LinearConstraint(pad(c.A), c.lb, c.ub) for c in cons_l]
         I = csr_matrix((np.ones(K), (np.arange(K), np.arange(K))), shape=(K, K))
         ext.append(LinearConstraint(hstack([-ACM, I, csr_matrix((K, 1))]).tocsr(), const_ac, np.inf))
-        ext.append(LinearConstraint(hstack([csr_matrix((K, n)), -I, csr_matrix(np.ones((K, 1)))]).tocsr(), 0, np.inf))
+        bg = np.zeros(K) if peak_bg is None else np.asarray(peak_bg, float)[:K]
+        m = max(1, int(peak_avg_slots)); grp = (np.arange(K) + int(peak_phase)) // m; G_n = grp.max() + 1
+        G = csr_matrix((np.ones(K) / m, (grp, np.arange(K))), shape=(G_n, K))     # aligned interval mean (partial = / m)
+        ext.append(LinearConstraint(hstack([csr_matrix((G_n, n)), -G, csr_matrix(np.ones((G_n, 1)))]).tocsr(), G @ bg, np.inf))
         ext.append(LinearConstraint(pad(csr_matrix(energy_obj)), -np.inf, r2.fun + e_tol * abs(r2.fun) + 1e-6))
         c3 = np.zeros(n + K + 1); c3[-1] = 1
-        b3 = Bounds(np.r_[lb, np.zeros(K + 1)], np.r_[ub, np.full(K + 1, np.inf)])
+        b3 = Bounds(np.r_[lb, np.zeros(K), float(peak_floor)], np.r_[ub, np.full(K + 1, np.inf)])
         r3 = milp(c3, constraints=ext, integrality=np.r_[integ, np.zeros(K + 1)], bounds=b3, options=opts)
         if r3.x is not None:
             z = r3.x[:n]; peak_info = dict(peak_kw_planned=float(r3.fun), peak_status=r3.message)

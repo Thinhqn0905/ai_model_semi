@@ -102,3 +102,17 @@ def test_bus_limits_match_bruteforce(field, val):
     r = solve(jobs, S, K, "DC", prm, DT, idle_kw=idle)
     assert best is not None and r.status == "optimal" and ok(r.starts)
     assert r.tt == pytest.approx(best[0], abs=1e-9) and r.net_kwh == pytest.approx(best[1], abs=1e-6)
+
+
+def test_billing_peak_avoids_background_peak():
+    """P0-BILL level: with a facility background spike, the cell's import moves away from it (energy unchanged)."""
+    jobs = [Job(0, 6, 20, np.full(2, 6.0), np.zeros(2))]                      # one 2-slot sink job, free start in 0..6
+    S, K = 1, 10
+    bg = np.zeros(K); bg[0:2] = 100.0                                         # background peak in slots 0-1
+    plain = solve(jobs, S, K, "DC", dt_h=DT, peak_stage=True)
+    bill = solve(jobs, S, K, "DC", dt_h=DT, peak_stage=True, peak_bg=bg, peak_avg_slots=2)
+    assert bill.net_kwh == pytest.approx(plain.net_kwh, abs=1e-6)
+    assert bill.starts[0] >= 2                                                # not on top of the background peak
+    assert bill.info["peak_kw_planned"] == pytest.approx(100.0, abs=1e-6)     # billed max = background alone
+    floor = solve(jobs, S, K, "DC", dt_h=DT, peak_stage=True, peak_bg=np.zeros(K), peak_floor=50.0)
+    assert floor.info["peak_kw_planned"] == pytest.approx(50.0, abs=1e-6)     # below the floor nothing is billed

@@ -60,7 +60,7 @@ Third lexicographic level (min peak at equal TT and energy, milp.solve peak_stag
 energy cost on DS06 (n=50). AI variants P1..P4 do not beat P0 on energy (n=100 and n=50) or peak (n=50). Product configuration:
 P0 + peak stage; AI forecasts shown to engineers (expected completion, uncertainty) behind AI-G10. Evidence: reports/ai/ai_exp12_ds06.md.
 
-## D006 (2026-11-25, lead) — Run 3: AI failure explained; decision unchanged (optimisation-only for scheduling)
+## D006-R3 (2026-11-25, lead) — Run 3: AI failure explained; decision unchanged (optimisation-only for scheduling)
 Information decomposition on DS06 (n=100, reports/run3/root_cause_analysis.md): rolling oracle == one-shot ORACLE (gap is pure
 information, 0.094 kWh = 1.1 % of P0); queued-job info 52 %, running-job info 26 %. The Run 2 integration fed PERFECT forecasts
 captures 0 % or loses -> the Run 2 negative result is an integration failure, not a model failure. Run 3 integrations (P5/P5s
@@ -68,3 +68,55 @@ phase-aligned recipe, PQ/PQ5 cycle-level queued-job model with AI18 gate) do not
 perfect cycle ratios recovers the tardiness value but not the energy value (n.s.), which lies in intra-cycle shape
 (reports/run3/ai_run3.md). Decision: keep P0 + peak stage for scheduling; forecasts stay engineer information (ETA, anomaly flag)
 behind AI-G10. No energy or peak saving is attributed to AI.
+
+# Run 4 binding decisions (user, 2026-11-25; D006-R3 above is the Run 3 evidence record behind D006/D010)
+
+## D006 — Default scheduling engine: P0-E1-Peak
+Rolling-horizon MILP without learned forecasting (recipe nominal profiles, current telemetry, production constraints, job-completion
+events) + E1 electrical limits (AFE import, bus throughput, slot step) + third lexicographic peak level; subject to dynamic twin
+screening. Evidence: reports/run3/e1_electrical_constraints.md (kill test 1.09 kWh 50/50 with limits; peak -25.6 % vs B1p-OPT;
+twin approval 100 % for P0 and ORACLE). Deterministic optimisation savings are never attributed to AI.
+
+## D007 — Experimental reference test cell
+Regenerative multi-channel battery module cycling test cell; commercial functional reference Chroma 17020 (not an internal circuit
+model). DS05 = measured profiles, DS06 = integrated benchmark (8 stations, 25 modules x 0.24 kW, AFE 20 kW, link 32 kW, step 10 kW,
+all ASSUMED, not Chroma specifications; kept for reproducibility, larger configurations only as sensitivity). Eligibility as the
+final semiconductor competition application: pending mentor confirmation. Closes the WP02 target-cell question (Session_Checklist 17).
+
+## D008 — Semiconductor transfer application (conditional)
+Regenerative bidirectional power-electronics module testing (bidirectional DC-DC validation, battery-emulator PE testing, PE module
+cycling, ESS module testing, EV power-conversion test). Eligible only with evidence of independently timed residual source and sink
+phases at the station boundary after local reuse; a bidirectional DUT does not imply bidirectional net station power. The reference
+cell is not changed again without evidence and explicit approval.
+
+## D009 — Software-first deployment
+ReGenATE is a coordination software platform on existing regenerative equipment. FIN-A (regen-to-AC), FIN-B (existing compatible
+shared-energy infrastructure, PRIORITY), FIN-C (full retrofit). Contribution = incremental coordination, scheduling, billing
+optimisation, operational intelligence; hardware regeneration and vendor channel-to-channel reuse are not ReGenATE novelty.
+
+## D010 — AI operational intelligence
+Priorities: completion-time (ETA), station availability, tardiness-aware planning, cycle-/energy-deviation monitoring, calibrated
+uncertainty, risk advisory. AI enters automatic scheduling only after matched downstream improvement over a non-AI baseline
+(Run 3: not yet shown for energy, peak or tardiness with learned models; PQd* shows a tardiness ceiling of 0.048 h/instance).
+
+## D011 — Business feasibility
+Routes: reduced incremental CAPEX, existing infrastructure, energy, facility-level demand charges, TOU, contracted capacity, verified
+production benefits. No monetisation of unverified AI predictions, hypothetical avoided failures or unsupported productivity gains.
+
+## D012 — Electrical acceptance
+No optimizer or AI replaces independent electrical protection. Accepted schedules satisfy modelled hard constraints and pass the
+dynamic twin screen.
+
+## D013 — Public facility load: DS07 (primary), DS08 optional after DS07 works.
+DS07 = Lee, Baek, Kim, Sci Data 2022, figshare 14822256 v9, CC BY 4.0: 10 Korean factories, 1-min kW, Mar-Sep 2019 (verified on Colab,
+md5 match). Independent of DS05/DS06 (not synchronised).
+
+## D014 — Public tariff benchmark: Malaysia TNB RP4 (primary, maximum demand), Vietnam actual + two-component trial (trial not
+payable), Singapore SP Group. Geographical counterfactuals, not the DS07 factories' actual tariffs.
+
+## D015 — Facility-level billing: monthly bills per tariff rules (billing interval, eligible periods) on facility load + cell load;
+no extrapolation of instantaneous cell peak reductions.
+
+## D016 — Contribution decomposition: report separately regenerative hardware (B0->B1), shared topology (B1p-OPT->B2 / ->B3),
+conventional scheduling, rolling optimisation, peak/billing optimisation, AI operational benefit. The 11.6 % shared-link figure is
+topology + optimisation, never AI or software-only.
