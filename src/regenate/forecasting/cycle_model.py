@@ -54,7 +54,38 @@ def fit(c, seed=0):
     return models, F, pd.DataFrame(rows)
 
 
-def evaluate(c, models, F):
+GATE_TH = (None, 0.0, 0.05, 0.1, 0.2, 0.5, 1.0)   # None = model off (recipe); th = use model only if |log ratio| > th
+
+
+def select_gates(c, models, F):
+    """AI18: per (target, use case) gate chosen on VALIDATION MAE; keeps the exact recipe for typical cycles."""
+    va = c[c.split == "val"]; rows = []
+    for t, col in TARGETS.items():
+        lr = models[t].predict(va[F]); prev = np.exp(va[f"{t}_lag1"].values); true = va[col].clip(lower=EPS).values
+        for uc in sorted(c.use_case.unique()):
+            m = (va.use_case == uc).values
+            if not m.any():
+                rows.append(dict(target=t, use_case=uc, th=None, val_mae=np.nan)); continue
+            best = min(((th, np.mean(np.abs(prev[m] * np.exp(_gate(lr[m], th)) - true[m]))) for th in GATE_TH),
+                       key=lambda x: x[1])
+            rows.append(dict(target=t, use_case=uc, th=best[0], val_mae=best[1]))
+    return pd.DataFrame(rows)
+
+
+def _gate(lr, th):
+    return np.zeros_like(lr) if th is None else np.where(np.abs(lr) > th, lr, 0.0)
+
+
+def gated_log_ratio(c, models, F, gates, t):
+    lr = models[t].predict(c[F]); g = gates[gates.target == t].set_index("use_case").th
+    out = np.zeros_like(lr)
+    for uc in c.use_case.unique():
+        m = (c.use_case == uc).values; th = g.get(uc, None)
+        out[m] = _gate(lr[m], None if th is None or (isinstance(th, float) and np.isnan(th)) else th)
+    return out
+
+
+def evaluate(c, models, F, gates=None):
     out = []
     for split in ("val", "test"):
         d = c[c.split == split]
@@ -62,6 +93,8 @@ def evaluate(c, models, F):
             true = d[col].clip(lower=EPS).values; prev = np.exp(d[f"{t}_lag1"].values)
             preds = {"AI00_prev_cycle": prev, "AI02_med5": np.exp(d[f"{t}_med5"].values),
                      "AI10_lgbm_cycle": prev * np.exp(models[t].predict(d[F]))}
+            if gates is not None:
+                preds["AI18_gated"] = prev * np.exp(gated_log_ratio(d, models, F, gates, t))
             base = np.mean(np.abs(prev - true))
             for name, p in preds.items():
                 for uc in [None] + sorted(d.use_case.unique()):
@@ -73,10 +106,10 @@ def evaluate(c, models, F):
     return pd.DataFrame(out)
 
 
-def pred_table(c, models, F):
+def pred_table(c, models, F, gates=None):
     p = c[["cycle_file", "use_case", "split"]].copy()
-    for t in TARGETS:
-        p[f"r_{t}"] = np.exp(models[t].predict(c[F]))                    # predicted ratio to the previous cycle
+    for t in TARGETS:                                                     # predicted ratio to the previous cycle
+        p[f"r_{t}"] = np.exp(models[t].predict(c[F]) if gates is None else gated_log_ratio(c, models, F, gates, t))
     return p
 
 
@@ -87,8 +120,10 @@ def main():
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     cyc, _ = load_proc(a.proc)
     c = build_table(cyc); models, F, sel = fit(c, a.seed)
-    ev = evaluate(c, models, F); ev.to_csv(out / "cycle_metrics.csv", index=False); sel.to_csv(out / "selection.csv", index=False)
-    pred_table(c, models, F).to_parquet(out / "cycle_pred.parquet", index=False)
+    gates = select_gates(c, models, F); gates.to_csv(out / "gates.csv", index=False)
+    ev = evaluate(c, models, F, gates); ev.to_csv(out / "cycle_metrics.csv", index=False); sel.to_csv(out / "selection.csv", index=False)
+    pred_table(c, models, F).to_parquet(out / "cycle_pred.parquet", index=False)              # PQ: ungated model
+    pred_table(c, models, F, gates).to_parquet(out / "cycle_pred_gated.parquet", index=False)  # PQ with AI18 gate
     import joblib; joblib.dump(dict(models=models, feats=F), out / "cycle_models.joblib")
     (out / "manifest.json").write_text(json.dumps(dict(args=vars(a), n=len(c), feats=F), indent=1))
     print(ev[(ev.use_case == "ALL")].round(4).to_string(index=False))

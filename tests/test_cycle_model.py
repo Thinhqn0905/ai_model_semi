@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from regenate.forecasting.cycle_model import build_table, fit, evaluate, pred_table
+from regenate.forecasting.cycle_model import build_table, fit, evaluate, pred_table, select_gates
 
 
 def synth_cyc(n=400):
@@ -24,3 +24,13 @@ def test_cycle_model_leak_free_and_runs():
     assert not any(f.startswith(("l_", "y_")) or f in ("dur_h", "e_charge_kwh") for f in F)       # no same-cycle info
     ev = evaluate(c, models, F); assert set(ev.model) == {"AI00_prev_cycle", "AI02_med5", "AI10_lgbm_cycle"}
     p = pred_table(c, models, F); assert {"r_dur", "r_ech", "r_eds"} <= set(p.columns) and (p.r_dur > 0).all()
+
+
+def test_gate_off_equals_recipe():
+    c = build_table(synth_cyc()); models, F, _ = fit(c)
+    g = select_gates(c, models, F); g["th"] = None
+    p = pred_table(c, models, F, g); assert np.allclose(p.r_dur, 1.0)
+    ev = evaluate(c, models, F, select_gates(c, models, F))
+    v = ev[(ev.split == "val") & (ev.use_case == "ALL")].set_index(["target", "model"]).mae
+    for t in ("dur", "ech", "eds"):                     # gate selected on val can never be worse than the recipe on val
+        assert v[(t, "AI18_gated")] <= v[(t, "AI00_prev_cycle")] + 1e-12
