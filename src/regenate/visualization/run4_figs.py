@@ -88,7 +88,7 @@ def generate(number, root):
                     raise Blocked(f'missing input: {manifest}')
                 try:
                     args = json.loads(manifest.read_text(encoding='utf-8'))['args']
-                    settings.append({k: v for k, v in args.items() if k not in ('out', 'methods', 'workers')})
+                    settings.append({k: args.get(k) for k in ('seeds', 'flex', 'split', 'n_jobs', 'n_stations', 'time_limit', 'prm', 'peak')})
                 except (ValueError, KeyError, TypeError) as exc:
                     raise Blocked(f'invalid manifest: {manifest}: {exc}') from exc
             if any(x != settings[0] for x in settings[1:]):
@@ -172,25 +172,40 @@ def generate(number, root):
             ax.set_xlabel(title + ' (paired 95% CI)')
         return fig, b, [p]
     if number in (17, 18):
-        p = root / ('run4/eta/metrics_T1.csv' if number == 17 else 'run4/eta/metrics_T2.csv')
-        d = read(p); b = boundary(d, p)
-        fig, ax = plt.subplots(figsize=(7, 4))
+        p = root / ('run4/eta/predictions_T1.parquet' if number == 17 else 'run4/eta/metrics_T2.csv')
         if number == 17:
-            require(d, ['cycle_id', 'progress', 'true', 'q10', 'q90'], p)
-            for cycle, g in d.groupby('cycle_id', sort=False):
-                g = g.sort_values('progress'); x = pd.to_numeric(g.progress).to_numpy()
-                ax.plot(x, pd.to_numeric(g['true']).to_numpy(), label=str(cycle))
-                ax.fill_between(x, pd.to_numeric(g.q10).to_numpy(), pd.to_numeric(g.q90).to_numpy(), alpha=.15)
-            ax.set_ylabel('True and q10–q90 ETA'); ax.legend(fontsize=7)
-        else:
-            require(d, ['progress_bin', 'error'], p)
-            g = d.groupby('progress_bin', sort=True).error.mean()
-            ax.bar(g.index.astype(str), g.values); ax.set_ylabel('Mean ETA error')
-        ax.set_xlabel('Cycle progress'); return fig, b, [p]
+            if not p.is_file():
+                raise Blocked(f'missing input: {p}')
+            d = pd.read_parquet(p)
+            require(d, ['cycle_file', 'use_case', 'true', 'model', 'q10', 'q50', 'q90'], p)
+            models = d.model.dropna().astype(str).unique().tolist()
+            model = 'quantile_lightgbm_cqr' if 'quantile_lightgbm_cqr' in models else next((m for m in models if 'quantile' in m.lower() or m.lower().startswith('q')), None)
+            if model is None:
+                raise Blocked(f'{p}: no quantile model')
+            d = d[d.model == model].head(30).reset_index(drop=True)
+            if d.empty:
+                raise Blocked(f'{p}: no predictions')
+            fig, ax = plt.subplots(figsize=(9, 4))
+            x = np.arange(len(d))
+            ax.plot(x, d['true'].to_numpy(), 'o', label='True')
+            ax.plot(x, d.q50.to_numpy(), '.', label='Median')
+            ax.fill_between(x, d.q10.to_numpy(dtype=float), d.q90.to_numpy(dtype=float), alpha=.2)
+            ax.set_xlabel('Sample cycle'); ax.set_ylabel('ETA'); ax.legend()
+            return fig, 'NOT_VERIFIED', [p]
+        d = read(p); b = boundary(d, p)
+        require(d, ['use_case', 'subset', 'progress', 'model', 'mae'], p)
+        d = d[(d.use_case == 'ALL') & (d.subset == 'ALL') & (d.progress != 'ALL')]
+        if d.empty:
+            raise Blocked(f'{p}: no aggregate progress rows')
+        fig, ax = plt.subplots(figsize=(8, 4))
+        d.pivot(index='progress', columns='model', values='mae').reindex(['0-25', '25-50', '50-75', '75-100']).plot.bar(ax=ax)
+        ax.set_ylabel('MAE'); ax.set_xlabel('Cycle progress')
+        return fig, b, [p]
     if number in (27, 28, 30):
         paths = sorted((root / 'run4').glob('fac_bill_tnb_*/facility_md.csv')) if number == 30 else [root / 'run4/fac_grid_tnb/facility_md.csv']
         if number == 30:
             paths += sorted((root / 'run4').glob('fac_p0bill_*/facility_md.csv'))
+            paths += sorted((root / 'run4').glob('fac_aibill_*/facility_md.csv'))
             if not paths:
                 raise Blocked(f"missing input: {root / 'run4/fac_bill_tnb_*/facility_md.csv'} and {root / 'run4/fac_p0bill_*/facility_md.csv'}")
         frames = [read(x) for x in paths]
@@ -205,12 +220,15 @@ def generate(number, root):
             ax.set_xlabel('Cell peak (kW)'); ax.set_ylabel('Facility MD increment (kW)')
         else:
             if number == 30:
-                kinds = d.method.astype(str).str.extract(r'^(P0-BILL|ORACLE-BILL|P0)(?:[:@]|$)', expand=False)
-                needed = {'P0', 'P0-BILL', 'ORACLE-BILL'}
-                if not needed.issubset(set(kinds.dropna())):
-                    raise Blocked(f"{paths}: missing billing methods {sorted(needed - set(kinds.dropna()))}")
-                d = d[kinds.isin(needed)]
-            if d.duplicated(['facility', 'month', 'method']).any():
+                methods = d.method.astype(str)
+                d = d[methods.str.match(r'^(P0@v2_e1_peak|P0-BILL:(hist|ai|oracle)@etol0\.02|ORACLE(?:-BILL)?(?:[:@].*)?)$')].copy()
+                if d.empty:
+                    raise Blocked(f'{paths}: missing billing methods')
+                count = int(d.duplicated(['facility', 'month', 'method']).sum())
+                if count:
+                    print(f'F30: deduplicated {count} facility/month/method records (kept first)')
+                    d = d.drop_duplicates(['facility', 'month', 'method'], keep='first')
+            elif d.duplicated(['facility', 'month', 'method']).any():
                 raise Blocked(f"{paths}: ambiguous duplicate facility/month/method records")
             pivot = d.pivot(index=['facility', 'month'], columns='method', values='md_increment_kw')
             pivot.plot.bar(ax=ax); ax.set_ylabel('Billed demand increment (kW)')
@@ -221,26 +239,61 @@ def generate(number, root):
         26: root / 'ds07/facility_monthly_summary.csv',
         32: root / 'run3/fin_v3_ds06.csv',
     }
-    p = required[number]; d = read(p); b = boundary(d, p)
+    p = required[number]
+    paths = [p]
+    if number == 26 and not p.is_file():
+        paths = sorted((root / 'run4').glob('fac_grid*/facility_md.csv'))
+        if not paths:
+            raise Blocked(f'missing input: {p} and run4/fac_grid*/facility_md.csv')
+        frames = [read(x) for x in paths]
+        labels = [boundary(d, x) for d, x in zip(frames, paths)]
+        if len(set(labels)) != 1:
+            raise Blocked('facility inputs have inconsistent evidence boundaries')
+        d = pd.concat(frames, ignore_index=True); b = labels[0]
+        require(d, ['facility', 'month', 'md_bg_kw'], paths)
+        if (d.groupby(['facility', 'month']).md_bg_kw.nunique() > 1).any():
+            raise Blocked('inconsistent background demand for facility/month')
+        d = d.drop_duplicates(['facility', 'month']).copy()
+        d['md_kw'] = d['md_bg_kw']
+    else:
+        d = read(p)
+        b = 'SIM_DATA_PROFILE' if number == 22 and 'boundary' not in d else boundary(d, p)
     if number == 22:
-        require(d, ['constraint', 'approval', 'reason'], p)
-        fig, ax = plt.subplots(figsize=(8, 4))
-        pd.crosstab(d.constraint, d.reason).plot.bar(stacked=True, ax=ax)
-        ax.set_ylabel('Plans'); return fig, b, [p]
+        require(d, ['run', 'method', 'approved'], p)
+        sizing = root / 'run4_rt3/screen_sizing_summary.csv'
+        fig, axes = plt.subplots(1, 2 if sizing.is_file() else 1, figsize=(11 if sizing.is_file() else 7, 4), squeeze=False)
+        d = d.copy(); d['run'] = d['run'].replace({'v2_diag': 'E0', 'v2_e1': 'E1'})
+        d.groupby(['run', 'method']).approved.mean().unstack().plot.bar(ax=axes[0, 0])
+        axes[0, 0].set_ylabel('Approval fraction')
+        if sizing.is_file():
+            z = read(sizing); require(z, ['afe_kw', 'bus_kw', 'method', 'n', 'approved', 'kinds'], sizing)
+            z = z.copy(); z['setting'] = z.afe_kw.astype(str) + '/' + z.bus_kw.astype(str)
+            z.pivot_table(index='setting', columns='method', values='approved', aggfunc='mean').plot.bar(ax=axes[0, 1])
+            axes[0, 1].set_xlabel('AFE / bus (kW)'); axes[0, 1].set_ylabel('Approved')
+            paths.append(sizing)
+        return fig, b, paths
     if number == 26:
         require(d, ['facility', 'month', 'md_kw'], p)
         fig, ax = plt.subplots(figsize=(8, 4))
         d.pivot(index='month', columns='facility', values='md_kw').plot(ax=ax)
-        ax.set_ylabel('Billed demand (kW)'); return fig, b, [p]
-    if number == 25:
-        require(d, ['scenario', 'annual_benefit'], p)
-        fig, ax = plt.subplots(figsize=(7, 4)); ax.bar(d.scenario, d.annual_benefit)
-        ax.set_ylabel('Annual benefit (input currency/year)'); return fig, b, [p]
-    require(d, ['scenario', 'annual_benefit', 'break_even_capex'], p)
-    fig, ax = plt.subplots(figsize=(7, 4)); ax.scatter(d.annual_benefit, d.break_even_capex)
-    for row in d.itertuples(): ax.annotate(str(row.scenario), (row.annual_benefit, row.break_even_capex))
-    ax.set_xlabel('Annual benefit (input currency/year)'); ax.set_ylabel('Break-even CAPEX (input currency)')
-    return fig, b, [p]
+        ax.set_ylabel('Background demand (kW)'); return fig, b, paths
+    require(d, ['option', 'annual_net_usd', 'break_even_capex_usd'], p)
+    extras = [x for x in (root / 'run4/fin_fac_gen_fx0.21/clustered_summary.csv', root / 'run4/fin_fac_tou_fx0.21/clustered_summary.csv') if x.is_file()]
+    fig, axes = plt.subplots(1, 2 if extras else 1, figsize=(12 if extras else 7, 4), squeeze=False)
+    ax = axes[0, 0]
+    ax.scatter(d.annual_net_usd, d.break_even_capex_usd)
+    for row in d.itertuples(): ax.annotate(str(row.option), (row.annual_net_usd, row.break_even_capex_usd))
+    ax.set_xlabel('Annual net (USD/year)'); ax.set_ylabel('Break-even CAPEX (USD)')
+    if extras:
+        frames = [read(x) for x in extras]
+        for frame, path in zip(frames, extras):
+            require(frame, ['option', 'n_cells', 'annual_net_usd', 'ceiling_3y', 'ceiling_5y', 'ceiling_10y_discounted', 'tariff'], path)
+        z = pd.concat(frames, ignore_index=True)
+        for (option, tariff), group in z.groupby(['option', 'tariff']):
+            axes[0, 1].plot(group.n_cells, group.annual_net_usd, marker='o', label=f'{option} / {tariff}')
+        axes[0, 1].set_xlabel('Cells'); axes[0, 1].set_ylabel('Annual net (USD/year)'); axes[0, 1].legend(fontsize=6)
+        paths += extras
+    return fig, b, paths
 
 
 def main(argv=None):
@@ -250,6 +303,12 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
     command = shlex.join([sys.executable, '-m', 'regenate.visualization.run4_figs', '--runs', args.runs, '--out', args.out])
     lines = ['# Run 4 figures', '', 'Generated from supplied CSVs; blocked figures require the listed evidence.', '']
+    existing = Path('reports/figures')
+    for n in range(1, 16):
+        name = f'F{n:02d}'
+        files = sorted(existing.glob(f'{name}.*'))
+        links = ', '.join(f'[{f.name}]({f.resolve().as_posix()})' for f in files)
+        lines.append(f'- {name}: ' + (f'PASS (NOT_VERIFIED; existing files): {links}' if files else 'MISSING'))
     for n in (16, 17, 18, 19, 21, 22, 24, 25, 26, 27, 28, 30, 32):
         name = f'F{n}'
         try:

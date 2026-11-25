@@ -6,14 +6,14 @@ from pathlib import Path
 
 FIGURES = {
     'F16': ['run3/v2_diag/results.csv', 'run3/v2_diag/manifest.json', 'run3/v2_pqstar/results.csv', 'run3/v2_pqstar/manifest.json', 'run3/v2_pqd/results.csv', 'run3/v2_pqd/manifest.json'],
-    'F17': ['run4/eta/metrics_T1.csv'], 'F18': ['run4/eta/metrics_T2.csv'],
+    'F17': ['run4/eta/predictions_T1.parquet'], 'F18': ['run4/eta/metrics_T2.csv'],
     'F19': ['run3/v2_diag/results.csv', 'run3/v2_diag/manifest.json', 'run3/v2_pqstar/results.csv', 'run3/v2_pqstar/manifest.json', 'run3/v2_pqd/results.csv', 'run3/v2_pqd/manifest.json'],
-    'F21': ['run3/v2_diag/results.csv'], 'F22': ['run3/screen_e1.csv'],
+    'F21': ['run3/v2_diag/results.csv'], 'F22': ['run3/screen_e1.csv', 'run4_rt3/screen_sizing_summary.csv'],
     'F24': ['v2_flex025_n100.csv', 'run3/v2_e1/results.csv', 'run3/v2_e1/manifest.json', 'run3/v2_e1_peak/results.csv', 'run3/v2_e1_peak/manifest.json'],
-    'F25': ['run3/fin_v3_ds06.csv'], 'F26': ['ds07/facility_monthly_summary.csv'],
+    'F25': ['run3/fin_v3_ds06.csv', 'run4/fin_fac_gen_fx0.21/clustered_summary.csv', 'run4/fin_fac_tou_fx0.21/clustered_summary.csv'], 'F26': ['ds07/facility_monthly_summary.csv', 'run4/fac_grid*/facility_md.csv'],
     'F27': ['run4/fac_grid_tnb/facility_md.csv'], 'F28': ['run4/fac_grid_tnb/facility_md.csv'],
-    'F30': ['run4/fac_bill_tnb_*/facility_md.csv', 'run4/fac_p0bill_*/facility_md.csv'],
-    'F32': ['run3/fin_v3_ds06.csv'],
+    'F30': ['run4/fac_bill_tnb_*/facility_md.csv', 'run4/fac_p0bill_*/facility_md.csv', 'run4/fac_aibill_*/facility_md.csv'],
+    'F32': ['run3/fin_v3_ds06.csv', 'run4/fin_fac_gen_fx0.21/clustered_summary.csv', 'run4/fin_fac_tou_fx0.21/clustered_summary.csv'],
 }
 
 
@@ -34,7 +34,7 @@ def collect(drive, local, out):
                 if not path.is_file():
                     continue
                 rel = path.relative_to(directory).as_posix()
-                canonical = ('run3' if run == 'run3' else 'run4') + '/' + rel
+                canonical = ('run4_rt3' if run == 'run4_rt3' and rel == 'screen_sizing_summary.csv' else 'run3' if run == 'run3' else 'run4') + '/' + rel
                 candidates.setdefault(canonical, []).append(path)
                 # Some Drive exports contain an additional run3/run4 directory.
                 if rel.startswith(('run3/', 'run4/', 'ds07/')):
@@ -51,7 +51,7 @@ def collect(drive, local, out):
     # Copy all campaign CSVs and manifests, including optional campaigns.
     copied = set()
     for dest, paths in sorted(candidates.items()):
-        if not (dest.endswith('.csv') or dest.endswith('/manifest.json')):
+        if not (dest.endswith(('.csv', '.parquet')) or dest.endswith('/manifest.json')):
             continue
         unique = set(paths)
         selected = max(unique, key=lambda p: (p.stat().st_mtime_ns, str(p)))
