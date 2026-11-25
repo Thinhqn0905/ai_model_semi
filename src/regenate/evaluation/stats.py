@@ -15,6 +15,22 @@ def paired_ci(a, b, n_boot=10_000, seed=0, level=0.95):
                 lo=float(np.quantile(bs, q)), hi=float(np.quantile(bs, 1 - q)), wins=int(np.sum(d > 1e-9)))
 
 
+def cluster_paired_ci(a, b, clusters, n_boot=10_000, seed=0, level=0.95):
+    """Paired difference (a - b) with a CLUSTER bootstrap: resample whole clusters (e.g. DS07 factories) with replacement, keep all
+    observations (months) of each drawn cluster. Mean = mean over all observations; lo/hi = percentile CI; also returns the number of
+    clusters and the share of clusters whose mean difference is positive (cluster_wins)."""
+    d = np.asarray(a, float) - np.asarray(b, float); g = np.asarray(clusters)
+    ok = np.isfinite(d); d, g = d[ok], g[ok]
+    if d.size == 0:
+        return dict(n=0, n_clusters=0, mean=np.nan, lo=np.nan, hi=np.nan, wins=0, cluster_wins=0)
+    keys = np.unique(g); sums = np.array([d[g == k].sum() for k in keys]); cnts = np.array([(g == k).sum() for k in keys])
+    rng = np.random.default_rng(seed); idx = rng.integers(0, keys.size, (n_boot, keys.size))
+    bs = sums[idx].sum(1) / cnts[idx].sum(1)
+    q = (1 - level) / 2
+    return dict(n=int(d.size), n_clusters=int(keys.size), mean=float(d.mean()), lo=float(np.quantile(bs, q)), hi=float(np.quantile(bs, 1 - q)),
+                wins=int(np.sum(d > 1e-9)), cluster_wins=int(np.sum(sums / cnts > 1e-9)))
+
+
 def wide(df, value="net_kwh"):
     return df.pivot_table(index="instance_id", columns="method", values=value, aggfunc="first")
 
