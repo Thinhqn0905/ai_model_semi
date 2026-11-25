@@ -108,3 +108,14 @@ def test_pq_star_uses_true_length_and_nominal_when_running():
     f = make_profile_fn(inst, "PQ*")
     assert len(f(0, None)[0]) == len(job_profile(inst, 0, 0.25, "truth")[0])
     assert np.allclose(f(0, dict(elapsed_h=1.0))[0], job_profile(inst, 0, 0.25, "nominal")[0])
+
+
+def test_pqd_keeps_recipe_energy():
+    from regenate.forecasting.ai_engine import make_profile_fn
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 7, n_jobs=4, n_stations=2, split="train")
+    cf = inst["jobs"].set_index("job_id").loc[0, "cycle_file"]; nom = make_profile_fn(inst, "P0")(0, None)
+    pin, prec, _ = make_profile_fn(inst, "PQd", cycle_pred={cf: dict(r_dur=2.0, r_ech=5.0, r_eds=5.0)})(0, None)
+    assert abs(len(pin) - 2 * len(nom[0])) <= 1
+    assert abs(pin.sum() - nom[0].sum()) <= 2 * max(pin.max(), nom[0].max())     # energy kept within one partial slot
+    assert np.allclose(make_profile_fn(inst, "PQd", cycle_pred={cf: dict(r_dur=1.0, r_ech=5.0, r_eds=5.0)})(0, None)[0], nom[0])

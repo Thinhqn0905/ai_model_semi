@@ -18,7 +18,7 @@ from regenate.simulation.replay import Replay
 FIFO_M = {"B0": "B0", "B1": "B1", "B1p": "B1p", "B2": "DC"}
 ONESHOT = {"B1-OPT": ("B1", "truth"), "B1p-OPT": ("B1p", "truth"), "B3": ("DC", "nominal"), "ORACLE": ("DC", "truth")}
 ROLLING = ("P0", "P1", "P2", "P3", "P4")
-DIAG = ("P5", "P5s", "PQ", "PQ5", "PQ*", "P1*", "P2*", "P3*", "P4*", "TR_RUN", "TR_Q", "TR_ALL")   # Run 3 information decomposition (no model needed)
+DIAG = ("P5", "P5s", "PQ", "PQ5", "PQ*", "PQd", "PQd*", "P1*", "P2*", "P3*", "P4*", "TR_RUN", "TR_Q", "TR_ALL")   # Run 3 information decomposition (no model needed)
 
 
 def milp_jobs(inst, which, flex, fifo_starts, sl):
