@@ -1,0 +1,9 @@
+Common rules for the Run 4 Final Evaluation Report parts (md only):
+- Sources: docs/decisions.md (D001-D018), docs/handoff_run4.md, docs/system_spec.md, docs/target_cell_spec.md, docs/traceability.md,
+  reports/run3/*.md, reports/run4/*.md, reports/ai/*.md, reports/data/*.md, reports/safety/*.md, reports/economics/*.md, reports/benchmark/*.md,
+  reports/final/report_run4.md, reports/run4/figures/INDEX.md, data/manifests/dataset_registry.json, data/tariffs/*.yaml, runs/claims.jsonl.
+- Copy numbers only from those files; never recompute or invent. For every quantitative row give: baseline, n, unit, CI (if any),
+  evidence category (MEASURED / SIM_DATA_PROFILE / SIM_ASSUMED_PROFILE / VENDOR_REPORTED / DATASHEET / SOURCE_REPORTED / ASSUMED / NOT_VERIFIED)
+  and the exact raw-result path as written in the source report (Drive paths stay Drive paths).
+- Unfinished items: PENDING (AI-BILL results: Drive MyDrive/semiexpo/ai_runs/run4_final_summary.md, still running). Missing items (e.g. dashboard
+  screenshots, DS08 data) -> MISSING with the reason. Compact tables, no narrative padding. Section headings numbered as in the user list.
