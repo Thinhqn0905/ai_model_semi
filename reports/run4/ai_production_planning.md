@@ -24,6 +24,9 @@ abnormal cycles where the model acts, so a P90 bound would not be trustworthy (a
 | peak vs P0 | - | -0.42 [-0.87, -0.01] | -0.41 [-0.93, +0.10] |
 | violation count (all instances) | 1 | 2 | 0 |
 
+Ungated P-ETA (same engine, `v2_wpc_ungated`, n = 100): TT saved -0.0083 h [-0.0317, +0.0113] (n.s.), kWh -0.051 [-0.080, -0.023]
+(worse) -> the ungated model is worse than the gated one, as in Run 3.
+
 ## Verdict
 - **P-ETA-S FAILS the WP-C acceptance**: it realises ~14 % of the perfect-duration tardiness value (0.0054 of 0.0389 h) and pays for
   it with significantly higher energy and peak. Not adopted for automatic scheduling (D010).
