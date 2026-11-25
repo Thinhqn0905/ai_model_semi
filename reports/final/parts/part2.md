@@ -15,15 +15,15 @@ Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak redu
 
 Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_DATA_PROFILE; baseline and raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv` (`reports/ai/ai_exp12_ds06.md`). Positive means lower energy or peak than baseline.
 
-| Baseline ? method | kWh [CI] | peak kW [CI] | wins energy |
+| Baseline -> method | kWh [CI] | peak kW [CI] | wins energy |
 |---|---|---|---|
-| B1 ? B2 | 2.84 [2.73, 2.95] | Not reported | 100/100 |
-| B1p-OPT ? ORACLE | 1.094 [1.037, 1.148] | Not reported | 100/100 |
-| P0 ? P1 | -0.018 [-0.030, -0.005] | -0.34 [-0.83, 0.13] | 27/100 |
-| P0 ? P2 | -0.019 [-0.031, -0.007] | -0.25 [-0.73, 0.23] | 22/100 |
-| P0 ? P3 | -0.024 [-0.038, -0.009] | -0.57 [-1.08, -0.06] | 27/100 |
-| P0 ? P4 | -0.026 [-0.041, -0.012] | -0.40 [-1.00, 0.20] | 27/100 |
-| P0 ? ORACLE | 0.094 [0.077, 0.112] | 1.14 [0.57, 1.72] | 94/100 |
+| B1 -> B2 | 2.84 [2.73, 2.95] | Not reported | 100/100 |
+| B1p-OPT -> ORACLE | 1.094 [1.037, 1.148] | Not reported | 100/100 |
+| P0 -> P1 | -0.018 [-0.030, -0.005] | -0.34 [-0.83, 0.13] | 27/100 |
+| P0 -> P2 | -0.019 [-0.031, -0.007] | -0.25 [-0.73, 0.23] | 22/100 |
+| P0 -> P3 | -0.024 [-0.038, -0.009] | -0.57 [-1.08, -0.06] | 27/100 |
+| P0 -> P4 | -0.026 [-0.041, -0.012] | -0.40 [-1.00, 0.20] | 27/100 |
+| P0 -> ORACLE | 0.094 [0.077, 0.112] | 1.14 [0.57, 1.72] | 94/100 |
 
 # 7 Electrical feasibility
 
@@ -54,7 +54,7 @@ Full sizing results, n=30, CI not reported, SIM_DATA_PROFILE; raw `ai_runs/run4_
 | 20 / 32 | 30/30; 8.81 | 0; 10.23 | 0 | Not reported |
 | 30 / 32 | 30/30; 8.81 | 0; 10.23 | 0 | 1.000 / 1.000 / 1.000 |
 
-E0 ? E1 twin approval for B2 is 94% ? 94% and B1p-OPT 92% ? 92%, n=50, CI not reported, SIM_DATA_PROFILE, raw `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`, `screen_e1.csv` (`reports/run3/e1_electrical_constraints.md`). V1 cases: forecast wrong, sensor loss, MES disconnect, AFE saturation, bus overvoltage, test delay, engineer reject, solver timeout, replanner exception; v2: solver timeout, invalid AI, NaN power, engineer rejection. Case-level simulated PASS evidence is the individual JSON files in `runs/fail_v1/` and `runs/run3/fail/`, SIM_ASSUMED_PROFILE, `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
+E0 -> E1 twin approval for B2 is 94% -> 94% and B1p-OPT 92% -> 92%, n=50, CI not reported, SIM_DATA_PROFILE, raw `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`, `screen_e1.csv` (`reports/run3/e1_electrical_constraints.md`). V1 cases: forecast wrong, sensor loss, MES disconnect, AFE saturation, bus overvoltage, test delay, engineer reject, solver timeout, replanner exception; v2: solver timeout, invalid AI, NaN power, engineer rejection. Case-level simulated PASS evidence is the individual JSON files in `runs/fail_v1/` and `runs/run3/fail/`, SIM_ASSUMED_PROFILE, `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
 
 # 8 Facility level
 
@@ -72,21 +72,21 @@ Median coincidence of cell peak with billed demand is 0.09 for P0-E1-Peak and 0.
 
 Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, SIM_DATA_PROFILE + unsynchronised MEASURED; General raw MyDrive/semiexpo/ai_runs/run4/fac_grid (sha256 6e669d46a861fe54), ToU raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv`; `reports/run4/facility_billing.md`. Factory ties/losses are not reported and must not be inferred from wins.
 
-| Baseline ? method | General kW [CI], factories won | ToU kW [CI], factories won |
+| Baseline -> method | General kW [CI], factories won | ToU kW [CI], factories won |
 |---|---|---|
-| B1p-OPT ? P0-E1-Peak | 1.86 [0.83, 2.79], 9/10 | 1.06 [-0.22, 2.30], 8/10 |
-| B2 ? P0 | 1.89 [0.73, 3.02], 9/10 | 1.21 [0.41, 2.03], 7/10 |
-| P0 ? P0-E1-Peak | 0.23 [-0.11, 0.61], 4/10 | 0.52 [0.08, 0.96], 7/10; withdrawn as non-robust |
-| P0-E1-Peak ? ORACLE-E1-Peak | 0.22 [-0.02, 0.48], 7/10 | 0.59 [0.09, 1.03], 7/10; withdrawn as non-robust |
+| B1p-OPT -> P0-E1-Peak | 1.86 [0.83, 2.79], 9/10 | 1.06 [-0.22, 2.30], 8/10 |
+| B2 -> P0 | 1.89 [0.73, 3.02], 9/10 | 1.21 [0.41, 2.03], 7/10 |
+| P0 -> P0-E1-Peak | 0.23 [-0.11, 0.61], 4/10 | 0.52 [0.08, 0.96], 7/10; withdrawn as non-robust |
+| P0-E1-Peak -> ORACLE-E1-Peak | 0.22 [-0.02, 0.48], 7/10 | 0.59 [0.09, 1.03], 7/10; withdrawn as non-robust |
 
 100-pool results, same n and boundary, raw `ai_runs/run4_rt2/fac_{gen,tou}_1cell_n100`, `reports/run4/facility_billing.md`:
 
-| Baseline ? method | General kW [CI]; factories | ToU kW [CI]; factories |
+| Baseline -> method | General kW [CI]; factories | ToU kW [CI]; factories |
 |---|---|---|
-| B2 ? P0-E1-Peak | 1.94 [1.12, 2.80]; 9/10 | 1.93 [0.69, 3.07]; 8/10 |
-| B1p-OPT ? P0-E1-Peak | 1.94 [0.57, 3.19]; 8/10 | 2.18 [0.98, 3.21]; 8/10 |
-| P0 ? P0-E1-Peak | 0.13 [-0.20, 0.48]; 6/10 | -0.00 [-0.30, 0.30]; 4/10 |
-| P0-E1-Peak ? ORACLE-E1-Peak | 0.38 [-0.11, 0.88]; 6/10 | -0.04 [-0.55, 0.48]; 4/10 |
+| B2 -> P0-E1-Peak | 1.94 [1.12, 2.80]; 9/10 | 1.93 [0.69, 3.07]; 8/10 |
+| B1p-OPT -> P0-E1-Peak | 1.94 [0.57, 3.19]; 8/10 | 2.18 [0.98, 3.21]; 8/10 |
+| P0 -> P0-E1-Peak | 0.13 [-0.20, 0.48]; 6/10 | -0.00 [-0.30, 0.30]; 4/10 |
+| P0-E1-Peak -> ORACLE-E1-Peak | 0.38 [-0.11, 0.88]; 6/10 | -0.04 [-0.55, 0.48]; 4/10 |
 
 # 9 Multi-cell
 
@@ -103,7 +103,7 @@ Independent scheduling behind one meter; same boundary, n=70 and clustered CI as
 
 Coordinated P0-BILL five-cell cases worsened billed demand against P0-E1-Peak; n=2, CI not reported, SIM_DATA_PROFILE + unsynchronised MEASURED, raw `ai_runs/run4/`, `reports/run4/facility_billing.md`. Multi-cell energy, feasibility and solver scalability are NOT_VERIFIED as matched summaries; monetary estimates are in section 11.
 
-P0-E1-Peak ? ORACLE-E1-Peak ToU reductions, same n, boundary and raw as above: 1 cell 0.59 [0.09, 1.03], 3 cells 0.01 [-0.95, 0.95], 5 cells 0.01 [-0.79, 0.87], 10 cells 1.91 [0.73, 3.02] kW; the one-cell result is withdrawn under the larger-pool test (`reports/run4/facility_billing.md`). Coordinated five-cell cases, P0-E1-Peak ? P0-BILL: 13.4 ? 19.2 and 17.8 ? 23.8/25.4 kW, approximately 23 kWh/month more; n=2, CI not reported, raw `ai_runs/run4/`, SIM_DATA_PROFILE + unsynchronised MEASURED (`reports/run4/facility_billing.md`).
+P0-E1-Peak -> ORACLE-E1-Peak ToU reductions, same n, boundary and raw as above: 1 cell 0.59 [0.09, 1.03], 3 cells 0.01 [-0.95, 0.95], 5 cells 0.01 [-0.79, 0.87], 10 cells 1.91 [0.73, 3.02] kW; the one-cell result is withdrawn under the larger-pool test (`reports/run4/facility_billing.md`). Coordinated five-cell cases, P0-E1-Peak -> P0-BILL: 13.4 -> 19.2 and 17.8 -> 23.8/25.4 kW, approximately 23 kWh/month more; n=2, CI not reported, raw `ai_runs/run4/`, SIM_DATA_PROFILE + unsynchronised MEASURED (`reports/run4/facility_billing.md`).
 
 # 10 Tariff validation
 
@@ -128,7 +128,7 @@ FIN-A has no energy value by physics; FIN-B adds software to existing shared har
 
 General five-cell CAPEX ceilings for 3/5/10 years are USD 4,164/6,940/9,314, respectively; ten-cell USD 10,445/17,408/23,362. Ten-year ceiling is discounted. 10-y NPV at 8 % on known CAPEX (factory-clustered mean, raw `ai_runs/run4/fin_fac_{gen,tou}_fx0.21/clustered_summary.csv`): MV General 1/3/5/10 cells -972/+2,814/+5,094/+19,142 USD; MV ToU -1,334/+1,402/+4,421/+16,388 USD (OPTIMISTIC: missing costs excluded). Monthly savings = annual/12. FX sensitivity is in the raw CSVs; tariff, holiday, missing OPEX and site costs materially affect conclusions (`reports/run4/economics_run4.md`). Corrected: three cells reach a five-year (not three-year) payback on known CAPEX only (MV General 4.0 y, MV ToU 5.0 y); any missing cost removes it (`reports/run4/economics_run4.md`, correction note).
 
-Complete published FIN-B rows below: B2 ? P0-E1-Peak, n=70, SIM_DATA_PROFILE + unsynchronised MEASURED, ASSUMED FX and annualisation, factory-clustered ranges; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`, `reports/run4/economics_run4.md`. CAPEX ceilings in USD; 10-year ceiling discounted. Missing costs and source inconsistencies above apply.
+Complete published FIN-B rows below: B2 -> P0-E1-Peak, n=70, SIM_DATA_PROFILE + unsynchronised MEASURED, ASSUMED FX and annualisation, factory-clustered ranges; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`, `reports/run4/economics_run4.md`. CAPEX ceilings in USD; 10-year ceiling discounted. Missing costs and source inconsistencies above apply.
 
 | Tariff; cells | Annual USD [range] | 3 / 5 / 10-year ceiling USD | Payback years |
 |---|---|---|---|
