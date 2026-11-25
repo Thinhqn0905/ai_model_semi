@@ -59,3 +59,12 @@ results/v2_peak). Forecast accuracy (Branch C) is reported separately and never 
 Third lexicographic level (min peak at equal TT and energy, milp.solve peak_stage) lowers P0 peak by 3.9 % (CI excludes 0) at no
 energy cost on DS06 (n=50). AI variants P1..P4 do not beat P0 on energy (n=100 and n=50) or peak (n=50). Product configuration:
 P0 + peak stage; AI forecasts shown to engineers (expected completion, uncertainty) behind AI-G10. Evidence: reports/ai/ai_exp12_ds06.md.
+
+## D006 (2026-11-25, lead) — Run 3: AI failure explained; decision unchanged (optimisation-only for scheduling)
+Information decomposition on DS06 (n=100, reports/run3/root_cause_analysis.md): rolling oracle == one-shot ORACLE (gap is pure
+information, 0.094 kWh = 1.1 % of P0); queued-job info 52 %, running-job info 26 %. The Run 2 integration fed PERFECT forecasts
+captures 0 % or loses -> the Run 2 negative result is an integration failure, not a model failure. Run 3 integrations (P5/P5s
+phase-aligned recipe, PQ/PQ5 cycle-level queued-job model with AI18 gate) do not beat P0 (several significantly worse); PQ* with
+perfect cycle ratios recovers the tardiness value but not the energy value (n.s.), which lies in intra-cycle shape
+(reports/run3/ai_run3.md). Decision: keep P0 + peak stage for scheduling; forecasts stay engineer information (ETA, anomaly flag)
+behind AI-G10. No energy or peak saving is attributed to AI.
