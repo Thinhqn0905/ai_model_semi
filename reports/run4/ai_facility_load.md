@@ -1,0 +1,7 @@
+# Facility load forecasting — PENDING_COLAB
+
+Boundary: NOT_VERIFIED. This is additional research using DS07 measured facility load; no forecast or billing benefit is established by this implementation. Run the full experiment on Colab only after the WP-J billing headroom decision. DS07 and the simulated cell are not synchronized.
+
+Run `python -m regenate.forecasting.facility_load --ds07 ZIP --out DIR`. The script uses 15-minute means, March–June training, July validation and August–September test. Decisions use only observations strictly before the decision time. It fits global direct-horizon models with factory ID and training-median target scaling. Missing slots remain missing in feature construction; ridge and random forest use training-fitted imputation. Historical baseline matches `facility.bg_forecast`; test metrics use matched nonmissing truth and historical forecasts. NMAE is normalized by training median. Peak recall uses each test factory-month's observed 95th percentile within the weekday 14:00–22:00 window. Coverage is empirical P10–P90, without crossing correction.
+
+Outputs: joblib predictor, block-start forecasts parquet, metrics CSV and manifest. July is exported for validation; no tuning is performed. The predictor retains observed history and must be supplied only histories available at deployment. Model performance, compute cost and downstream billing impact are PENDING_COLAB. The local synthetic test is not evidence of DS07 forecast accuracy.
