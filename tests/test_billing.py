@@ -40,3 +40,16 @@ def test_registry_loads():
     assert len(paths) == 5
     for p in paths:
         assert yaml.safe_load(p.read_text(encoding='utf-8'))['id']
+
+
+def test_missing_tou_rate_rejected():
+    with pytest.raises(ValueError, match='missing energy rate'):
+        bill([1]*30, {'energy_rates': {'peak': 2}, 'windows': []})
+
+
+def test_sliding_and_bad_mode():
+    p = [0]*15 + [30]*30 + [0]*15
+    assert bill(p, {'interval_mode': 'sliding'})['billed_demand_kw'] == 30
+    assert bill(p, {'interval_mode': 'aligned'})['billed_demand_kw'] == 15
+    with pytest.raises(ValueError, match='interval_mode'):
+        bill(p, {'interval_mode': 'bad'})

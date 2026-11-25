@@ -43,19 +43,26 @@ def monthly_bill(power_kw, timestamps, tariff):
         if isinstance(obj, list):
             return any(unverified(v) for v in obj)
         return False
+    mode = tariff.get('interval_mode', 'aligned')
+    if mode not in ('aligned', 'sliding'):
+        raise ValueError('interval_mode must be aligned or sliding')
+    if tariff.get('contract_kw') is not None and float(_value(tariff['contract_kw'])) < 0:
+        raise ValueError('contract capacity must be nonnegative')
     windows = tariff.get('windows', [])
     period = np.array([_period(x, windows) for x in t])
     rates = tariff.get('energy_rates', {})
     months = {}
     for month in sorted(set(t.strftime('%Y-%m'))):
         ix = np.flatnonzero(t.strftime('%Y-%m') == month)
+        if rates and any(rates.get(period[i], rates.get('normal')) is None or _value(rates.get(period[i], rates.get('normal')), None) is None for i in ix):
+            raise ValueError('missing energy rate for a consumed period')
         energy = sum(max(p[i], 0)*minutes/60*float(_value(rates.get(period[i], rates.get('normal')))) for i in ix)
         export = sum(max(-p[i], 0)*minutes/60 for i in ix)*float(_value(tariff.get('export_rate')))
         candidates = []
         for i in ix:
             if i+n > len(t) or t[i+n-1].strftime('%Y-%m') != month:
                 continue
-            if tariff.get('interval_mode', 'aligned') == 'aligned' and (t[i].hour*60+t[i].minute) % interval:
+            if mode == 'aligned' and (t[i] - t[i].normalize()) % pd.Timedelta(minutes=interval) != pd.Timedelta(0):
                 continue
             eligible = tariff.get('demand_eligible_periods')
             if eligible and not all(x in eligible for x in period[i:i+n]):

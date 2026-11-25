@@ -37,25 +37,31 @@ energy_rates:
     unit: VND/kWh
     currency: VND
     source_url: https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf
-    source_page_section: Appendix 1.2 medium voltage
+    source_page_section: Appendix 1.2, above 1 kV to 35 kV; exact PDF page not independently
+      confirmed
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
+    source_file: data/tariffs/sources/vn_2892.pdf
   offpeak:
     value: 1166
     unit: VND/kWh
     currency: VND
     source_url: https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf
-    source_page_section: Appendix 1.2 medium voltage
+    source_page_section: Appendix 1.2, above 1 kV to 35 kV; exact PDF page not independently
+      confirmed
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
+    source_file: data/tariffs/sources/vn_2892.pdf
   peak:
     value: 3348
     unit: VND/kWh
     currency: VND
     source_url: https://evn.com.vn/userfile/User/tcdl/files/2026/11/1_QD-BCT_2026_2892-20261104131123509.pdf
-    source_page_section: Appendix 1.2 medium voltage
+    source_page_section: Appendix 1.2, above 1 kV to 35 kV; exact PDF page not independently
+      confirmed
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
+    source_file: data/tariffs/sources/vn_2892.pdf
 demand_rates: {}
 fixed_fees: {}
 export_rate:
@@ -83,3 +89,4 @@ penalty:
   access_date: '2026-11-25'
   status: NOT_VERIFIED
 tou_windows_source: https://www.evn.com.vn/d/vi-VN/news/Quyet-dinh-so-963QD-BCT-ve-khung-gio-cao-diem-thap-diem-va-gio-binh-thuong-cua-he-thong-dien-quoc-gia--60-134-507803
+voltage_class: above 1 kV to 35 kV; Decision 2892/QD-BCT, 31 October 2026

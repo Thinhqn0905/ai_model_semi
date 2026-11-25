@@ -18,7 +18,7 @@ energy_rates:
     source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
     source_page_section: Medium Voltage ToU peak
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
   offpeak:
     value: 0.2723
     unit: MYR/kWh
@@ -26,24 +26,26 @@ energy_rates:
     source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
     source_page_section: Medium Voltage ToU offpeak
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
 demand_rates:
   capacity:
-    value: 30.19
+    value: null
     unit: MYR/kW/month
     currency: MYR
     source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage ToU peak capacity
+    source_page_section: MV TOU rate requires review of original PDF; previous number
+      removed
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
   network:
-    value: 66.87
+    value: null
     unit: MYR/kW/month
     currency: MYR
     source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage ToU peak network
+    source_page_section: MV TOU rate requires review of original PDF; previous number
+      removed
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
 fixed_fees:
   retail:
     value: 200
@@ -52,7 +54,7 @@ fixed_fees:
     source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
     source_page_section: Medium Voltage ToU retail
     access_date: '2026-11-25'
-    status: VERIFIED
+    status: NOT_VERIFIED
 export_rate:
   value: null
   unit: currency/kWh
@@ -73,8 +75,9 @@ penalty:
   value: null
   unit: description
   currency: null
-  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-  source_page_section: penalties not established
+  source_url: https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf
+  source_page_section: 'section 4.2: 8.50 MYR/kW shortfall; reference depends on customer
+    history; excluded from bill'
   access_date: '2026-11-25'
   status: NOT_VERIFIED
 demand_eligible_periods:

@@ -47,19 +47,26 @@ penalty:
   status: NOT_VERIFIED
 contract_kw: null
 contract_rate:
-  value: 15.07
+  value: 14.21
   unit: SGD/kW/month
   currency: SGD
-  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
-  source_page_section: Table 9 HT large April 2026
+  source_url: https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf
+  source_page_section: Table 9, HT Large, exclusive of GST
   access_date: '2026-11-25'
-  status: NOT_VERIFIED
+  status: VERIFIED
+  page: PDF page 7, Table 9
+  quote: High Tension - Large 14.21 0.74 0.08 0.59 21.32 71.05 71.05 170.52
+  source_file: data/tariffs/sources/sg_july2026.pdf
 excess_rate:
-  value: 22.61
+  value: 21.32
   unit: SGD/kW/month
   currency: SGD
-  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
-  source_page_section: Table 9 HT large uncontracted April 2026
+  source_url: https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf
+  source_page_section: Table 9, HT Large, exclusive of GST
   access_date: '2026-11-25'
-  status: NOT_VERIFIED
-contract_rule: Contract capacity is customer input; never automatically resized.
+  status: VERIFIED
+  page: PDF page 7, Table 9
+  quote: High Tension - Large 14.21 0.74 0.08 0.59 21.32 71.05 71.05 170.52
+  source_file: data/tariffs/sources/sg_july2026.pdf
+contract_rule: 'HT Large: contract is input; UCC applies to excess for normal consumers
+  without embedded generation. Other schemes require additional rules.'
