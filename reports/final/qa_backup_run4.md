@@ -144,7 +144,7 @@ Boundary: site NOT_VERIFIED. Source: `reports/run4/ds07_quality.md`.
 
 **EN:** No; the facility and cell are unsynchronised, and site billing details remain incomplete; General and ToU demand rules are verified in the official schedule.
 
-Boundary: SIM_DATA_PROFILE + MEASURED counterfactual; tariff rule NOT_VERIFIED. Sources: `reports/run4/facility_billing.md`, `reports/run4/tariff_registry.md`.
+Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised counterfactual; tariff schedule SOURCE_REPORTED; site contract, interval alignment and holidays NOT_VERIFIED. Sources: `reports/run4/facility_billing.md`, `reports/run4/tariff_registry.md`.
 
 ### 19. What is the deployment gate?
 
@@ -167,7 +167,7 @@ Earlier document gate is superseded; underlying findings require their cited run
 
 ### Why five or more cells?
 
-**EN:** Sharing site-level costs can improve modeled payback, but demand savings are not linear and five is not a universal cutoff: three cells reach an optimistic four-year General payback. At five cells the General three-year ceiling is USD 4,164 against USD 4,220 known CAPEX, leaving no room for missing costs. Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised, ASSUMED finance; sources `reports/run4/economics_run4.md`, `reports/run4/facility_billing.md`; run `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`.
+**EN:** Sharing site-level costs can improve modeled payback, but demand savings are not linear and five is not a universal cutoff: the source table reports an optimistic four-year General payback for three cells, although its verdict text contradicts that table. At five cells the General three-year ceiling is USD 4,164 against USD 4,220 known CAPEX, leaving no room for missing costs. Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised, ASSUMED finance; sources `reports/run4/economics_run4.md`, `reports/run4/facility_billing.md`; run `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`.
 
 ### Is the TNB rate verified?
 

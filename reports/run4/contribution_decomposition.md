@@ -15,3 +15,5 @@ All intervals are paired 95% confidence intervals. Positive values mean reductio
 | Facility billing B2 ? P0-E1-Peak | MD increment reduction 1.73 kW [0.73, 2.68]; SIM_DATA_PROFILE cell + MEASURED DS07 facility, unsynchronised counterfactual | TNB peak-period scenario; tariff factory-clustered 95% CI; interval alignment NOT_VERIFIED (`reports/run4/facility_billing.md`). |
 
 The 11.6% shared-link result is topology **plus optimisation**, not AI or software-only: B1p-OPT ? ORACLE is 1.094 kWh [1.037, 1.148], SIM_DATA_PROFILE (`reports/run3/root_cause_analysis.md`). The primary KPI is incremental grid kWh at M0 against B1, with matched instances, profiles, bus limits and tardiness; site outcome NOT_VERIFIED (`reports/run3/mentor_compliance_audit.md`).
+
+D017 stops station-level AI scheduling and anomaly-detection experiments after their negative results; facility billing AI remains conditional on a successful perfect-background P0-BILL extension. Both that extension and AI-BILL are PENDING. Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised counterfactual; sources `docs/decisions.md` D017, `reports/run4/facility_billing.md`.
