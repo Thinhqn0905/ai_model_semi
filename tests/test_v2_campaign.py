@@ -73,3 +73,13 @@ def test_diagnostic_variants_perfect_and_truth():
     assert len(p2[0]) == len(tru[0])                                  # perfect remaining duration -> true length
     rows, _ = run_one(inst, None, flex=0.5, time_limit=10, methods=["P0", "P1*", "P2*", "TR_RUN", "TR_ALL"])
     assert {r["method"] for r in rows} == {"P0", "P1*", "P2*", "TR_RUN", "TR_ALL"} and all(r["violations"] == 0 for r in rows)
+
+
+def test_p5_phase_aligned_runs():
+    from regenate.forecasting.ai_engine import make_profile_fn
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 4, n_jobs=4, n_stations=2, split="train")
+    pin, prec, _ = make_profile_fn(inst, "P5")(0, dict(elapsed_h=1.0))
+    assert len(pin) >= 4 and (pin >= 0).all() and (prec >= 0).all()
+    rows, _ = run_one(inst, None, flex=0.5, time_limit=10, methods=["P0", "P5", "P5s"])
+    assert all(r["violations"] == 0 for r in rows)
