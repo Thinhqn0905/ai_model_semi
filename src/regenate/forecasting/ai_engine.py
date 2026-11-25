@@ -155,7 +155,9 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_C
         obs_in = np.array([ch_t[i * spm:(i + 1) * spm].mean() for i in range(e)]) * k
         obs_rec = np.array([ds_t[i * spm:(i + 1) * spm].mean() for i in range(e)]) * k
         n_nom_rem = max(1, len(nom[0]) - e)
-        rem_q = p["remaining_duration"]
+        rem_q = np.asarray(p["remaining_duration"], float)
+        if not np.all(np.isfinite(rem_q)):
+            return nom                                                     # AI-G10 fallback on non-finite duration
         if base in ("P2", "P3"):
             n_rem = max(1, int(round(rem_q[1] / (spm))))
         elif base == "P4":
@@ -169,6 +171,8 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_C
             tail_in[:m] = _interp_slots(p["sink_power"], m) * k
             tail_rec[:m] = _interp_slots(p["source_power"], m) * k
         pin = np.r_[obs_in, np.clip(tail_in, 0, None)]; prec = np.r_[obs_rec, np.clip(tail_rec, 0, None)]
+        if not (np.all(np.isfinite(pin)) and np.all(np.isfinite(prec))):
+            return nom                                                     # AI-G10: never pass non-finite power on
         return pin, prec, np.zeros_like(pin)
 
     return fn
