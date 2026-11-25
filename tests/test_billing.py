@@ -2,7 +2,7 @@
 import pytest
 import yaml
 from pathlib import Path
-from src.regenate.economics.billing import monthly_bill
+from src.regenate.economics.billing import monthly_bill, my_public_holidays
 
 
 def bill(p, tariff, start='2026-01-05 00:00'):
@@ -72,3 +72,29 @@ def test_tnb_general_vs_tou_md_rule():
     tou = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_TOU.yaml').read_text(encoding='utf-8'))
     assert bill(load, gen, '2019-03-04 00:00')['billed_demand_kw'] == 500.0
     assert bill(load, tou, '2019-03-04 00:00')['billed_demand_kw'] == 100.0
+
+
+def test_holiday_peak_spike():
+    timestamps = pd.date_range('2026-01-05 14:00', periods=2 * 24 * 60, freq='min')
+    load = [10.0] * len(timestamps)
+    load[:30] = [100.0] * 30
+    holiday = timestamps[0].date()
+    tou = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_TOU.yaml').read_text(encoding='utf-8'))
+    gen = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_general.yaml').read_text(encoding='utf-8'))
+    result = lambda tariff, **kwargs: monthly_bill(load, timestamps, tariff, **kwargs)['months']['2026-01']
+    assert result(tou)['billed_demand_kw'] == 100
+    assert result(tou, holidays=[holiday])['billed_demand_kw'] == 10
+    assert result(tou, holidays=[holiday])['energy_charge'] < result(tou)['energy_charge']
+    assert result({**tou, 'holiday_dates': [holiday]}) == result(tou, holidays=[holiday])
+    assert result(tou, holidays=[])['billed_demand_kw'] == 100
+    assert result(gen, holidays=[holiday])['billed_demand_kw'] == 100
+
+
+def test_my_public_holidays(monkeypatch):
+    import sys
+    from types import SimpleNamespace
+    monkeypatch.setitem(sys.modules, 'holidays', SimpleNamespace(country_holidays=lambda country, subdiv, years: (country, subdiv, years)))
+    assert my_public_holidays(2026) == ('MY', None, 2026)
+    monkeypatch.setitem(sys.modules, 'holidays', None)
+    with pytest.raises(ImportError, match="Install the 'holidays' package"):
+        my_public_holidays(2026)

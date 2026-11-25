@@ -18,7 +18,15 @@ def _period(ts, windows):
     return 'normal'
 
 
-def monthly_bill(power_kw, timestamps, tariff):
+def my_public_holidays(year):
+    try:
+        import holidays
+    except ImportError as exc:
+        raise ImportError("Install the 'holidays' package to obtain Malaysian public holidays") from exc
+    return holidays.country_holidays('MY', subdiv=None, years=year)
+
+
+def monthly_bill(power_kw, timestamps, tariff, holidays=None):
     if tariff.get('tariff_status') == 'TRIAL_NOT_PAYABLE':
         raise ValueError('paper trial tariff is not payable')
     if tariff.get('id') == 'TAR03_SG' and tariff.get('contract_kw') is None:
@@ -49,7 +57,8 @@ def monthly_bill(power_kw, timestamps, tariff):
     if tariff.get('contract_kw') is not None and float(_value(tariff['contract_kw'])) < 0:
         raise ValueError('contract capacity must be nonnegative')
     windows = tariff.get('windows', [])
-    period = np.array([_period(x, windows) for x in t])
+    holiday_dates = set(tariff.get('holiday_dates', []) if holidays is None else holidays)
+    period = np.array(['offpeak' if windows and x.date() in holiday_dates else _period(x, windows) for x in t])
     rates = tariff.get('energy_rates', {})
     months = {}
     for month in sorted(set(t.strftime('%Y-%m'))):
@@ -69,13 +78,15 @@ def monthly_bill(power_kw, timestamps, tariff):
                 continue
             candidates.append((float(np.maximum(p[i:i+n], 0).mean()), t[i]))
         demand, stamp = max(candidates, default=(0.0, None), key=lambda x:x[0])
-        demand_charge = sum(demand*float(_value(v)) for v in tariff.get('demand_rates', {}).values())
-        fixed = sum(float(_value(v)) for v in tariff.get('fixed_fees', {}).values())
+        demand_components = {k: demand*float(_value(v)) for k, v in tariff.get('demand_rates', {}).items()}
+        fixed_components = {k: float(_value(v)) for k, v in tariff.get('fixed_fees', {}).items()}
+        demand_charge = sum(demand_components.values())
+        fixed = sum(fixed_components.values())
         contract = tariff.get('contract_kw')
         capacity = excess = 0.0
         if contract is not None:
             contract = float(_value(contract))
             capacity = contract*float(_value(tariff.get('contract_rate')))
             excess = max(0, demand-contract)*float(_value(tariff.get('excess_rate')))
-        months[month] = {'energy_charge': energy, 'demand_charge': demand_charge, 'fixed_fees': fixed, 'contract_charge': capacity, 'excess_charge': excess, 'export_credit': export, 'billed_demand_kw': demand, 'demand_timestamp': stamp.isoformat() if stamp is not None else None, 'total': energy+demand_charge+fixed+capacity+excess-export, 'not_verified': unverified(tariff) or not candidates}
+        months[month] = {'energy_charge': energy, 'demand_charge': demand_charge, 'demand_components': demand_components, 'fixed_fees': fixed, 'fixed_components': fixed_components, 'contract_charge': capacity, 'excess_charge': excess, 'export_credit': export, 'billed_demand_kw': demand, 'demand_timestamp': stamp.isoformat() if stamp is not None else None, 'total': energy+demand_charge+fixed+capacity+excess-export, 'not_verified': unverified(tariff) or not candidates}
     return {'months': months, 'not_verified': any(m['not_verified'] for m in months.values())}
