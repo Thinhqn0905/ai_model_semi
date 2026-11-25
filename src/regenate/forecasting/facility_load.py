@@ -80,6 +80,31 @@ def build_models():
     return models
 
 
+_G = {}
+
+
+def _train_rows(name):
+    return make_rows(_G['series'][name], _G['ids'][name], _G['scales'][name], '2019-03-01', '2019-07-01', _G['stride'])[:2]
+
+
+def _export_rows(name):
+    s, ids, scales, models, out = _G['series'][name], _G['ids'], _G['scales'], _G['models'], []
+    for month in ('2019-07', '2019-08', '2019-09'):
+        start = pd.Timestamp(month + '-01'); end = start + pd.offsets.MonthBegin(1)
+        bstarts = set(month_blocks(month, 15))          # block starts match facility.month_blocks (monthly reset)
+        for t in sorted(set(pd.date_range(start, end, freq=f"{_G['stride']}min", inclusive='left')) | bstarts):
+            idx = pd.date_range(t, periods=60, freq='15min')
+            forecasts = {'persistence': bg_forecast(s, t, 60, 'persist'), 'hist': bg_forecast(s, t, 60, 'hist'),
+                         'seasonal': s.reindex(idx - pd.Timedelta(weeks=1)).to_numpy()}
+            x = np.asarray([features(s, t, h, ids[name]) for h in range(1, 61)])
+            forecasts.update({key: model.predict(x) * scales[name] for key, model in models.items()})
+            truth = s.reindex(idx).to_numpy()
+            for h, target in enumerate(idx):
+                row = dict(factory=name, decision_time=t, target_time=target, horizon=h + 1, split=split_for(target), actual_kw=truth[h])
+                row.update({key: values[h] for key, values in forecasts.items()}); out.append(row)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ds07', required=True); ap.add_argument('--out', required=True)
@@ -94,31 +119,19 @@ def main():
     scales = {name: float(s.loc['2019-03-01':'2019-06-30'].median()) for name, s in series.items()}
     if any(not np.isfinite(v) or v <= 0 for v in scales.values()):
         raise ValueError('Each factory needs a positive training median')
-    batches = [make_rows(series[n], ids[n], scales[n], '2019-03-01', '2019-07-01', args.stride_min)[:2] for n in names]
+    from concurrent.futures import ProcessPoolExecutor
+    _G.update(series=series, ids=ids, scales=scales, stride=args.stride_min)   # fork-shared state for the worker processes
+    with ProcessPoolExecutor() as ex:                                          # one factory per core (feature loops are pure Python)
+        batches = list(ex.map(_train_rows, names))
     X = np.concatenate([b[0] for b in batches]); y = np.concatenate([b[1] for b in batches])
     models = build_models()
     for model in models.values():
         model.fit(X, y)
     predictor = FacilityPredictor(models, series, scales, ids)
     joblib.dump(predictor, out / 'facility_predictor.joblib')
-    records = []
-    for name in names:
-        s = series[name]
-        for month in ('2019-07', '2019-08', '2019-09'):
-            # Block starts match facility.month_blocks, including monthly reset.
-            start = pd.Timestamp(month + '-01')
-            end = start + pd.offsets.MonthBegin(1)
-            bstarts = set(month_blocks(month, 15))
-            for t in sorted(set(pd.date_range(start, end, freq=f'{args.stride_min}min', inclusive='left')) | bstarts):
-                idx = pd.date_range(t, periods=60, freq='15min')
-                forecasts = {'persistence': bg_forecast(s, t, 60, 'persist'), 'hist': bg_forecast(s, t, 60, 'hist'),
-                             'seasonal': s.reindex(idx - pd.Timedelta(weeks=1)).to_numpy()}
-                x = np.asarray([features(s, t, h, ids[name]) for h in range(1, 61)])
-                forecasts.update({key: model.predict(x) * scales[name] for key, model in models.items()})
-                truth = s.reindex(idx).to_numpy()
-                for h, target in enumerate(idx):
-                    row = dict(factory=name, decision_time=t, target_time=target, horizon=h+1, split=split_for(target), actual_kw=truth[h])
-                    row.update({key: values[h] for key, values in forecasts.items()}); records.append(row)
+    _G.update(models=models)
+    with ProcessPoolExecutor() as ex:
+        records = [r for part in ex.map(_export_rows, names) for r in part]
     df = pd.DataFrame(records)
     block_starts = {t for month in ('2019-07', '2019-08', '2019-09') for t in month_blocks(month, 15)}
     df[df.decision_time.isin(block_starts)].to_parquet(out / 'forecasts.parquet', index=False)
