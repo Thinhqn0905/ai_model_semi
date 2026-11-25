@@ -26,3 +26,13 @@ def test_md_window_ignores_offpeak():
     p["2019-03-04 15:00":"2019-03-04 15:29"] = 300.0                                     # peak-period interval
     assert billed_demand(p, 30)[0] == 900.0
     assert billed_demand(p, 30, md_window=([0, 1, 2, 3, 4], 14, 22))[0] == 300.0
+
+
+def test_bg_forecast_is_causal():
+    from regenate.evaluation.facility import bg_forecast
+    idx = pd.date_range("2019-03-01", periods=4 * 24 * 35, freq="15min")
+    bg = pd.Series(np.arange(len(idx), dtype=float), index=idx)
+    t = idx[4 * 24 * 30]
+    assert bg_forecast(bg, t, 3, "persist")[0] == bg[t - pd.Timedelta(minutes=15)]          # last slot strictly before t
+    h = bg_forecast(bg, t, 2, "hist"); assert h[0] == np.mean([bg[t - pd.Timedelta(weeks=w)] for w in (1, 2, 3, 4)])
+    assert bg_forecast(bg, t, 2, "oracle")[1] == bg[idx[4 * 24 * 30 + 1]]
