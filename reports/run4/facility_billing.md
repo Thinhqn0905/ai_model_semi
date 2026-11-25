@@ -151,3 +151,22 @@ Same facility-months, block draw from 100 instead of 50 instances, factory-clust
 The FIN-B software effect (B2 -> P0-E1-Peak, ~1.9 kW per cell) is robust to the instance pool. The two small 50-pool effects under the
 ToU rule (E1+peak level +0.52 kW, perfect cycle information +0.59 kW) are NOT robust (CIs include 0 with the 100 pool): they are
 withdrawn as claims and the "candidate AI opportunity" from perfect cycle information at facility level is not supported.
+
+## Causal P0-BILL extended (ToU rule, e_tol 2 %): 12 facility-months (6 factories x 2019-05/07, 1 cell) + 2 coordinated 5-cell cases
+Factory-clustered vs P0-E1-Peak (+ = lower billed-demand increment than P0-E1-Peak):
+| Variant | kW [CI] | facility-months better |
+|---|---|---|
+| P0-BILL hist (historical background) | -0.57 [-2.56, +0.89] n.s. | 6/12 |
+| P0-BILL oracle (perfect background) | +0.94 [-0.80, +2.96] n.s. | 6/12 |
+| ORACLE-E1-Peak (perfect cycles, not billing-aware) | +0.27 [-1.14, +1.98] n.s. | 5/12 |
+| P0-BILL hist -> oracle (value of a perfect background forecast) | +1.50 [-0.01, +3.15] borderline | - |
+5 cells (Forge_2, Metal_1, 2019-07): P0-BILL is WORSE than P0-E1-Peak (13.4 -> 19.2 kW, 17.8 -> 23.8/25.4 kW) and uses ~23 kWh/month more;
+sequential cells with a block-wise floor do not coordinate well. Verdict: billing-aware scheduling as formulated (lexicographic level per
+15 h block) does NOT beat the peak-aware default engine (FAIL / INCONCLUSIVE at 1 cell, FAIL at 5 cells). The only remaining AI question is
+whether a learned background forecast closes part of the hist -> oracle gap (+1.5 kW borderline); AI-BILL on the forecaster's TEST months
+(Aug-Sep) is running. Even a full gap closure would not make P0-BILL better than P0-E1-Peak in this formulation.
+
+## Holiday sensitivity (ToU rule, Malaysian 2019 public holidays off-peak; `--holidays MY`; 100-instance pool; runtime 2)
+B2 -> P0-E1-Peak: 1 cell +0.97 kW [-0.01, +1.91] (7/10 factories; vs +1.93 without holidays), 5 cells +3.13 [+0.98, +5.20] (8/10).
+Treating holidays as off-peak removes billed intervals and roughly halves the 1-cell effect (borderline); the multi-cell effect stays
+significant. Base case remains "holidays follow the weekday rule" (treatment not documented in the schedule PDF).
