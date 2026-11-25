@@ -120,3 +120,14 @@ no extrapolation of instantaneous cell peak reductions.
 ## D016 — Contribution decomposition: report separately regenerative hardware (B0->B1), shared topology (B1p-OPT->B2 / ->B3),
 conventional scheduling, rolling optimisation, peak/billing optimisation, AI operational benefit. The 11.6 % shared-link figure is
 topology + optimisation, never AI or software-only.
+
+## D017 (user, 2026-11-25) — Run 4 scope adjustments
+1. AI retained for ETA prediction and engineer advisory only. Station-level AI scheduling (P1-P5, PQ, PQ5, PQd) and anomaly-detection
+   experiments are STOPPED (failed: reports/run3/ai_run3.md, reports/run4/ai_production_planning.md, reports/run4/ai_monitoring.md;
+   results kept). AI-assisted facility billing continues against P0-BILL and ORACLE-BILL.
+2. FIN-B prioritised: evaluate 1, 3, 5, 10 cells with shared software/server costs and facility-level coordination; target 3-5 y
+   payback without linear-savings assumptions or artificial cost cuts; otherwise report break-even conditions.
+3. TNB tariffs from the official schedule PDF (data/tariffs/sources/Tariff-TNB-pdf.pdf): MV General, MV ToU, HV General, HV ToU with
+   30-min MD, peak periods and holiday treatment (holidays: sensitivity, not documented in the schedule).
+4. Reference cell (Chroma 17020-type battery cycling) and P0-E1-Peak default scheduler retained (D006, D007).
+5. DS07 results reported with factory-clustered CIs; complete running experiments; preserve negative results.
