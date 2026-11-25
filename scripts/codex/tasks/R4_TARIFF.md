@@ -24,3 +24,6 @@ Contract:
 4. Report: table per tariff with every field, status and source; what is still NOT_VERIFIED; that VN-TRIAL is not payable;
    that these are geographical counterfactuals for DS07 Korean factories, not their actual tariffs.
 Gate: `python -m pytest -q -p no:cacheprovider --basetemp runs/tmp_pytest_bill tests/test_billing.py` passes; all 5 YAML load.
+
+## Run 2 (lead) — evidence standard
+VERIFIED requires: a saved copy of the official document in data/tariffs/sources/ (sha256 in data/tariffs/sources/README.md), the exact quoted text line(s) and the page/table number in the YAML field (quote:, page:). If you cannot download/open the document, the field is NOT_VERIFIED regardless of the reference value in the plan. Re-check every currently VERIFIED field against this standard. Then resolve: Malaysia MD definition (30-min interval, aligned or sliding, peak-period eligibility for MV TOU), MV TOU energy windows, ICPT/AFA surcharges, connected-load charge rule, Vietnam actual tariff (official decision number + rates), Singapore UOS/contracted capacity current schedule. Finish with the gate.

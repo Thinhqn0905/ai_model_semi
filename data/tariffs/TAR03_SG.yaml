@@ -1,0 +1,65 @@
+id: TAR03_SG
+boundary: SOURCE_REPORTED
+billing_interval_minutes:
+  value: 30
+  unit: min
+  currency: null
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: metering interval
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+interval_mode: aligned
+windows: []
+energy_rates:
+  normal:
+    value: null
+    unit: SGD/kWh
+    currency: SGD
+    source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+    source_page_section: energy supply and TOU rates not established
+    access_date: '2026-11-25'
+    status: NOT_VERIFIED
+demand_rates: {}
+fixed_fees: {}
+export_rate:
+  value: null
+  unit: currency/kWh
+  currency: null
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: export rule not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+adjustments:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: taxes and adjustments not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+penalty:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: penalties not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+contract_kw: null
+contract_rate:
+  value: 15.07
+  unit: SGD/kW/month
+  currency: SGD
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: Table 9 HT large April 2026
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+excess_rate:
+  value: 22.61
+  unit: SGD/kW/month
+  currency: SGD
+  source_url: https://www.spgroup.com.sg/search?q=Transformer+efficiency+99.1%25+as+per+IS+2026+standard
+  source_page_section: Table 9 HT large uncontracted April 2026
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+contract_rule: Contract capacity is customer input; never automatically resized.

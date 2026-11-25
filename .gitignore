@@ -2,7 +2,7 @@
 /DS0*/
 /predict_ai_electrics/
 /doc/
-/data/
+/data/*
 /runs/
 *.pdf
 *.crdownload
@@ -12,3 +12,8 @@ __pycache__/
 *.zip
 .claude/settings.local.json
 reports/product/*.log
+!/data/tariffs/
+!/data/manifests/
+!/data/vendor/
+/data/vendor/*.pdf
+/data/tariffs/sources/*.pdf

@@ -1,0 +1,71 @@
+id: TAR01_MY_TNB_RP4_MV_general
+boundary: SOURCE_REPORTED
+billing_interval_minutes:
+  value: 30
+  unit: min
+  currency: null
+  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+  source_page_section: metering interval
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+interval_mode: aligned
+windows: []
+energy_rates:
+  normal:
+    value: 0.2983
+    unit: MYR/kWh
+    currency: MYR
+    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+    source_page_section: Medium Voltage General energy
+    access_date: '2026-11-25'
+    status: VERIFIED
+demand_rates:
+  capacity:
+    value: 29.43
+    unit: MYR/kW/month
+    currency: MYR
+    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+    source_page_section: Medium Voltage General capacity
+    access_date: '2026-11-25'
+    status: VERIFIED
+  network:
+    value: 59.84
+    unit: MYR/kW/month
+    currency: MYR
+    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+    source_page_section: Medium Voltage General network
+    access_date: '2026-11-25'
+    status: VERIFIED
+fixed_fees:
+  retail:
+    value: 200
+    unit: MYR/month
+    currency: MYR
+    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+    source_page_section: Medium Voltage General retail
+    access_date: '2026-11-25'
+    status: VERIFIED
+export_rate:
+  value: null
+  unit: currency/kWh
+  currency: null
+  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+  source_page_section: export rule not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+adjustments:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+  source_page_section: taxes and adjustments not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+penalty:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
+  source_page_section: penalties not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED

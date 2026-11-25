@@ -1,0 +1,48 @@
+id: TAR02_VN_trial
+boundary: SOURCE_REPORTED
+billing_interval_minutes:
+  value: 30
+  unit: min
+  currency: null
+  source_url: https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112
+  source_page_section: metering interval
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+interval_mode: aligned
+windows: []
+energy_rates: {}
+demand_rates: {}
+fixed_fees: {}
+export_rate:
+  value: null
+  unit: currency/kWh
+  currency: null
+  source_url: https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112
+  source_page_section: export rule not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+adjustments:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112
+  source_page_section: taxes and adjustments not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+penalty:
+  value: null
+  unit: description
+  currency: null
+  source_url: https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112
+  source_page_section: penalties not established
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED
+tariff_status: TRIAL_NOT_PAYABLE
+trial_rate:
+  value: null
+  unit: VND/kW/month
+  currency: VND
+  source_url: https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112
+  source_page_section: paper trial rates not specified
+  access_date: '2026-11-25'
+  status: NOT_VERIFIED

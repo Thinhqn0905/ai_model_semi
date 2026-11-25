@@ -6,7 +6,7 @@ Boundary: SIM_ASSUMED_PROFILE for bench_v1 computations; LOCAL_RUN on MEASURED D
 
 OK — `runs/run3/manifest_run2.json` inventories the task-named campaign directories, their CSV hashes, available seeds, instance counts, methods, embedded arguments and recorded boundaries. Infinities in old manifests are represented as strings for strict JSON. `runs/run3/audit/run.log` records the generation run.
 
-NOT_VERIFIED — Commands and claim-level report bindings are frequently absent in original manifests. The manifest explicitly records these gaps. It does not claim a repository-wide inventory; only directories named by this task were searched. DS06 and CQR Drive inputs are REMOTE, local rerun pending.
+NOT_VERIFIED — Commands and claim-level report bindings are frequently absent in original manifests. The manifest explicitly records these gaps. It does not claim a repository-wide inventory; only directories named by this task were searched. DS06 inputs are REMOTE, recomputed by lead on Colab, not locally re-verifiable; CQR inputs remain remote.
 
 ## 2. Report number reconciliation
 
@@ -48,7 +48,7 @@ NOT_VERIFIED — Complete the report-by-report raw-CSV reconciliation, including
 
 OK — `runs/run3/audit/claim_reconciliation.csv` contains the reported Branch C model skill and coverage cells, independently recomputed from local model MAEs and coverage, plus the business-case equal-TT sample counts, means and t intervals recomputed from individual `runs/rolling_v1/ladder.csv` rows. Boundary: LOCAL_RUN on MEASURED DS05 for forecast metrics; SIM_ASSUMED_PROFILE for economics. The generated CSV identifies the claim, reported value, recomputed value, and match. `runs/run3/audit/reconciliation.log` records the run. These matches do not validate the underlying measured data, model split, or financial assumptions.
 
-NOT_VERIFIED — The task requires all headline figures; this table does not yet cover every local headline in the benchmark and economics reports, nor DS02/DS04 or diagnostic source CSVs. Several cited sources fall outside the task-named input paths. DS06 and CQR results are REMOTE, rerun on Colab in progress (runs/run3/v2_diag); no remote values are treated as locally verified. Branch C sample counts and the 73/87/261-minute MAEs remain unreconciled. Monetary columns have not been independently recalculated. The listed output is a partial audit, not a completed gate.
+NOT_VERIFIED — The task requires all headline figures; this table does not yet cover every local headline in the benchmark and economics reports, nor DS02/DS04 or diagnostic source CSVs. Several cited sources fall outside the task-named input paths. DS06 results are REMOTE, recomputed by lead on Colab; no remote values are treated as locally verified. CQR inputs remain remote. Branch C sample counts and the 73/87/261-minute MAEs remain unreconciled. Monetary columns have not been independently recalculated. The listed output is a partial audit, not a completed gate.
 
 ### Comparison-specific fairness matrix
 
@@ -72,3 +72,17 @@ Source review: `src/regenate/evaluation/stats.py:23`, `src/regenate/evaluation/o
 | P0 vs P4 | common rolling configuration, P4 joint P90 duration | NOT_VERIFIED: DS06 CSVs remote; paired instance and equal-TT checks pending. |
 
 ISSUE — `src/regenate/optimization/milp.py:11` models downtime as aggregate capacity, while `src/regenate/optimization/rolling.py:94` does not supply the same capacity constraint; electrical bus caps are not established as hard scheduling constraints. Recommend identically constrained rolling truth and recipe experiments and independently verify solver stages, time budgets and realized TT before causal attribution.
+
+### Run 3 continuation: reproducibility and cross-report checks
+
+OK — `runs/ds05_local_build.log:7` records 14,755 cycles and 2 errors (local rebuild; MEASURED DS05). The lead reports the matching Colab build in `reports/run3/root_cause_analysis.md:16`; its remote output is NOT_VERIFIED locally.
+
+NOT_VERIFIED — The lead reports Branch C retraining identical for 55/55 metrics and DS06 P0/B1p-OPT/ORACLE/B1 reproducing Run 2 to three decimals; the underlying remote retraining and Run 2 precision are not locally available for independent verification. `reports/run3/root_cause_analysis.md:31` gives the four Run 3 means and only two-decimal Run 2 values. The lead reports all 200 one-shot MILPs optimal at gap 0 (`reports/run3/root_cause_analysis.md:32`); REMOTE, recomputed by lead on Colab, SIM_DATA_PROFILE, not locally re-verifiable. This statement does not apply to rolling solvers or other campaigns.
+
+OK — The locally available Branch C remaining-duration MAEs were checked against model_metrics.csv; see `runs/run3/audit/branch_c_mae_check.csv` and `runs/run3/audit/run3_check.log` (LOCAL_RUN on MEASURED DS05).
+
+OK — Shared DS06 claims reviewed: P0 versus rolling truth 0.094 kWh and the 0.188 versus 0.140 h tardiness figures agree between `reports/run3/root_cause_analysis.md:38` and `reports/run3/ai_run3.md:66` and `:69`; `reports/run3/mentor_compliance_audit.md:127` agrees for 0.094 kWh. The E1 50-instance and economics equal-TT subsets differ from the 100-instance diagnostic; their values must not be treated as the same claim. These are report-consistency checks, not independent remote recomputation.
+
+ISSUE — `reports/run3/economics_v3.md:15` says DS06 rows are pending while the same file reports completed DS06 results at `reports/run3/economics_v3.md:27`. Recommend removing or qualifying the stale pending statement.
+
+NOT_VERIFIED — A complete cross-report audit of every DS06 numeric claim and complete raw-CSV reconciliation across all requested local report headlines remain outstanding; the partial matches above do not establish full coverage.

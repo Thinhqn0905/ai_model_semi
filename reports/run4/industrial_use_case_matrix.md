@@ -1,0 +1,15 @@
+# Industrial use-case matrix
+
+D008 eligibility requires evidence of independently timed residual source and sink phases at the station boundary after local reuse. A bidirectional DUT does not imply bidirectional net station power. **NOT_VERIFIED** applies to site eligibility, durations, flexibility and residual phases unless stated. Equipment capability is **VENDOR_REPORTED**, not a site result. Power ranges are illustrative equipment ratings, not typical site measurements. Sources: [vendor reference](vendor_reference.md).
+
+| Candidate | Independent residual source/sink phases after local reuse | Power / duration | Schedule flexibility | Existing channel reuse | Semiconductor relevance | D008 eligibility | Evidence needed |
+|---|---|---|---|---|---|---|---|
+| Battery module cycling | Unknown at site: stored energy can discharge, but vendor reuse and auxiliaries change residual | VENDOR_REPORTED 17020 options 0.6–60 kW/channel; duration unknown | Unknown; recipe timing is not permission | VENDOR_REPORTED 17020 supports charging-channel reuse | Indirect; equipment uses power electronics | D007 reference; competition fit pending mentor | Boundary traces, reuse policy, windows, mentor acceptance |
+| Bidirectional DC-DC validation | Unknown: Keysight describes port sourcing/sinking, not net station export | VENDOR_REPORTED example 10 kW instrument; duration unknown | Unknown | Unknown | Direct converter/module testing | Conditional | Net traces in both directions after local reuse; independent timing and windows |
+| Battery-emulator power-electronics testing | Unknown: emulator port direction is insufficient | Unknown | Unknown | Unknown | Direct power electronics | Conditional | Metered net phases, setup and independent windows |
+| Power-module cycling | Unknown: topology and stored energy unspecified | Unknown | Unknown | Unknown | Direct semiconductor module test | Conditional | DUT/test topology, residual traces, independent starts |
+| Energy-storage module testing | Unknown: storage can return energy; station net not established | VENDOR_REPORTED 17020 battery options 0.6–60 kW/channel; duration unknown | Unknown | VENDOR_REPORTED for 17020; other equipment unknown | Indirect or direct depending on DUT | Conditional | Boundary traces, actual equipment/reuse and movable starts |
+| EV power-conversion test systems | Unknown: 8620 describes HIL, not station net export | Unknown | Unknown | Unknown | Direct OBC/DC-DC power electronics | Conditional | Metered net phases, equipment topology, independent starts and test constraints |
+| Converter burn-in (D001 negative control) | No under D001 analytic assumptions: output never exceeds input and local reuse occurs first | Unknown; assumption is pointwise, not a rating | Cannot create residual source under those assumptions | Setup dependent | Direct | Ineligible under D001 assumptions | Verify local reuse and measured power; revisit only if assumptions fail |
+
+These candidates do not establish an incremental energy saving. Evaluate matched baselines and existing vendor reuse before claiming coordination benefit.

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "DS01",
+    "title": "Hybrid flow shop instances",
+    "doi": null,
+    "repository": "project source",
+    "version": null,
+    "license": "CC BY 4.0",
+    "urls": [],
+    "files": [],
+    "measurement_boundary": "synthetic scheduling instances",
+    "sampling": "abstract time",
+    "units": "abstract power",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Scheduling benchmark",
+    "limitations": "No measured regenerative power",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS02",
+    "title": "SHIFT2DC",
+    "doi": "10.5281/zenodo.18524234",
+    "repository": "Zenodo",
+    "version": null,
+    "license": "CC BY 4.0",
+    "urls": [
+      "https://doi.org/10.5281/zenodo.18524234"
+    ],
+    "files": [],
+    "measurement_boundary": "DC bus and terminal traces",
+    "sampling": "approximately 1 s",
+    "units": "V, A, kW",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Bus context",
+    "limitations": "Clock and power flow signs undocumented",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS03",
+    "title": "Equipment and EDC sources",
+    "doi": null,
+    "repository": null,
+    "version": null,
+    "license": null,
+    "urls": [],
+    "files": [],
+    "measurement_boundary": "equipment specifications and sequences",
+    "sampling": null,
+    "units": "V, W",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Equipment grounding",
+    "limitations": "Vendor values and measured traces have distinct boundaries",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS04",
+    "title": "SME machine loads",
+    "doi": null,
+    "repository": null,
+    "version": null,
+    "license": null,
+    "urls": [],
+    "files": [],
+    "measurement_boundary": "manufacturing machine power and status",
+    "sampling": "variable; company B approximately 60 s",
+    "units": "kW",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Forecast benchmark",
+    "limitations": "Not semiconductor test cells",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS05",
+    "title": "Long-Term Sweat Testing Data for Second-Life Batteries",
+    "doi": "10.17028/rd.lboro.28732490.v2",
+    "repository": "figshare",
+    "version": 2,
+    "license": "CC BY 4.0",
+    "urls": [
+      "https://doi.org/10.17028/rd.lboro.28732490.v2"
+    ],
+    "files": [
+      {
+        "name": "DS5.zip",
+        "size": 9066300821,
+        "md5": null,
+        "sha256": "2748f41455a6b8c262fb25d6ddda00b4477610fdf04c767cc580ca73c169c5c8",
+        "note": "LOCAL_RUN archive hash; source checksum not independently verified"
+      }
+    ],
+    "measurement_boundary": "battery cycler module power",
+    "sampling": "10 s time unit",
+    "units": "W, V, A",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Bidirectional cycle forecasting",
+    "limitations": "Second-life modules, not semiconductor DUTs",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS06",
+    "title": "Scheduling benchmark DS06",
+    "doi": null,
+    "repository": null,
+    "version": null,
+    "license": null,
+    "urls": [],
+    "files": [],
+    "measurement_boundary": "derived scheduling instances",
+    "sampling": null,
+    "units": null,
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Scheduling benchmark",
+    "limitations": "Not site measurements",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS07",
+    "title": "Industrial facility electricity demand",
+    "doi": "10.6084/m9.figshare.14822256.v9",
+    "repository": "figshare",
+    "version": 9,
+    "license": "CC BY 4.0",
+    "urls": [
+      "https://doi.org/10.6084/m9.figshare.14822256.v9",
+      "https://api.figshare.com/v2/articles/14822256/versions/9"
+    ],
+    "files": [
+      {
+        "name": "Data_list.zip",
+        "size": 10861504,
+        "md5": "cc3911b3f9e1125468e864a24540cfe0",
+        "sha256": "f8794dc10e8892ead63f431eb55c6a4d6c6411c09a3d58aa29a07c54a14b57fc"
+      },
+      {
+        "name": "Code_list.zip",
+        "size": 6035,
+        "md5": "398ed0baae9c9a33466e811860f4c3b3",
+        "sha256": null,
+        "note": "R scripts; never executed"
+      }
+    ],
+    "measurement_boundary": "factory consumption",
+    "sampling": "1 min",
+    "units": "kW",
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Facility demand context",
+    "limitations": "Missing rows; not semiconductor test cells",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  },
+  {
+    "id": "DS08",
+    "title": "EWELD",
+    "doi": "10.6084/m9.figshare.21893808.v3",
+    "repository": "figshare",
+    "version": 3,
+    "license": "CC BY 4.0",
+    "urls": [
+      "https://doi.org/10.6084/m9.figshare.21893808.v3",
+      "https://api.figshare.com/v2/articles/21893808/versions/3"
+    ],
+    "files": [
+      {
+        "name": "EWELD.zip",
+        "size": 258090540,
+        "md5": "eea1455aff6518aae1fbfc397b178111",
+        "sha256": null,
+        "url": "https://ndownloader.figshare.com/files/38873490"
+      }
+    ],
+    "measurement_boundary": null,
+    "sampling": null,
+    "units": null,
+    "provenance": "SOURCE_REPORTED / project audit; see registry report",
+    "role": "Potential external dataset",
+    "limitations": "Metadata only; measurement boundary unverified",
+    "unknown_note": "Null or empty fields are not verified; no value inferred."
+  }
+]

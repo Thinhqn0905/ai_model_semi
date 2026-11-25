@@ -22,3 +22,6 @@ Gate: report exists with sections 1-6; manifest json loads; every ISSUE has a fi
 
 ## Run 2 (lead)
 Finish sections 2 and 4 completely in this run (every headline number with a local source; every comparison in stats.COMPARISONS plus ORACLE/P0/P1-P4). Do not return CONTINUE for work that is possible with local files; DS06 remote rows stay "REMOTE, rerun on Colab in progress (runs/run3/v2_diag)".
+
+## Run 3 (lead) — final
+DS06 numbers were recomputed by the lead on Colab (notebook semiexpo_ai.ipynb cells 32-49) and are written in reports/run3/{root_cause_analysis,ai_run3,e1_electrical_constraints,economics_v3}.md with Drive source paths. Mark them "REMOTE, recomputed by lead on Colab" (not locally re-verifiable). Check instead that every DS06 number quoted in reports/run3/*.md is consistent across those files (same value for the same claim), list inconsistencies with file:line. Add the reproducibility facts: DS05 local rebuild = Colab (14,755 cycles, 2 errors, runs/ds05_local_build.log); Branch C retrain identical (55/55 metrics); DS06 Run 3 P0/B1p-OPT/ORACLE/B1 = Run 2 to 3 decimals; all one-shot MILPs optimal gap 0. Then finish and return ALL_PASS if the gate passes.

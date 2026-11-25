@@ -30,3 +30,6 @@ uncertainty; constrained optimizer decides. M15 electricity first; water needs s
 investment/payback. Map each to the closest mentor quotation in Instruction/Mentor_Feedback.md (quote + location); if your
 draft used another numbering, renumber it. Note: the NaN fallback FAIL is fixed by the lead (ai_engine.py non-finite -> recipe);
 check reports/run3/failure_injection_v2.md for the rerun result before grading.
+
+## Run 3 (lead) — final run now
+All lead campaigns are done: read reports/run3/root_cause_analysis.md, ai_run3.md, e1_electrical_constraints.md, economics_v3.md (DS06 section), failure_injection_v2.md, demonstrator.md, cross_dataset_benchmark.md, metric_audit_v3.md, electrical_feasibility.md (may still be in progress: then cite it as partial). Rewrite the audit with the M01-M16 definitions above and final statuses; return ALL_PASS when the gate passes.
