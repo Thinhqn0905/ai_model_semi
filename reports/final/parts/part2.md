@@ -1,5 +1,7 @@
 ﻿# 6 Energy optimisation ladder B0..ORACLE
 
+Reconciliation (SIM_DATA_PROFILE): baselines are matched by instance within each file; P0 rows match across the diagnostic and Run 3 forecast files. In the Run 2 ladder B3 has one infeasible tardiness-stage instance (99/100 optimal); flex 1.0 has time-limit incumbents for ORACLE 17/26 and B3 18/26, so the reported oracle saving is a lower bound, not a certified optimum: MyDrive/semiexpo/ai_runs/v2_flex1/results.csv (sha256 43b3f53afd3a6284). Rolling P0 has higher mean tardiness than one-shot methods (0.18?0.25 h versus 0.105?0.174 h); energy comparisons are not equal-production unless an equal-tardiness subset is stated. In the merged E1 run B2 has 13/100 violations, P0 1/100, and optimized one-shot 0; PQd has 2/100: MyDrive/semiexpo/ai_runs/run4/v2_wpc_gated (sha256 f346ca242945923d), MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187).
+
 DS06 replays measured DS05 cycle shapes with assumed scaling and windows: **SIM_DATA_PROFILE**, site NOT_VERIFIED. Same ledger and paired instances are intended; differing tardiness and electrical conditions require reconciliation before causal claims (`reports/run3/metric_audit_v3.md`). Means below have no reported CI; raw result `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`, source `reports/ai/ai_exp12_ds06.md`.
 
 | Method | n | Net M0 kWh/instance | Peak kW | CI |
@@ -9,7 +11,7 @@ DS06 replays measured DS05 cycle shapes with assumed scaling and windows: **SIM_
 | B3 | 99 | 8.55 | 11.60 | Not reported |
 | P0 / P1 / P2 / P3 / P4 / ORACLE | 100 | 8.45 / 8.46 / 8.47 / 8.47 / 8.47 / 8.35 | 11.34 / 11.68 / 11.58 / 11.90 / 11.74 / 10.19 | Not reported |
 
-Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4/v2_e1_peak_b`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: equal-tardiness and feasibility reconciliation NOT_VERIFIED. P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
+Primary comparison, B1 → P0-E1-Peak: 3.077 kWh saved [2.967, 3.186], peak reduction 4.54 kW [3.76, 5.31], paired 95% CI, n=100, SIM_DATA_PROFILE; raw `ai_runs/run4_rt2/v2_e1_peak100` and `run4/v2_e1_peak_b`, `reports/run3/e1_electrical_constraints.md`. P0 tardiness 0.18 h versus 0.14 h one-shot, and P0 has one modeled violation versus 13 for B2: unequal tardiness and modeled violations limit this comparison; MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187). P0 → ORACLE energy headroom 0.094 kWh [0.077, 0.112], n=100, SIM_DATA_PROFILE, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; P1 versus P0 is 0.018 kWh worse [0.005, 0.030], same source. Import/export, direct reuse and matching ratio, throughput/makespan, solver runtime and gap for this matched ladder: NOT_VERIFIED here; do not infer them from net energy.
 
 Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_DATA_PROFILE; baseline and raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv` (`reports/ai/ai_exp12_ds06.md`). Positive means lower energy or peak than baseline.
 
@@ -25,6 +27,12 @@ Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_
 
 # 7 Electrical feasibility
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
+Reconciliation (SIM_DATA_PROFILE): baselines are matched by instance within each file; P0 rows match across the diagnostic and Run 3 forecast files. In the Run 2 ladder B3 has one infeasible tardiness-stage instance (99/100 optimal); flex 1.0 has time-limit incumbents for ORACLE 17/26 and B3 18/26, so the reported oracle saving is a lower bound, not a certified optimum: MyDrive/semiexpo/ai_runs/v2_flex1/results.csv (sha256 43b3f53afd3a6284). Rolling P0 has higher mean tardiness than one-shot methods (0.18?0.25 h versus 0.105?0.174 h); energy comparisons are not equal-production unless an equal-tardiness subset is stated. In the merged E1 run B2 has 13/100 violations, P0 1/100, and optimized one-shot 0; PQd has 2/100: MyDrive/semiexpo/ai_runs/run4/v2_wpc_gated (sha256 f346ca242945923d), MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187).
+
+D019 retains AFE 20 kW / bus 32 kW as the reference and identifies AFE 20 kW / bus 16 kW as the cost-optimised candidate. On the same 30 simulated instances the candidate has zero violations, 100% twin approval, and unchanged energy and tardiness; raw MyDrive/semiexpo/ai_runs/run4_rt3/v2_size_afe20_bus16 (sha256 9b253122). AFE 10 kW has three infeasible ORACLE cases: MyDrive/semiexpo/ai_runs/run4_rt3/v2_size_afe10_bus32 (sha256 ad65c2b5dcde9508).
+
 | Comparison | Result | Boundary and raw evidence |
 |---|---|---|
 | E0 → E1 twin approval, ORACLE | 98% → 100%, n=50; P0 100% → 100%; CI not reported | SIM_DATA_PROFILE; `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`, `screen_e1.csv`; `reports/run3/e1_electrical_constraints.md` |
@@ -32,9 +40,9 @@ Additional matched ladder comparisons: n=100 except B3 n=99, paired 95% CI, SIM_
 | Sizing, E1 | At 15 kW AFE / 32 kW bus, P0 has 1 violation and twin approval 0.967; at 20 / 16 kW, P0 and B2 have zero violations and approval 1.000; n=30, CI not reported | SIM_DATA_PROFILE; `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md` |
 | 10 kW AFE | ORACLE 27/30 solved; P0 twin approval 0.667; CI not reported | SIM_DATA_PROFILE; same sizing paths |
 
-The sizing report contains both a pending placeholder and a later screening table; independent retrieval of the latter remains PENDING (`docs/handoff_run4.md`). UV and overcurrent are modeled rejection causes; actual voltage/current excursions and protection qualification are NOT_VERIFIED. Twin parameters are assumed; independent protection and engineer approval remain required. Failure injection v1 and v2 report simulation-only passes, respectively `runs/fail_v1/pytest_run3.log` and `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE; case evidence `runs/fail_v1/` and `runs/run3/fail/`, sources `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
+The later sizing screening table is the D019 simulation evidence; its older pending placeholder is superseded. UV and overcurrent are modeled rejection causes; actual voltage/current excursions and protection qualification are NOT_VERIFIED. Twin parameters are assumed; independent protection and engineer approval remain required. Failure injection v1 and v2 report simulation-only passes, respectively `runs/fail_v1/pytest_run3.log` and `runs/run3/fail/pytest_fail2_run2.log`, SIM_ASSUMED_PROFILE; case evidence `runs/fail_v1/` and `runs/run3/fail/`, sources `reports/safety/failure_injection.md`, `reports/run3/failure_injection_v2.md`.
 
-Full sizing results, n=30, CI not reported, SIM_DATA_PROFILE; raw `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md`. Screen retrieval remains PENDING as above.
+Full sizing results, n=30, CI not reported, SIM_DATA_PROFILE; raw `ai_runs/run4_rt3/sizing_summary.csv`, `ai_runs/run4_rt3/screen_sizing_summary.csv`; `reports/run3/e1_electrical_constraints.md`. The reported screening is simulation only.
 
 | AFE / bus kW | ORACLE solved; peak kW | P0 violations; peak kW | B2 violations | twin approval B2 / P0 / ORACLE |
 |---|---|---|---|---|
@@ -50,6 +58,8 @@ E0 ? E1 twin approval for B2 is 94% ? 94% and B1p-OPT 92% ? 92%, n=50, CI not re
 
 # 8 Facility level
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 DS06 simulated cells are added to unsynchronised measured DS07 facility loads, not site savings; **SIM_DATA_PROFILE + MEASURED**, site NOT_VERIFIED. DS08 robustness is MISSING: metadata audit only, no archive or qualifying complete customer subset (`reports/run4/ds08_audit.md`, `data/manifests/ds08_metadata.json`). DS07 uses 10 factories and 70 factory-months; factory-clustered paired 95% CI supersedes month-level CI. Source `reports/run4/facility_billing.md`, raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv` and `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells`.
 
 | Baseline → method | Rule | Mean MD reduction kW [95% CI] | Factories won | n |
@@ -60,7 +70,7 @@ DS06 simulated cells are added to unsynchronised measured DS07 facility loads, n
 
 Median coincidence of cell peak with billed demand is 0.09 for P0-E1-Peak and 0.24 for B2, all-hours, n=70; CI and full win/tie/loss breakdown not reported (`reports/run4/facility_billing.md`, raw `ai_runs/run4/fac_grid_tnb/`). The 100-instance-pool ToU B2 → P0 effect is 1.93 kW [0.69, 3.07], n=70; the earlier peak-level and perfect-information effects are WITHDRAWN because their larger-pool CIs include zero (`ai_runs/run4_rt2/fac_{gen,tou}_1cell_n100`). Holiday-off-peak sensitivity gives 0.97 kW [-0.01, 1.91] for one cell and 3.13 [0.98, 5.20] for five, n=70, factory-clustered CI; raw `ai_runs/run4_rt2/`, source `reports/run4/facility_billing.md`. Holiday treatment is NOT_VERIFIED.
 
-Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, SIM_DATA_PROFILE + unsynchronised MEASURED; General raw path NOT_VERIFIED, ToU raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv`; `reports/run4/facility_billing.md`. Factory ties/losses are not reported and must not be inferred from wins.
+Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, SIM_DATA_PROFILE + unsynchronised MEASURED; General raw MyDrive/semiexpo/ai_runs/run4/fac_grid (sha256 6e669d46a861fe54), ToU raw `MyDrive/semiexpo/ai_runs/run4/fac_grid_tnb/facility_md.csv`; `reports/run4/facility_billing.md`. Factory ties/losses are not reported and must not be inferred from wins.
 
 | Baseline ? method | General kW [CI], factories won | ToU kW [CI], factories won |
 |---|---|---|
@@ -80,6 +90,8 @@ Full factory-clustered comparisons, n=70 facility-months, 10 factories, 95% CI, 
 
 # 9 Multi-cell
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Independent scheduling behind one meter; same boundary, n=70 and clustered CI as section 8. Raw `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells`; source `reports/run4/facility_billing.md`.
 
 | Cells | Baseline → method | General MD reduction kW [95% CI] | ToU MD reduction kW [95% CI] |
@@ -95,11 +107,15 @@ P0-E1-Peak ? ORACLE-E1-Peak ToU reductions, same n, boundary and raw as above: 1
 
 # 10 Tariff validation
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 SOURCE_REPORTED, geographic counterfactuals, not actual DS07 bills. TNB schedule [official PDF](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf), p.2: General “Setiap kilowatt permintaan maksimum sebulan”; ToU adds “semasa tempoh puncak”. General uses whole-month MD, ToU peak-period MD. The older registry's General peak-only entry is superseded (`reports/run4/facility_billing.md`, `reports/final/report_run4.md`). TNB's [MD page](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge) verifies 30-minute MD (D018); alignment and public-holiday handling remain NOT_VERIFIED.
 
 MV General energy 0.2983 MYR/kWh, demand capacity 29.43 and network 59.84 MYR/kW/month; MV ToU energy peak/off-peak 0.3132/0.2723 MYR/kWh. Registry marks individual rates NOT_VERIFIED while the later economics report marks rates verified: reconciliation needed. HV rate fields and exact quotations beyond the above: NOT_VERIFIED here. Source `reports/run4/tariff_registry.md`, `reports/run4/economics_run4.md`; source schedule `data/tariffs/sources/Tariff-TNB-pdf.pdf`; n/CI not applicable. Vietnam actual rates are NOT_VERIFIED pending exact page; [VN trial](https://www.evn.com.vn/d/vi-VN/news/Trien-khai-thu-nghiem-gia-ban-le-dien-hai-thanh-phan-tu-thang-102025-60-142-505112) is TRIAL_NOT_PAYABLE; [Singapore schedule](https://www.spgroup.com.sg/dam/jcr:ed6d35eb-7bb5-450c-8386-b61f0cc13142/Transmission%20Service%20Rate%20Schedule%20(effective%20from%201%20Jul%202026).pdf) contract/excess rates are 14.21/21.32 SGD/kW/month, SOURCE_REPORTED, table 9 (`reports/run4/tariff_registry.md`). Billing-engine test output path NOT_VERIFIED; incomplete calculations exclude charges listed in the registry.
 
 # 11 Economics
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 FIN-A has no energy value by physics; FIN-B adds software to existing shared hardware; FIN-C includes unscoped hardware (`docs/decisions.md` D017; `reports/run4/economics_run4.md`). The following FIN-B estimates use B2 → P0-E1-Peak, n=70 facility-months, SIM_DATA_PROFILE + unsynchronised MEASURED, assumed annualisation and FX; factory-clustered ranges; raw `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`. Known site CAPEX USD 4,220 is an estimate; installation, requalification and support are MISSING. Paybacks are optimistic, site NOT_VERIFIED.
 
@@ -130,6 +146,8 @@ Complete published FIN-B rows below: B2 ? P0-E1-Peak, n=70, SIM_DATA_PROFILE + u
 HV smaller-cell results are not tabulated in the source; `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/clustered_summary.csv` requires retrieval. FIN-C hardware CAPEX, installation, qualification and support OPEX are MISSING; FIN-A value is bounded by the in-rack physics assumption (`docs/decisions.md`, `reports/run4/economics_run4.md`).
 
 # 12 Contribution decomposition
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 Values below are paired reductions with 95% CI, SIM_DATA_PROFILE, not additive: subsets, information, objectives and tardiness differ; topology-only attribution and raw reconciliation NOT_VERIFIED. Source `reports/run4/contribution_decomposition.md`; raw `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`.
 

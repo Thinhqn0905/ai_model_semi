@@ -19,7 +19,7 @@ M identifiers below are a working mapping of mentor requirements, not identifier
 | M09 | Strong baselines and perfect Oracle | PARTIAL | `reports/run4/mentor_compliance_run4.md` (M09); site NOT_VERIFIED |
 | M10 | Incremental M0 kWh versus B1 | PARTIAL | `reports/run4/mentor_compliance_run4.md` (M10); site NOT_VERIFIED |
 | M11 | FPY, throughput and test integrity | PARTIAL | `reports/run4/mentor_compliance_run4.md` (M11); site NOT_VERIFIED |
-| M12 | AI incremental benefit over matched non-AI | PASS | `reports/run4/mentor_compliance_run4.md` (M12); site NOT_VERIFIED |
+| M12 | AI incremental benefit over matched non-AI | FAIL | `reports/run4/mentor_compliance_run4.md` (M12); evaluation completed, matched AI scheduling benefit not demonstrated; site NOT_VERIFIED |
 | M13 | Sensitivity and paired statistics | PARTIAL | `reports/run4/mentor_compliance_run4.md` (M13); site NOT_VERIFIED |
 | M14 | Forecast power, duration and uncertainty; constrained optimizer decides | PARTIAL | `reports/run4/mentor_compliance_run4.md` (M14); site NOT_VERIFIED |
 | M15 | Electricity first; water separate | PASS | `reports/run4/mentor_compliance_run4.md` (M15); site NOT_VERIFIED |

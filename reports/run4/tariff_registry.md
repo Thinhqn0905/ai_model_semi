@@ -1,36 +1,36 @@
 # Tariff registry
 
-Boundary: SOURCE_REPORTED. These are geographical counterfactuals for DS07 Korean factories, not their actual tariffs. VN trial is TRIAL_NOT_PAYABLE. These incomplete calculations are not payable bills: taxes, adjustments, reactive power, connected-load and standby penalties are excluded. Null means missing. Aligned metering is an assumption. The TNB general tariff peak-only treatment follows the task instruction and is NOT_VERIFIED; the TNB source establishes peak-only MD for ToU.
+Boundary: SOURCE_REPORTED. These are geographical counterfactuals for DS07 Korean factories, not their actual tariffs. VN trial is TRIAL_NOT_PAYABLE. These incomplete calculations are not payable bills: taxes, adjustments, reactive power, connected-load and standby penalties are excluded. Null means missing. Aligned metering is an assumption. The official schedule specifies whole-month maximum demand for General and peak-period maximum demand for ToU. Public-holiday treatment is NOT documented and is a sensitivity, not a verified rule.
 
 ## TAR01_MY_TNB_RP4_MV_general
 
 | Field | Value | Unit | Currency | Status | Source and section |
 |---|---|---|---|---|---|
 | billing_interval_minutes | 30 | min | None | VERIFIED | [TNB maximum demand calculation](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge); `docs/decisions.md` D018 |
-| energy_rates.normal | 0.2983 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage General energy](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| demand_rates.capacity | 29.43 | MYR/kW/month | MYR | NOT_VERIFIED | [Medium Voltage General capacity](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| demand_rates.network | 59.84 | MYR/kW/month | MYR | NOT_VERIFIED | [Medium Voltage General network](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| fixed_fees.retail | 200 | MYR/month | MYR | NOT_VERIFIED | [Medium Voltage General retail](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| energy_rates.normal | 0.2983 | MYR/kWh | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage General energy](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| demand_rates.capacity | 29.43 | MYR/kW/month | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage General capacity](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| demand_rates.network | 59.84 | MYR/kW/month | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage General network](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| fixed_fees.retail | 200 | MYR/month | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage General retail](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | export_rate | None | currency/kWh | None | NOT_VERIFIED | [export rule not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | adjustments | None | description | None | NOT_VERIFIED | [taxes and adjustments not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | penalty | None | description | None | NOT_VERIFIED | [section 4.2: 8.50 MYR/kW shortfall; reference depends on customer history; excluded from bill](https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf) |
 | tou_windows_status | Monday-Friday 14:00-22:00 peak; otherwise off-peak | description | None | VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
-| demand_eligibility_status | peak only | description | None | NOT_VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
+| demand_eligibility_status | whole-month maximum, all hours | description | None | VERIFIED | Official TNB schedule PDF p.2, SHA-256 `e6634bbe...` |
 | fuel_adjustment_status | monthly fuel adjustment; rate not established | description | None | VERIFIED | [Energy Adjustment](https://www.mytnb.com.my/tariff) |
 | interval_mode_status | aligned assumed; documentation not established | description | None | NOT_VERIFIED | [metering alignment](https://www.mytnb.com.my/tariff) |
 
-Other configuration: `{'interval_mode': 'aligned', 'windows': [{'days': [0, 1, 2, 3, 4], 'start': '14:00', 'end': '22:00', 'period': 'peak'}, {'days': [0, 1, 2, 3, 4], 'start': '00:00', 'end': '14:00', 'period': 'offpeak'}, {'days': [0, 1, 2, 3, 4], 'start': '22:00', 'end': '24:00', 'period': 'offpeak'}, {'days': [5, 6], 'start': '00:00', 'end': '24:00', 'period': 'offpeak'}], 'demand_eligible_periods': ['peak']}`.
+Other configuration: `{'interval_mode': 'aligned', 'windows': [{'days': [0, 1, 2, 3, 4], 'start': '14:00', 'end': '22:00', 'period': 'peak'}, {'days': [0, 1, 2, 3, 4], 'start': '00:00', 'end': '14:00', 'period': 'offpeak'}, {'days': [0, 1, 2, 3, 4], 'start': '22:00', 'end': '24:00', 'period': 'offpeak'}, {'days': [5, 6], 'start': '00:00', 'end': '24:00', 'period': 'offpeak'}], 'demand_eligible_periods': all hours (corrected scenario; YAML configuration requires reconciliation)}`.
 
 ## TAR01_MY_TNB_RP4_MV_TOU
 
 | Field | Value | Unit | Currency | Status | Source and section |
 |---|---|---|---|---|---|
 | billing_interval_minutes | 30 | min | None | VERIFIED | [TNB maximum demand calculation](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge); `docs/decisions.md` D018 |
-| energy_rates.peak | 0.3132 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage ToU peak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| energy_rates.offpeak | 0.2723 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage ToU offpeak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| demand_rates.capacity | None | MYR/kW/month | MYR | NOT_VERIFIED | [MV TOU rate requires review of original PDF; previous number removed](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| demand_rates.network | None | MYR/kW/month | MYR | NOT_VERIFIED | [MV TOU rate requires review of original PDF; previous number removed](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
-| fixed_fees.retail | 200 | MYR/month | MYR | NOT_VERIFIED | [Medium Voltage ToU retail](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| energy_rates.peak | 0.3132 | MYR/kWh | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage ToU peak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| energy_rates.offpeak | 0.2723 | MYR/kWh | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage ToU offpeak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| demand_rates.capacity | 30.19 | MYR/kW/month | MYR | VERIFIED | Official TNB schedule PDF p.2, SHA-256 `e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e` |
+| demand_rates.network | 66.87 | MYR/kW/month | MYR | VERIFIED | Official TNB schedule PDF p.2, SHA-256 `e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e` |
+| fixed_fees.retail | 200 | MYR/month | MYR | VERIFIED | PDF p.2, SHA-256 `e6634bbe...`; [Medium Voltage ToU retail](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | export_rate | None | currency/kWh | None | NOT_VERIFIED | [export rule not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | adjustments | None | description | None | NOT_VERIFIED | [taxes and adjustments not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | penalty | None | description | None | NOT_VERIFIED | [section 4.2: 8.50 MYR/kW shortfall; reference depends on customer history; excluded from bill](https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf) |
@@ -82,3 +82,5 @@ Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'tariff_status
 Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'contract_rule': 'HT Large: contract is input; UCC applies to excess for normal consumers without embedded generation. Other schemes require additional rules.'}`.
 
 Malaysia RP4 schedule fields retain their individual statuses; the MD interval is VERIFIED by TNB (D018); meter alignment remains NOT_VERIFIED. AFA replaces ICPT and changes monthly, but the rate is not established. Connected-load applicability and taxes remain unresolved. Vietnam rates remain NOT_VERIFIED pending exact page and quotation. Singapore supply energy, reactive, standby and export remain unverified or unimplemented. Source copies and SHA-256 hashes are in [sources](../../data/tariffs/sources/README.md).
+
+TNB source provenance: [official schedule](../../data/tariffs/sources/Tariff-TNB-pdf.pdf), p.2, SHA-256 `e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e`; rates VERIFIED. The [TNB MD page](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge) and D018 establish the 30-minute interval; [myTNB](https://www.mytnb.com.my/tariff) establishes the weekday peak window. Holiday treatment NOT documented; see holiday sensitivity in `facility_billing.md`. The YAML files are outside this task?s ownership and may retain stale statuses or configuration; this registry records the corrected provenance, not a validated executable tariff.

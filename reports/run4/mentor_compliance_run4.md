@@ -1,6 +1,6 @@
 # Run 4 mentor compliance audit ? final evidence assessment
 
-M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run 4 reports. Results are CONCEPT-LEVEL only; no site validation or shadow-mode dataset exists. CI intervals below are 95%. Remote Drive campaigns are reported by their local summaries and are NOT_VERIFIED by independent local raw-data reconciliation. Status grades each requirement at its stated boundary, not a deployment authorization.
+M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run 4 reports. Results are CONCEPT-LEVEL only; no site validation or shadow-mode dataset exists. CI intervals below are 95%. Drive raw bindings were reconciled from the authoritative manifest, computed from Drive files; this is not independent local retrieval. Status grades each requirement at its stated boundary, not a deployment authorization.
 
 | ID | Requirement | Status |
 |---|---|---|
@@ -15,7 +15,7 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 | M09 | Strong baselines and perfect Oracle | PARTIAL |
 | M10 | Incremental M0 kWh versus B1 | PARTIAL |
 | M11 | FPY, throughput and test integrity | PARTIAL |
-| M12 | AI incremental benefit over matched non-AI | PASS |
+| M12 | AI incremental benefit over matched non-AI | FAIL |
 | M13 | Sensitivity and paired statistics | PARTIAL |
 | M14 | Forecast power, duration and uncertainty; constrained optimizer decides | PARTIAL |
 | M15 | Electricity first; water separate | PASS |
@@ -23,9 +23,9 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 | Status | Count |
 |---|---:|
-| PASS | 3 |
+| PASS | 2 |
 | PARTIAL | 9 |
-| FAIL | 0 |
+| FAIL | 1 |
 | BLOCKED | 4 |
 
 ## M01 - Intelligent energy coordination
@@ -57,7 +57,7 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 **Implemented module:** `DS01_Quanh/code/regen_core.py`. **Supporting experiment:** Flexibility sensitivity. **Evidence file:** `reports/run4/contribution_decomposition.md`.
 **Result:** Run 4 retains the flexibility and incremental M0 energy gate; contribution decomposition reports mixed topology and scheduling effects.
-**Remaining limitation:** SIM_DATA_PROFILE; independently matched comparisons, site flexibility and B1 gate remain NOT_VERIFIED.
+**Remaining limitation:** SIM_DATA_PROFILE; instance matching is documented in `docs/raw_binding_manifest.md`; site flexibility and the site B1 gate remain NOT_VERIFIED.
 **Status:** PARTIAL.
 
 ## M04 - Losses and consistent ledger
@@ -125,7 +125,7 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 **Implemented module:** `DS01_Quanh/code/regen_core.py`. **Supporting experiment:** Matched rolling-truth diagnostic. **Evidence file:** `reports/run4/p0_architecture.md`.
 **Result:** The ladder and perfect-information diagnostics are documented.
-**Remaining limitation:** SIM_DATA_PROFILE; independent raw reconciliation and matching of tardiness and configuration remain NOT_VERIFIED.
+**Remaining limitation:** SIM_DATA_PROFILE; instance matching is documented in `docs/raw_binding_manifest.md`; unequal tardiness limits one-shot comparisons; site configuration remains NOT_VERIFIED.
 **Status:** PARTIAL.
 
 ## M10 - Incremental M0 kWh versus B1
@@ -135,7 +135,7 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 **Implemented module:** `DS01_Quanh/code/regen_core.py`. **Supporting experiment:** Equal-tardiness rolling ladder. **Evidence file:** `reports/run4/contribution_decomposition.md`.
 **Result:** Incremental grid energy at M0 versus B1 is the stated primary KPI.
-**Remaining limitation:** SIM_DATA_PROFILE; reported B1 to P0-E1-Peak saving is 3.077 kWh [2.967, 3.186], paired 95% CI, n=100, SIM_DATA_PROFILE (`reports/run3/e1_electrical_constraints.md`); independent matching and site savings remain NOT_VERIFIED.
+**Remaining limitation:** SIM_DATA_PROFILE; reported B1 to P0-E1-Peak saving is 3.077 kWh [2.967, 3.186], paired 95% CI, n=100, SIM_DATA_PROFILE (`reports/run3/e1_electrical_constraints.md`); matched raw MyDrive/semiexpo/ai_runs/run4_rt2/v2_e1_peak100/results.csv (sha256 57cd90452ba6e187); site savings remain NOT_VERIFIED.
 **Status:** PARTIAL.
 
 ## M11 - FPY, throughput and test integrity
@@ -157,8 +157,8 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 **Implemented module:** `src/regenate/forecasting/ai_engine.py`. **Supporting experiment:** DS06 paired AI comparison. **Evidence file:** `reports/run3/ai_run3.md`.
 **Result:** Energy AI did not demonstrate incremental benefit over P0; P0 remains the default.
-**Remaining limitation:** SIM_DATA_PROFILE; paired comparisons need raw reconciliation. Extended P0-BILL shows no stable default-engine gain; AI-BILL remains PENDING with adoption criteria and expected output specified in `docs/handoff_run4.md`.
-**Status:** PASS.
+**Remaining limitation:** SIM_DATA_PROFILE; evaluation completed, but matched AI scheduling benefit was not demonstrated. Raw MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv (sha256 5a97158f145ea3b5); MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). ETA accuracy is separately PASS under G06.
+**Status:** FAIL.
 
 ## M13 - Sensitivity and paired statistics
 **Mentor quotation:** `Instruction/Mentor_Feedback.md`, lines 37-39:
@@ -169,7 +169,7 @@ M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run
 
 **Implemented module:** `DS01_Quanh/code/regen_core.py`. **Supporting experiment:** Flexibility sensitivity. **Evidence file:** `reports/run4/contribution_decomposition.md`.
 **Result:** Run 4 decomposes paired intervals and identifies limitations in cross-comparison.
-**Remaining limitation:** SIM_DATA_PROFILE; matched configuration and tardiness need reconciliation; facility multi-cell and factory-clustered intervals are reported in `reports/run4/facility_billing.md`: B2 to P0-E1-Peak for one cell is 2.12 kW [0.86, 3.32] General and 1.73 [0.73, 2.68] ToU, SIM_DATA_PROFILE plus unsynchronized MEASURED DS07. Raw Drive results have not been independently reconciled.
+**Remaining limitation:** SIM_DATA_PROFILE; matched configuration and tardiness need reconciliation; facility multi-cell and factory-clustered intervals are reported in `reports/run4/facility_billing.md`: B2 to P0-E1-Peak for one cell is 2.12 kW [0.86, 3.32] General and 1.73 [0.73, 2.68] ToU, SIM_DATA_PROFILE plus unsynchronized MEASURED DS07. Drive bindings are in `docs/raw_binding_manifest.md`; local independent retrieval was not performed.
 **Status:** PARTIAL.
 
 ## M14 - Forecast power, duration and uncertainty; constrained optimizer decides
@@ -213,8 +213,8 @@ These are evidence assessments, not new campaign results. PASS is limited to the
 |---|---|---|
 | G01 Reference cell | PARTIAL | `docs/decisions.md`: ASSUMED reference; site eligibility NOT_VERIFIED. |
 | G02 Physics / kill test | PARTIAL | `docs/decisions.md`: analytic and unit-test boundary; run output path NOT_VERIFIED. |
-| G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`: SIM_DATA_PROFILE; matching NOT_VERIFIED. |
-| G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`: SIM_DATA_PROFILE; exact run output path NOT_VERIFIED. |
+| G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`: SIM_DATA_PROFILE; instance matching documented in `docs/raw_binding_manifest.md`; unequal tardiness remains. |
+| G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`: SIM_DATA_PROFILE; raw MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). |
 | G05 Energy AI | FAIL | `reports/run3/ai_run3.md`: SIM_DATA_PROFILE; no demonstrated gain. |
 | G06 ETA accuracy | PASS | `reports/run4/ai_eta.md`: MEASURED held-out DS05 accuracy only; run `MyDrive/semiexpo/ai_runs/run4/eta/`; older placeholder superseded. |
 | G07 Production AI | FAIL | `reports/run4/ai_production_planning.md`: SIM_DATA_PROFILE downstream. |

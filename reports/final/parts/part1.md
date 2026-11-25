@@ -2,6 +2,8 @@
 
 ## 1 Dataset
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 Registry and provenance: `data/manifests/dataset_registry.json`, `reports/run4/dataset_registry.md`. Counts below are SOURCE_REPORTED or MEASURED source observations; CI and baseline not applicable. Unknown fields are NOT_VERIFIED.
 
 | Dataset / source | Samples; features; split; role and provenance |
@@ -16,6 +18,8 @@ Registry and provenance: `data/manifests/dataset_registry.json`, `reports/run4/d
 | DS08 https://doi.org/10.6084/m9.figshare.21893808.v3 | MISSING local data; publication reports 386 customer CSVs, time and interval energy; split not established; external candidate. `reports/run4/ds08_audit.md` |
 
 ## 2 AI benchmark
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 MEASURED observations, derived forecast metrics; no site or energy claim. Full model-by-horizon NMAE, skill and coverage tables are in `reports/ai/branch_A_ds02.md`, `reports/ai/branch_B_ds04.md`, with raw metric paths `runs/ai/ds02/model_metrics.csv`, `runs/ai/ds04/model_metrics.csv`; model definitions and matched splits are in `reports/run3/cross_dataset_benchmark.md`. DS05 model-by-target skill and coverage are in `reports/ai/branch_C_ds05.md`, raw `results/ai_ds05_branchC/*`. Baselines are persistence for DS02/DS04 and previous cycle for DS05. MAE, RMSE, sample counts, latency and model size are NOT_VERIFIED where not recorded in those tables; CI not recorded. Strongest baseline varies by dataset and horizon; do not infer it across incompatible protocols. Model size: not recorded. Additional metrics absent from the source tables remain NOT_VERIFIED.
 
@@ -158,6 +162,8 @@ DS05: `reports/ai/branch_C_ds05.md`; raw `results/ai_ds05_branchC/*`; held-out t
 
 ## 3 AI ETA
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 MEASURED DS05 held-out data; previous-cycle baseline; CI not recorded. Battery cycles are a proxy. `reports/run4/ai_eta.md`; raw `MyDrive/semiexpo/ai_runs/run4/eta/`; TCN raw `ai_runs/run4/eta_tcn/`. RMSE and relative-error summaries not recorded in these tables.
 
 | Task / model | n | MAE min | Skill | Coverage | Latency ms/sample |
@@ -191,6 +197,8 @@ Additional ETA models and progress bins: MEASURED held-out DS05; baseline previo
 
 ## 4 AI downstream
 
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
+
 SIM_DATA_PROFILE: measured DS05 cycles with assumed scaling and windows; paired n=100 against P0, positive means reduction; paired 95% CI. Common instances and ledger within each campaign; equality of tardiness is not universal, so the comparisons do not isolate causal effects. Site performance NOT_VERIFIED. `reports/ai/ai_exp12_ds06.md`, `MyDrive/semiexpo/ai_runs/v2_flex025_n100.csv`; `reports/run3/root_cause_analysis.md`, `MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv`; `reports/run3/ai_run3.md`, `MyDrive/semiexpo/ai_runs/run3/v2_p5/results.csv`, `MyDrive/semiexpo/ai_runs/run3/v2_{pq_gated,pq_ungated,pqstar}/results.csv`, `MyDrive/semiexpo/ai_runs/run3/v2_pqd/results.csv`.
 
 | Variant | Energy reduction kWh [CI] | Peak reduction kW [CI] | Tardiness reduction h [CI] |
@@ -209,9 +217,11 @@ SIM_DATA_PROFILE: measured DS05 cycles with assumed scaling and windows; paired 
 | TR_RUN / TR_Q / TR_ALL | 0.024 [0.013,0.037] / 0.049 [0.035,0.064] / 0.094 [0.077,0.112] | 0.16 [-0.25,0.57] / 0.82 [0.31,1.36] / 1.12 [0.59,1.65] | paired CI not recorded |
 | ORACLE | 0.094 [0.077,0.112] | 1.14 [0.57,1.72] | paired CI not recorded |
 
-Perfect queued and running information are different interventions, not additive causal contributions. P0→P5s CI crosses zero; P0→ORACLE is a ceiling. Independent raw reconciliation remains NOT_VERIFIED. `reports/run4/contribution_decomposition.md`, `reports/run3/metric_audit_v3.md`.
+Perfect queued and running information are different interventions, not additive causal contributions. P0→P5s CI crosses zero; P0→ORACLE is a ceiling. Raw bindings are reconciled by the Drive manifest; MyDrive/semiexpo/ai_runs/run3/v2_diag/results.csv (sha256 4a8d6b74b0c8a154). `reports/run4/contribution_decomposition.md`, `reports/run3/metric_audit_v3.md`.
 
 ## 5 AI-BILL
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 SIM_DATA_PROFILE cell plus unsynchronized MEASURED DS07 facility; site NOT_VERIFIED. `reports/run4/facility_billing.md`; exact raw paths for the causal extended table are not recorded there.
 
@@ -225,7 +235,7 @@ SIM_DATA_PROFILE cell plus unsynchronized MEASURED DS07 facility; site NOT_VERIF
 Go only if AI beats both historical P0-BILL and P0-E1-Peak with factory-clustered CIs excluding zero; otherwise no-go after evaluation. `docs/handoff_run4.md`, `docs/decisions.md` D017. No result is claimed while pending.
 
 
-Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized MEASURED DS07, n=4 facility-months; baseline P0-E1-Peak; kW monthly increment, CI not recorded; exact raw result path NOT_VERIFIED, source `reports/run4/facility_billing.md`.
+Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized MEASURED DS07, n=4 facility-months; baseline P0-E1-Peak; kW monthly increment, CI not recorded; raw results MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Forge_2 (sha256 f427310b) and MyDrive/semiexpo/ai_runs/run4/fac_p0bill5_Metal_1 (sha256 150ec779), source `reports/run4/facility_billing.md`.
 
 | Facility-month | P0-E1-Peak | hist | persist | oracle background | ORACLE-E1-Peak |
 |---|---:|---:|---:|---:|---:|
@@ -234,9 +244,11 @@ Recorded individual ToU billing results: SIM_DATA_PROFILE plus unsynchronized ME
 | Steel_1 2019-05 | -0.02 | -0.03 | -0.03 | -0.03 | -0.02 |
 | Steel_1 2019-07 | -3.01 | -3.04 | -3.01 | -3.04 | -4.18 |
 
-Extended results: ORACLE-E1-Peak vs P0-E1-Peak +0.27 kW [-1.14, 1.98]; hist to oracle +1.50 kW [-0.01, 3.15]; n=12 facility-months, factory-clustered CI; raw path NOT_VERIFIED, `reports/run4/facility_billing.md`.
+Extended results: ORACLE-E1-Peak vs P0-E1-Peak +0.27 kW [-1.14, 1.98]; hist to oracle +1.50 kW [-0.01, 3.15]; n=12 facility-months, factory-clustered CI; raw results MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Forge_1 (sha256 3f97864b), MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Forge_2 (sha256 f9b5e7b8), MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Metal_1 (sha256 443e386b), MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Metal_3 (sha256 40072 0c6), MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Paper (sha256 469be4dd), MyDrive/semiexpo/ai_runs/run4/fac_p0bill_Steel_1 (sha256 fb2731dd); `reports/run4/facility_billing.md`.
 
 ## 16 Visualization index
+
+Simulation acceptance is limited to the stated evidence and gates; industrial site acceptance has not been performed.
 
 Status is based on index evidence only; PASS requires inspection and is not inferred. Original index `reports/figures/INDEX.md`; run-4 index `reports/run4/figures/INDEX.md`; boundary NOT_VERIFIED unless otherwise listed. F01/F02/F11 explicitly missing prediction rows. F16–F32 local run-4 figure files missing; the index lists selected campaign inputs as blocked. Figure file paths and full source data for F16–F32 are not recorded in the index.
 
