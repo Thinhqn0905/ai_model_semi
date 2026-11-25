@@ -70,3 +70,35 @@ def test_peak_stage_keeps_energy_and_lowers_peak():
                             DT, "DC")["peak_import_kw"]
     assert peak(pk) <= peak(base) + 1e-6
     assert abs(pk.info["peak_kw_planned"] - peak(pk)) < 1e-6          # planned peak == ledger peak
+
+
+def _residual_totals(jobs, starts, K, prm):
+    from regenate.optimization.milp import _coeffs
+    D, R = np.zeros(K), np.zeros(K)
+    for t, j in zip(starts, jobs):
+        c = _coeffs(j, "DC", prm); D[t:t + j.dur] += c["d1"]; R[t:t + j.dur] += c["r1"]
+    return D, R
+
+
+@pytest.mark.parametrize("field,val", [("P_bus_max", 9.0), ("dP_step_max", 10.0)])
+def test_bus_limits_match_bruteforce(field, val):
+    """E1: MILP with bus throughput / step caps equals brute force over plans that satisfy the caps."""
+    jobs = jobs_mixed(); S, K, idle = 2, 14, 0.2
+    prm = ElecParams(**{field: val})
+    def ok(st):
+        D, R = _residual_totals(jobs, st, K, prm)
+        return (D.max() <= val + 1e-9 and R.max() <= val + 1e-9) if field == "P_bus_max" else np.abs(np.diff(D - R)).max() <= val + 1e-9
+    best = None
+    for st in itertools.product(*[range(j.release, min(j.latest, K - j.dur) + 1) for j in jobs]):
+        run = np.zeros(K)
+        for t, j in zip(st, jobs):
+            run[t:t + j.dur] += 1
+        if run.max() > S or not ok(st):
+            continue
+        tt = sum(max(0.0, t + j.dur - j.due) for t, j in zip(st, jobs))
+        net = ledger(*render_slots(jobs, st, assign_stations(list(st), [j.dur for j in jobs], S), S, K, idle), DT, "DC", prm)["net_kwh"]
+        if best is None or (round(tt, 9), net) < best:
+            best = (round(tt, 9), net)
+    r = solve(jobs, S, K, "DC", prm, DT, idle_kw=idle)
+    assert best is not None and r.status == "optimal" and ok(r.starts)
+    assert r.tt == pytest.approx(best[0], abs=1e-9) and r.net_kwh == pytest.approx(best[1], abs=1e-6)

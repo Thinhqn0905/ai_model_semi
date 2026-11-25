@@ -34,6 +34,8 @@ class ElecParams:
     eta_link: float = 0.99      # DC cable/breaker path between stations ASSUMED
     P_link_max: float = np.inf  # kW, direct-transfer capacity of the shared link
     P_afe_max: float = np.inf   # kW, central AFE capacity (DC topology)
+    P_bus_max: float = np.inf   # kW, scheduler-side cap on total residual DC sink and total residual source (twin I_link proxy)
+    dP_step_max: float = np.inf # kW, scheduler-side cap on the slot-to-slot step of net residual DC demand (AFE transient proxy)
     allow_export: bool = True   # False: surplus that cannot be used is dumped
     cop: float = 3.0            # HVAC COP for dumped heat (B0)      ASSUMED
     hvac_on_dump: bool = True

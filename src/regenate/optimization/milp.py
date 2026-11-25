@@ -124,6 +124,12 @@ def solve(jobs, S, K, topology="DC", prm=None, dt_h=0.25, idle_kw=0.0, cap=None,
         D1, R1, AUX = prof_matrix("d1"), prof_matrix("r1"), prof_matrix("aux")
         ACM = AUX + run_ac
         E = lambda m, k: iE + nv_k * k + m
+        if dc and np.isfinite(prm.P_bus_max):          # E1: total residual sink / source on the shared bus
+            rows.append(D1); lo.extend([-np.inf] * K); hi.extend([prm.P_bus_max] * K)
+            rows.append(R1); lo.extend([-np.inf] * K); hi.extend([prm.P_bus_max] * K)
+        if dc and np.isfinite(prm.dP_step_max):        # E1: |net(k) - net(k-1)| <= dP (net residual DC demand)
+            NET = (D1 - R1).tolil(); dN = NET[1:] - NET[:-1]
+            rows.append(dN); lo.extend([-prm.dP_step_max] * (K - 1)); hi.extend([prm.dP_step_max] * (K - 1))
         for k in range(K):
             if dc:                                     # x <= D1, x <= eta_link R1, x <= Plink
                 r = D1[k].tolil(); r[0, E(0, k)] = -1; add(r, 0, np.inf)
