@@ -43,3 +43,10 @@ same under-coverage seen in Run 2 (0.755) -> P90 remaining duration must not be 
 G06 (AI operational value): **PASS for ETA accuracy** — two learned tasks beat strong non-AI baselines on held-out measured data
 (T1 AI18 +0.60, T2 RF +0.60). Calibration: T1 PASS (0.78 ~ 0.80), T2 PARTIAL (0.756). Production benefit: not implied by accuracy;
 see the WP-C downstream test (reports/run4/ai_production_planning.md).
+
+## Optional deep learning: TCN on GPU (T2 remaining duration) — `ai_runs/run4/eta_tcn/`
+Tesla T4, 30 epochs, 1,006 s training, lookback 240 min, same samples/split as eta.py T2. MAE 104.1 min (skill 0.33 vs previous cycle)
+vs random forest 62.0 (0.60); by progress 0-25 % 240.6 (0.44), 25-50 % 110.4 (0.40), 50-75 % 81.8 (0.28), 75-100 % 71.6 (-0.01).
+P10-P90 coverage 0.702 -> 0.767 after CQR (closer to nominal than QLGBM 0.756). Inference 0.16 ms/sample GPU, 0.19 ms CPU.
+Verdict: deep temporal model NOT justified for accuracy (worse than RF); its calibrated interval is marginally better. RF stays the
+remaining-duration model; AI18 gated stays the before-start model.

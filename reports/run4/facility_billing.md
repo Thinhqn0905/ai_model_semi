@@ -111,3 +111,31 @@ CIs below resample whole factories (cluster bootstrap over 10 DS07 factories, al
 | P0-E1-Peak -> ORACLE-E1-Peak | +0.22 [-0.02, +0.48] n.s. | 7/10 | +0.59 [+0.09, +1.03] | 7/10 |
 With factory clustering the FIN-B software effect stays significant under both TNB rules; B1p-OPT -> P0-E1-Peak under the ToU rule
 is no longer significant (negative result kept).
+
+## Multi-cell scenarios (D017.2) — n independent cells behind the same meter, factory-clustered CIs, n = 70 factory-months
+Each cell draws its own instance sequence (seed + 1000 x cell); cells are scheduled independently by the same policy (no cross-cell
+MILP). Drive `ai_runs/run4/fac_{gen,tou}_{3,5,10}cells`, `fac_grid_tnb_3cells`.
+| cells | B2 -> P0-E1-Peak, General rule (kW) | factories won | ToU rule (kW) | factories won | P0-E1-Peak -> ORACLE-E1-Peak, ToU (kW) |
+|---|---|---|---|---|---|
+| 1 | +2.12 [+0.86, +3.32] | 9/10 | +1.73 [+0.73, +2.68] | 8/10 | +0.59 [+0.09, +1.03] |
+| 3 | +4.55 [+2.59, +6.41] | 9/10 | +3.34 [+1.07, +5.72] | 8/10 | +0.01 [-0.95, +0.95] |
+| 5 | +5.99 [+4.53, +7.41] | 10/10 | +5.11 [+2.92, +7.42] | 10/10 | +0.01 [-0.79, +0.87] |
+| 10 | +15.12 [+11.48, +18.12] | 10/10 | +12.26 [+9.14, +15.02] | 10/10 | +1.91 [+0.73, +3.02] |
+Savings are not linear in the number of cells (per cell: 2.1, 1.5, 1.2, 1.5 kW under the General rule); every row is simulated.
+
+## Causal P0-BILL (billing-aware rolling P0) — first 4 facility-months (Forge_2, Steel_1 x 2019-05/07, ToU rule, 1 cell, e_tol 2 %)
+| facility-month | P0-E1-Peak | P0-BILL hist | P0-BILL persist | P0-BILL oracle background | ORACLE-E1-Peak |
+|---|---|---|---|---|---|
+| Forge_2 2019-05 | 0.80 | 3.19 | 4.48 | 1.36 | 0.00 |
+| Forge_2 2019-07 | 0.37 | -1.69 | -1.69 | 2.05 | 0.57 |
+| Steel_1 2019-05 | -0.02 | -0.03 | -0.03 | -0.03 | -0.02 |
+| Steel_1 2019-07 | -3.01 | -3.04 | -3.01 | -3.04 | -4.18 |
+Cell energy +5.3 to +6.1 kWh/month vs P0-E1-Peak for every P0-BILL variant. Even with a PERFECT background (oracle) P0-BILL is not
+better than P0-E1-Peak here: the block-wise billing level with a month-to-date floor and 2 % energy slack moves load in ways that can
+raise the month's peak later. Extension to 8 more facility-months and a 5-cell coordinated case is running.
+
+## AI on facility billing
+- Learned duration (PQd, default engine) at facility level (ToU, 1 cell): P0-E1-Peak -> PQd -0.27 kW [-0.64, +0.04] (2/10 factories
+  better) -> no billing value; perfect duration (PQd*) -0.07 [-0.36, +0.36] n.s.
+- AI-BILL (learned facility-load forecast in P0-BILL) is only meaningful if P0-BILL with a perfect background beats P0-E1-Peak; so far it
+  does not (above). Forecaster code is being prepared (R4_LOADAI); it will be run only if the extended P0-BILL oracle shows a gain.
