@@ -1,0 +1,124 @@
+id: TAR01_MY_TNB_RP4_HV_TOU
+category: Bukan Domestik Voltan Tinggi ToU
+boundary: SOURCE_REPORTED
+schedule: Jadual Tarif Elektrik di Semenanjung Bagi Tempoh 1 Julai 2025 Hingga 31
+  Disember 2027
+billing_interval_minutes:
+  value: 30
+  unit: min
+  source_url: https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge
+  source_page_section: TNB MD definition page (refuses automated access)
+  status: NOT_VERIFIED
+  note: 30-minute MD interval used as instructed by the project owner 2026-11-25;
+    not stated in the tariff schedule PDF
+interval_mode: aligned
+windows:
+- days: &id001
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  start: '14:00'
+  end: '22:00'
+  period: peak
+- days: *id001
+  start: 00:00
+  end: '14:00'
+  period: offpeak
+- days: *id001
+  start: '22:00'
+  end: '24:00'
+  period: offpeak
+- days:
+  - 5
+  - 6
+  start: 00:00
+  end: '24:00'
+  period: offpeak
+demand_eligible_periods:
+- peak
+md_rule: maximum demand per month during the peak period (permintaan maksimum sebulan
+  semasa tempoh puncak)
+holidays:
+  value: null
+  status: NOT_VERIFIED
+  note: 'Public-holiday treatment is not stated in the schedule PDF or the tariff
+    page read; base: holidays follow the weekday rule; sensitivity: Malaysian 2019
+    public holidays (python holidays package) as off-peak.'
+energy_rates:
+  peak:
+    value: 0.4452
+    unit: MYR/kWh
+    currency: MYR
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Tinggi ToU: Caj Tenaga - Untuk semua kWj semasa
+      tempoh puncak 44.52 sen/kWj'
+    access_date: '2026-11-25'
+    status: VERIFIED
+  offpeak:
+    value: 0.4043
+    unit: MYR/kWh
+    currency: MYR
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Tinggi ToU: Caj Tenaga - Untuk semua kWj semasa
+      tempoh luar puncak 40.43 sen/kWj'
+    access_date: '2026-11-25'
+    status: VERIFIED
+demand_rates:
+  capacity:
+    value: 21.76
+    unit: MYR/kW/month
+    currency: MYR
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Tinggi ToU: Caj Kapasiti - Setiap kilowatt permintaan
+      maksimum sebulan semasa tempoh puncak 21.76 RM/kW'
+    access_date: '2026-11-25'
+    status: VERIFIED
+  network:
+    value: 23.06
+    unit: MYR/kW/month
+    currency: MYR
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Tinggi ToU: Caj Rangkaian - Setiap kilowatt permintaan
+      maksimum sebulan semasa tempoh puncak 23.06 RM/kW'
+    access_date: '2026-11-25'
+    status: VERIFIED
+fixed_fees:
+  retail:
+    value: 250
+    unit: MYR/month
+    currency: MYR
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Tinggi ToU: Caj Peruncitan 250.00 RM/bulan'
+    access_date: '2026-11-25'
+    status: VERIFIED
+export_rate:
+  value: 0
+  status: NOT_VERIFIED
+  note: no export compensation in the schedule; behind-the-meter netting assumed
+adjustments:
+  value: null
+  status: NOT_VERIFIED
+  note: RP4 monthly fuel adjustment (singlebuyer.com.my) and taxes not included
+peak_definition:
+  source_url: https://www.mytnb.com.my/tariff
+  quote: 'On Monday to Friday / Peak : 2 PM to 10 PM / Off-Peak : 10 PM to 2 PM; On
+    Saturday and Sunday / Off-Peak throughout the day (24 hours)'
+  status: VERIFIED
+  access_date: '2026-11-25'

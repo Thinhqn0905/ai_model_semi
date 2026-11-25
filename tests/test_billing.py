@@ -37,7 +37,7 @@ def test_unverified():
 
 def test_registry_loads():
     paths = list(Path('data/tariffs').glob('*.yaml'))
-    assert len(paths) == 5
+    assert len(paths) == 7                     # MV/HV general + ToU (TNB RP4), VN actual + trial, SG
     for p in paths:
         assert yaml.safe_load(p.read_text(encoding='utf-8'))['id']
 
@@ -53,3 +53,22 @@ def test_sliding_and_bad_mode():
     assert bill(p, {'interval_mode': 'aligned'})['billed_demand_kw'] == 15
     with pytest.raises(ValueError, match='interval_mode'):
         bill(p, {'interval_mode': 'bad'})
+
+
+def test_tnb_peak_only_and_weekend():
+    tariff = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_TOU.yaml').read_text(encoding='utf-8'))
+    # Higher off-peak load must not determine the weekday maximum demand.
+    b = bill([100]*30 + [10]*30, tariff, '2026-01-05 13:30')
+    assert b['billed_demand_kw'] == 10
+    assert b['energy_charge'] == pytest.approx(50*0.2723 + 5*0.3132)
+    weekend = bill([100]*30, tariff, '2026-01-10 14:00')
+    assert weekend['billed_demand_kw'] == 0 and weekend['not_verified']
+
+
+def test_tnb_general_vs_tou_md_rule():
+    """General: month's max 30-min demand at any hour; ToU: only in the peak window (schedule p.2 wording)."""
+    load = [100.0] * (24 * 60); load[180:210] = [500.0] * 30               # Monday 03:00-03:29 off-peak spike
+    gen = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_general.yaml').read_text(encoding='utf-8'))
+    tou = yaml.safe_load(Path('data/tariffs/TAR01_MY_TNB_RP4_MV_TOU.yaml').read_text(encoding='utf-8'))
+    assert bill(load, gen, '2019-03-04 00:00')['billed_demand_kw'] == 500.0
+    assert bill(load, tou, '2019-03-04 00:00')['billed_demand_kw'] == 100.0

@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- <title>TNB Electricity Tariff</title> -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="tabTitle">Understand Your Electricity Tariff | Tenaga Nasional Berhad</title>
+  <!-- Fav Icon -->
+  <link href="/-/media/Project/TNB/myTNBportal/Settings/favicon.png" rel="shortcut icon">
+  <!-- Meta Description and Keywords -->
+  <meta name="description"
+    content="Understand Malaysia's electricity tariff structure, tariff categories, Fuel Adjustment, and Time-of-Use (ToU) tariff with TNB."
+    data-i18n="metaDescription" />
+  <meta name="keywords" content="Electricity Tariff / TNB Tariff" data-i18n="metaKeywords" />
+
+  <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+  <meta property="og:site_name" content="TNB Malaysia" />
+  <meta property="og:title" content="Understand Your Electricity Tariff | Tenaga Nasional Berhad" data-i18n="metaOGTitle" />
+  <meta property="og:description" content="Understand Malaysia's electricity tariff structure, tariff categories, Fuel Adjustment, and Time-of-Use (ToU) tariff with TNB." data-i18n="metaOGDescription" />
+  <meta property="og:image" content="https://www.mytnb.com.my/tariff/images/tariff-og-image.jpeg" />
+  <meta property="og:url" content="https://www.mytnb.com.my/tariff/index.html" />
+
+  <!-- Twitter Card -->
+  <meta property="twitter:title" content="Understand Your Electricity Tariff | Tenaga Nasional Berhad" data-i18n="metaTwitterTitle" />
+  <meta property="twitter:description" content="Understand Malaysia's electricity tariff structure, tariff categories, Fuel Adjustment, and Time-of-Use (ToU) tariff with TNB." data-i18n="metaTwitterDescription" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:image" content="https://www.mytnb.com.my/tariff/images/tariff-og-image.jpeg" />
+
+  <!-- Bootstrap CSS -->
+  <script type="text/javascript" src="/ruxitagentjs_ICANVfqru_10349261020121938.js" data-dtconfig="rid=RID_858510174|rpid=-1716535638|domain=mytnb.com.my|reportUrl=www.mytnb.com.my/rb_bf81960jks|app=544169f30bc73751|ssc=1|srtbv=4|owasp=1|featureHash=ICANVfqru|rdnt=1|uxrgce=1|cuc=ccd954kf|mel=100000|dpvc=1|lastModification=1794891870811|postfix=ccd954kf|tp=500,50,0|srbbv=3|agentUri=/ruxitagentjs_ICANVfqru_10349261020121938.js"></script><link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet" data-check />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Splide CSS -->
+  <link rel="stylesheet" href="lib/splidejs/splide.min.css" data-check />
+  <!-- Splide JS -->
+  <link href="style.css?v=1.1.69" rel="stylesheet" data-check />
+
+  <script src="lib/splidejs/splide.min.js" type="text/javascript" data-check></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="100">
+  <!-- Loader overlay -->
+  <div id="loader">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading…</span>
+    </div>
+  </div>
+
+  <div id="contentBody">
+
+    <!-- Navbar -->
+    <div data-include="components/navbar.html"></div>
+	<div data-include="components/hero-banner.html"></div>
+    <div data-include="components/menu-tile.html"></div>
+
+    <!-- Hero Section -->
+    <div data-include="sections/1. hero.html" data-check></div>
+
+    <!-- Fuel Adjustment Rate Section -->
+    <div data-include="sections/2. fuel.html" data-check></div>
+	
+	<div id="highlight-tou-slide"></div>
+
+    <!-- Features Section -->
+    <section id="features">
+      <div class="container">
+        <div class="section-title text-center mb-4">
+          <h2 data-i18n="indexFeature1Title"></h2>
+          <!-- <p class="lead text-muted">
+                  The new tariff structure includes several key changes to provide
+                  better transparency and fairness for all customers.
+                </p> -->
+        </div>
+
+        <div class="splide" id="featureSlider">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide">
+                <div class="feature-card-highlight p-3" data-target="content-pricing">
+                  <div class="feature-icon mb-2">
+                    <i class="fas fa-dollar-sign"></i>
+                  </div>
+                  <h3 data-i18n="indexFeature1Point1"></h3>
+                  <ul class="mb-2" data-i18n="indexFeature1Point1Desc">
+                  </ul>
+                </div>
+              </li>
+              <li class="splide__slide">
+                <div class="feature-card-highlight p-3" data-target="content-category">
+                  <div class="feature-icon mb-2">
+                    <i class="fas fa-bolt"></i>
+                  </div>
+                  <h3 data-i18n="indexFeature1Point2"></h3>
+                  <ul class="mb-2" data-i18n="indexFeature1Point2Desc">
+                  </ul>
+                </div>
+              </li>
+              <!-- <li class="splide__slide">
+              <div class="feature-card p-3" data-target="content-fuel">
+                <div class="feature-icon mb-2">
+                  <i class="fas fa-gas-pump"></i>
+                </div>
+                <h3>Fuel Adjustment</h3>
+                <p class="text-muted">
+                  From Imbalance Cost Pass-Through (ICPT) to Fuel Adjustment
+                  to ensure a more reflective rate for any adjustment to the
+                  fuel cost
+                </p>
+              </div>
+            </li> -->
+              <li class="splide__slide">
+                <div class="feature-card-highlight p-3 active" data-target="content-tou">
+                  <div class="feature-icon mb-2">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <h3 data-i18n="indexFeature1Point3">​</h3>
+                  <ul class="mb-2" data-i18n="indexFeature1Point3Desc">
+                  </ul>
+                </div>
+              </li>
+              <li class="splide__slide">
+                <div class="feature-card-highlight p-3" data-target="content-assistance">
+                  <div class="feature-icon mb-2">
+                    <i class="fas fa-user-group"></i>
+                  </div>
+                  <h3 data-i18n="indexFeature1Point4">​</h3>
+                  <ul class="mb-2" data-i18n="indexFeature1Point4Desc">
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="container mt-5">
+          <div id="content-pricing" class="card-content" style="display: none">
+            <!-- Table Section -->
+            <!--<div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle text-center">
+              <thead class="table-light">
+                <tr>
+                  <th>Key Change</th>
+                  <th>Old (Before 1 July 2025)</th>
+                  <th>New (1 July 2025 onwards)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Tariff Structure</strong></td>
+                  <td>Tiered pricing (based on consumption volume)</td>
+                  <td>
+                    Single energy charge tariff (broken into clear cost
+                    components)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>-->
+
+            <!-- Important Box -->
+            <!--<div class="alert alert-info d-flex align-items-start gap-2 mb-4">
+            <i class="fas fa-info-circle fa-lg mt-1"></i>
+            <div>
+              <strong>Important</strong><br />
+              For a detailed breakdown of your charges, please refer to your
+              upcoming electricity bill.
+            </div>
+          </div>-->
+
+            <!-- What does this mean for you? -->
+            <div class="mb-4">
+              <h5 class="fw-bold" data-i18n="indexFeature2Title"></h5>
+              <p data-i18n="indexFeature2Desc">
+              </p>
+            </div>
+
+            <!-- 1. Energy Charge -->
+            <div class="card mb-3">
+              <div class="card-body d-flex align-items-start gap-3">
+                <i class="fas fa-bolt fa-lg text-primary mt-1"></i>
+                <div>
+                  <h6 class="fw-bold mb-1" data-i18n="indexFeature2Point1"></h6>
+                  <div>
+                    <p class="mb-0 text-muted" data-i18n="indexFeature2Point1Desc1">
+                    </p>
+
+                    <ul data-i18n="indexFeature2Point1Desc2">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Fuel Adjustment -->
+            <!-- <div class="card mb-3">
+              <div class="card-body d-flex align-items-start gap-3">
+                <i class="fas fa-gas-pump fa-lg text-primary mt-1"></i>
+                <div>
+                  <h6 class="fw-bold mb-1">Fuel Cost Adjustment</h6>
+                  <p class="mb-0 text-muted">
+                    Fuel Cost Adjustment updated monthly to reflect changes in
+                    market price, replacing Imbalance Cost Pass-Through (ICPT)
+                    mechanism.
+                  </p>
+                </div>
+              </div>
+            </div>-->
+
+            <!-- 3. Capacity -->
+            <!-- <div class="card mb-3">
+              <div class="card-body d-flex align-items-start gap-3">
+                <i class="fas fa-lightbulb fa-lg text-primary mt-1"></i>
+                <div>
+                  <h6 class="fw-bold mb-1">
+                    Capacity Charge (maintaining reliable supply)
+                  </h6>
+                  <p class="mb-0 text-muted">
+                    Ensures reliable supply by maintaining power plants and
+                    standby capacity (so lights continue to stay on even during
+                    peak demand!).
+                  </p>
+                </div>
+              </div>
+            </div>-->
+
+            <!-- 4. Network Charge -->
+            <div class="card mb-3">
+              <div class="card-body d-flex align-items-start gap-3">
+                <i class="fas fa-network-wired fa-lg text-primary mt-1"></i>
+                <div>
+                  <h6 class="fw-bold mb-1" data-i18n="indexFeature2Point2"></h6>
+                  <p class="mb-0 text-muted" data-i18n="indexFeature2Point2Desc">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Retail Charge -->
+            <div class="card mb-3">
+              <div class="card-body d-flex align-items-start gap-3">
+                <i class="fas fa-receipt fa-lg text-primary mt-1"></i>
+                <div>
+                  <h6 class="fw-bold mb-1" data-i18n="indexFeature2Point3"></h6>
+                  <p class="mb-0 text-muted" data-i18n="indexFeature2Point3Desc">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Why this matters -->
+            <!--<h5 class="mt-5 mb-3">Why this matters?</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="border rounded p-3 h-100" style="text-align: center">
+                <i class="fas fa-plus-circle text-primary mb-2" style="font-size: 22px"></i>
+                <h6>No hidden cost</h6>
+                <p class="text-muted mb-0">Every charge is transparent.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="border rounded p-3 h-100" style="text-align: center">
+                <i class="fas fa-scale-balanced text-primary mb-2" style="font-size: 22px"></i>
+                <h6>Fairer pricing</h6>
+                <p class="text-muted mb-0">
+                  You only pay for what you consume.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="border rounded p-3 h-100" style="text-align: center">
+                <i class="fas fa-eye text-primary mb-2" style="font-size: 22px"></i>
+                <h6>Energy Adjustment</h6>
+                <p class="text-muted mb-0">
+                  Monthly fuel adjustment to reflect changes in generation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      -->
+
+            <section id="AFA">
+              <!-- What is Fuel Cost Adjustment -->
+              <div>
+                <h5 class="fw-bold" data-i18n="indexFeature3Title"></h5>
+                <p data-i18n="indexFeature3Desc"></p>
+				<!-- <img class="d-block img-fluid mx-auto mb-3" data-i18n-img-src="AFAPosterImage" -->
+                  <!-- src="images/AFA ENG.jpg" alt="Understanding Your Transition Bill" -->
+                  <!-- style="width: 100%; height: auto;" /> -->
+				  <div class="d-flex flex-column flex-md-row align-items-center gap-2 mb-3">
+					  <!-- AFA Card 1 -->
+					  <div class="border rounded h-100 px-4 py-3 d-flex justify-content-center align-items-center gap-2 flex-fill">
+						<img data-i18n-img-src="indexFeature3Icon1" alt="AFA image" width="24" height="24" />
+						<h6 class="fw-bold mb-0" data-i18n="AFAcardTitle1">Global fuel prices</h6>
+					  </div>
+					  <!-- + -->
+					  <div class="fw-bold fs-5">+</div>
+					  <!-- AFA Card 2 -->
+					  <div class="border rounded h-100 px-4 py-3 d-flex justify-content-center align-items-center gap-2 flex-fill">
+						<img data-i18n-img-src="indexFeature3Icon2" alt="AFA image" width="24" height="24" />
+						<h6 class="fw-bold mb-0" data-i18n="AFAcardTitle2">Foreign exchange rates</h6>
+					  </div>
+					  <!-- + -->
+					  <div class="fw-bold fs-5">+</div>
+					  <!-- AFA Card 3 -->
+					  <div class="border rounded h-100 px-4 py-3 d-flex justify-content-center align-items-center gap-2 flex-fill">
+						<img data-i18n-img-src="indexFeature3Icon3" alt="AFA image" width="24" height="24" />
+						<h6 class="fw-bold mb-0" data-i18n="AFAcardTitle3">Adjustment of actual generation cost</h6>
+					  </div>
+					</div>
+                <p data-i18n="indexFeature3Desc1"></p>
+                <p data-i18n="indexFeature3Desc2"></p>
+				<!-- Dynamic AFA Graph Filter -->
+                <div class="afa-range-controls">
+                  <div class="afa-picker" id="afaStartPicker">
+                    <button type="button" class="afa-picker-btn" id="afaStartBtn" aria-haspopup="true" aria-controls="afaStartPanel" aria-expanded="false">
+                      <span class="afa-picker-value" id="afaStartLabel"></span>
+                      <span class="afa-picker-caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <div class="afa-picker-panel" id="afaStartPanel" hidden>
+                      <div class="afa-picker-row">
+                        <span class="afa-picker-rowlabel" data-i18n="afaRangeYear">Year</span>
+                        <div class="afa-picker-years" id="afaStartYears"></div>
+                      </div>
+                      <div class="afa-picker-row">
+                        <span class="afa-picker-rowlabel" data-i18n="afaRangeMonth">Month</span>
+                        <div class="afa-picker-months" id="afaStartMonths"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="afa-range-dash">&mdash;</span>
+                  <div class="afa-picker" id="afaEndPicker">
+                    <button type="button" class="afa-picker-btn" id="afaEndBtn" aria-haspopup="true" aria-controls="afaEndPanel" aria-expanded="false">
+                      <span class="afa-picker-value" id="afaEndLabel"></span>
+                      <span class="afa-picker-caret" aria-hidden="true">&#9662;</span>
+                    </button>
+                    <div class="afa-picker-panel" id="afaEndPanel" hidden>
+                      <div class="afa-picker-row">
+                        <span class="afa-picker-rowlabel" data-i18n="afaRangeYear">Year</span>
+                        <div class="afa-picker-years" id="afaEndYears"></div>
+                      </div>
+                      <div class="afa-picker-row">
+                        <span class="afa-picker-rowlabel" data-i18n="afaRangeMonth">Month</span>
+                        <div class="afa-picker-months" id="afaEndMonths"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" id="afaApply" class="afa-range-apply" data-i18n="afaRangeApply">Apply</button>
+                </div>
+
+                <!-- Dynamic AFA Graph -->
+                <div class="afa-chart-wrapper">
+                  <canvas id="afaChart" role="img" aria-label="AFA rate chart"></canvas>
+                </div>
+                <p class="fst-italic text-muted text-center fs-8 mt-0 d-none d-lg-block" data-i18n="afaGraphDisclaimerDesktop"></p>
+                <p class="fst-italic text-muted text-center fs-8 mt-0 d-lg-none" data-i18n="afaGraphDisclaimerMobile"></p>
+              </div>
+
+				<!--300826/KWIE
+				<p data-i18n="specificMonthDesc"></p>
+                <table class="table table-bordered align-middle text-center">
+                  <thead>
+                    <tr class="table-primary text-dark">
+                      <th colspan="3" data-i18n="AFATitleSpecificMonth">
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-start" data-i18n="AFATitleSpecificMonth1" style="width: 70%;"></td>
+                      <td class="text-center" data-i18n="AFARateSpecificMonth1" style="width: 30%;"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-start" data-i18n="AFATitleSpecificMonth2" style="width: 70%;"></td>
+                      <td class="text-center" data-i18n="AFARateSpecificMonth2" style="width: 30%;"></td>
+                    </tr>
+                    <tr style="border: 2px solid black;">
+                      <td class="text-start fw-bold" data-i18n="AFATitleSpecificMonth3" style="width: 70%; border: 2px solid black;"></td>
+                      <td class="text-center fw-bold" data-i18n="AFARateSpecificMonth3" style="width: 30%; border: 2px solid black;"></td>
+                    </tr>
+                  </tbody>
+                </table>
+				-->
+
+              </div>
+
+              <!-- <div> -->
+                <!-- <p data-i18n="AFARemarks"></p> -->
+              <!-- </div> -->
+				
+				<!-- Table AFA Current & Forecast -->
+				<table class="table table-bordered align-middle text-center afa-forecast-table">
+				  <thead>
+					<tr class="table-primary text-dark">
+					  <th colspan="5" data-i18n="AFATitle"></th>
+					</tr>
+				  </thead>
+				  <tr>
+					<th colspan="2" style="background-color: #effdee" data-i18n="AFACurrent"></th>
+					<th colspan="3" style="background-color: #fbf2ea" data-i18n="AFAForecast"></th>
+				  </tr>
+				  <tr>
+					<th data-i18n="AFAMonth1" style="width: 20%;"></th>
+					<th data-i18n="AFAMonth2" style="width: 20%;"></th>
+					<th data-i18n="AFAT2Month1" style="width: 20%;"></th>
+					<th data-i18n="AFAT2Month2" style="width: 20%;"></th>
+					<th data-i18n="AFAT2Month3" style="width: 20%;"></th>
+				  </tr>
+				  <tr>
+					<td data-i18n="AFARate1"></td>
+					<td data-i18n="AFARate2"></td>
+					<td data-i18n="AFAT2Rate1"></td>
+					<td data-i18n="AFAT2Rate2"></td>
+					<td data-i18n="AFAT2Rate3"></td>
+				  </tr>
+				</table>
+				
+				<p data-i18n="AFARateBottomDesc" class="text-center fst-italic"></p>
+
+				<br>
+				
+				<p data-i18n="specificMonthDesc"></p>
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle text-center kwie-summary-table">
+                    <thead>
+                      <tr class="table-primary text-dark">
+                        <th style="width: 22%;" data-i18n="kwieSummaryCategoryHeader"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth1"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth2"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth3"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth4"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth5"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth6"></th>
+                        <th style="width: 11%;" data-i18n="kwieSummaryMonth7"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="text-start fw-bold" data-i18n="kwieSummaryAfaSurchargeRateLabel"></th>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth1"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth2"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth3"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth4"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth5"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth6"></td>
+                        <td data-i18n="kwieSummaryAfaSurchargeRateMonth7"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="text-start fw-bold" data-i18n="kwieSummaryKwieSubsidyRateLabel"></th>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth1"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth2"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth3"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth4"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth5"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth6"></td>
+                        <td data-i18n="kwieSummaryKwieSubsidyRateMonth7"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="text-start fw-bold" data-i18n="kwieSummaryCustomerSurchargeRateLabel"></th>
+                        <td data-i18n="kwieSummaryCustomerSurchargeRateMonth1"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth2"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth3"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth4"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth5"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth6"></td>
+                        <td  data-i18n="kwieSummaryCustomerSurchargeRateMonth7"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="text-start fw-bold" data-i18n="kwieSummaryTotalKwieSubsidyLabel"></th>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth1"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth2"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth3"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth4"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth5"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth6"></td>
+                        <td data-i18n="kwieSummaryTotalKwieSubsidyMonth7"></td>
+                      </tr>
+					  <tr>
+                        <th scope="row" class="text-start fw-bold" data-i18n="kwieSummaryTotalKwieSubsidyTotalLabel"></th>
+                        <td colspan="7" class="fw-bold" data-i18n="kwieSummaryTotalKwieSubsidyTotalValue"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+				
+                <div>
+                  <p data-i18n="AFANotes"></p>
+                  <p> </p>
+                  <p> </p>
+                </div>
+				
+              <!-- old AFA content -->
+              <!-- Fuel Adjustment Container -->
+              <!-- <div class="mx-auto" style="max-width: 500px"> -->
+              <!-- Fuel Adjustment Rate Box -->
+              <!-- <div class="bg-light p-4 rounded-4 shadow-sm mb-4 text-center">
+                  <div class="mb-3">
+                    <i class="fas fa-bolt fa-2x text-primary"></i>
+                  </div>
+                  <p class="fw-semibold mb-3" data-i18n="indexFeatureCardTitle"></p>
+                  <p class="fw-semibold mb-3" data-i18n="indexFeatureCardDesc1"></p> -->
+              <!-- <span data-i18n="indexFeatureCardDesc2" style="color: rgb(1, 1, 1)" ></span> -->
+              <!-- <span class="fw-semibold mb-3" data-i18n="indexFeatureCardDesc2" style="color: rgb(1, 1, 1)"></span> -->
+              <!--<p class="fw-semibold mb-2">
+                  &lt;Changeable monthly rate in sen/kWh&gt;
+                </p>-->
+              <!-- </div> -->
+
+              <!-- Know More Box -->
+              <div class="d-flex align-items-center bg-gradient-light-blue p-3 rounded-4 shadow-sm mx-auto d-none"
+                style="max-width: 700px">
+                <img src="images/alert-electricity.png" alt="Know more" width="50" class="me-3" />
+
+                <div class="text-start">
+                  <small>
+                    For future forecasts of subsequent months:
+                    <a href="https://www.singlebuyer.com.my/" target="_blank"
+                      class="text-decoration-underline text-primary">Single Buyer</a>
+                  </small>
+                </div>
+              </div>
+          </section>
+          <!-- old AFA content -->
+
+    </div>
+
+  </div>
+  </div>
+
+  <div class="container">
+    <div id="content-category" class="card-content" style="display: none">
+      <!-- Header -->
+      <div class="mb-4 text-center">
+        <h4 class="fw-bold mb-4 text-center" data-i18n="voltageStructureTitle">
+          Simplified Voltage-Based Structure
+        </h4>
+        <p class="text-muted" style="text-align: left" data-i18n="voltageStructureDesc">
+          Under the Electricity Tariff Restructuring, customers are
+          categorised based on the voltage level of electricity supply (Low,
+          Medium & High Voltage). <br /><br />
+          You may refer to the table below for the new tariff category
+          mapping.
+        </p>
+      </div>
+
+      <!-- 3 Feature Highlights -->
+      <!--<div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="border rounded p-3 h-100">
+                <i class="fas fa-bolt text-primary mb-2"></i>
+                <h6 class="fw-bold">Voltage-Based Classification</h6>
+                <p class="text-muted mb-0">
+                  Categorize based on electricity supply voltage instead of
+                  business activity.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div
+                class="border rounded p-3 h-100"
+                style="background-color: #eafaf1"
+              >
+                <i class="fas fa-layer-group text-success mb-2"></i>
+                <h6 class="fw-bold">Scalable Structure</h6>
+                <p class="text-muted mb-0">
+                  As your consumption grows, your category may change to a
+                  relevant supply level.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div
+                class="border rounded p-3 h-100"
+                style="background-color: #eef5ff"
+              >
+                <i class="fas fa-hand-holding-dollar text-info mb-2"></i>
+                <h6 class="fw-bold">Fair Pricing</h6>
+                <p class="text-muted mb-0">
+                  Pricing reflects actual consumption patterns and delivery
+                  methods.
+                </p>
+              </div>
+            </div>
+          </div>-->
+
+      <!-- Voltage Level Classifications -->
+      <div class="p-4 rounded mb-4" style="background-color: #eef3ff">
+        <h6 class="fw-bold mb-3" data-i18n="voltageClassificationTitle">
+          Voltage Level Classifications for Tariff purposes
+        </h6>
+        <div class="row text-center g-3">
+          <div class="col-md-4 d-flex align-items-stretch">
+            <div class="bg-white rounded p-3 shadow-sm h-100 w-100">
+              <span class="badge bg-success text-white mb-1">LV</span>
+              <h6 class="mb-1" data-i18n="lowVoltage">Low Voltage</h6>
+              <div class="text-muted" data-i18n="lowVoltageRange">50V &lt; V ≤ 1kV</div>
+              <br />
+              <h6 class="mb-1" data-i18n="extraLowVoltage">Extra Low Voltage</h6>
+              <div class="text-muted" data-i18n="extraLowVoltageRange">1V &lt; V ≤ 50V</div>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex align-items-stretch">
+            <div class="bg-white rounded p-3 shadow-sm h-100 w-100 align-content-center">
+              <span class="badge bg-warning text-dark mb-1">MV</span>
+              <h6 class="mb-1" data-i18n="mediumVoltage">Medium Voltage</h6>
+              <div class="text-muted" data-i18n="mediumVoltageRange">1kV &lt; V ≤ 50kV</div>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex align-items-stretch">
+            <div class="bg-white rounded p-3 shadow-sm h-100 w-100">
+              <span class="badge bg-danger text-white mb-1">HV</span>
+              <h6 class="mb-1" data-i18n="highVoltage">High Voltage</h6>
+              <div class="text-muted" data-i18n="highVoltageRange">50kV &lt; V ≤ 230kV</div>
+              <br />
+              <h6 class="mb-1" data-i18n="extraHighVoltage">Extra High Voltage</h6>
+              <div class="text-muted" data-i18n="extraHighVoltageRange">V &gt; 230kV</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tariff Structure Comparison Table -->
+      <div class="bg-primary text-white p-4 rounded-top text-center">
+        <h4 class="mb-0" data-i18n="tariffComparisonTitle">Tariff Category Mapping</h4>
+      </div>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered align-middle mb-4">
+          <thead class="table-light text-center">
+            <tr class="text-start">
+              <th style="width: 50%" data-i18n="oldTariff">Old Tariff Category</th>
+              <th style="width: 50%" data-i18n="newTariff">New Tariff Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="tariffAOld">Tariff A – Domestic Tariff</td>
+              <td data-i18n="tariffANew">&bull; Domestic General Tariff<br />&bull; Domestic ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffBDFOld">Tariff B – Low Voltage Commercial Tariff<br />Tariff D – Low Voltage
+                Industrial Tariff<br />Tariff F – Low Voltage Mining Tariff</td>
+              <td data-i18n="tariffBDFNew">&bull; Non-Domestic Low Voltage General Tariff<br />&bull; Non-Domestic
+                Low Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffC1E1F1Old">Tariff C1 – Medium Voltage General Commercial Tariff<br />Tariff E1 –
+                Medium Voltage General Industrial Tariff<br />Tariff F1 – Medium Voltage General Mining Tariff</td>
+              <td data-i18n="tariffC1E1F1New">Non-Domestic Medium Voltage General Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffC2E2F2Old">Tariff C2 – Medium Voltage Peak/Off-Peak Commercial Tariff<br />Tariff
+                E2 – Medium Voltage Peak/Off-Peak Industrial Tariff<br />Tariff F2 – Medium Voltage Peak/Off-Peak
+                Mining Tariff</td>
+              <td data-i18n="tariffC2E2F2New">Non-Domestic Medium Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffC3Old">Tariff C3 – High Voltage General Commercial</td>
+              <td data-i18n="tariffC3New">Non-Domestic High Voltage General Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffC4E3Old">Tariff C4 – High Voltage Peak/Off-Peak Commercial<br />Tariff E3 – High
+                Voltage Peak/Off-Peak Industrial Tariff</td>
+              <td data-i18n="tariffC4E3New">Non-Domestic High Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffHOld">Tariff H – Low Voltage Specific Agriculture Tariff</td>
+              <td data-i18n="tariffHNew">&bull; Specific Agriculture Low Voltage General Tariff<br />&bull; Specific
+                Agriculture Low Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffH1Old">Tariff H1 – Medium Voltage General Specific Agriculture Tariff</td>
+              <td data-i18n="tariffH1New">Specific Agriculture Medium Voltage General Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffH2Old">Tariff H2 – Medium Voltage Peak/Off-Peak Specific Agriculture Tariff</td>
+              <td data-i18n="tariffH2New">Specific Agriculture Medium Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffNAOld">N/A</td>
+              <td data-i18n="tariffNANew">&bull; Water & Sewerage Operator Low Voltage General Tariff<br />&bull;
+                Water & Sewerage Operator Low Voltage ToU Tariff<br />&bull; Water & Sewerage Operator Medium
+                Voltage General Tariff<br />&bull; Water & Sewerage Operator Medium Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td data-i18n="tariffGOld">Tariff G – Street Lighting Tariff <br />Tariff G1 – Neon & Floodlight
+                Tariff</td>
+              <td data-i18n="tariffGNew">Street Lighting Tariff</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-bordered align-middle text-center">
+          <thead>
+            <tr class="table-primary text-dark">
+              <th colspan="3">
+                <strong data-i18n="specificTitle">SPECIFIC</strong><br />
+                <small data-i18n="specificSub">(Co-Generation, Traction, Bulk, Thermal Energy Storage (TES),
+                  Backfeed & Ultra High Voltage)</small>
+              </th>
+            </tr>
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-bolt text-primary me-2"></i><strong
+                  data-i18n="coGenerationTitle">Co-Generation</strong>
+              </th>
+            </tr>
+            <tr class="table-light">
+              <th style="width: 50%" data-i18n="oldTariff">Old Tariff Category</th>
+              <th style="width: 50%" data-i18n="newTariff">New Tariff Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-start" data-i18n="cg1Old">Tariff C1 - Medium Voltage General Commercial
+                Tariff<br />Tariff E1 - Medium Voltage General Industrial Tariff<br />Tariff F1 - Medium Voltage
+                General Mining Tariff</td>
+              <td class="text-start" data-i18n="cg1New">Non-Domestic Medium Voltage General Tariff</td>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="cg2Old">Tariff C2 - Medium Voltage Peak/Off-Peak Commercial
+                Tariff<br />Tariff E2 - Medium Voltage Peak/Off-Peak Industrial Tariff<br />Tariff F2 - Medium
+                Voltage Peak/Off-Peak Mining Tariff</td>
+              <td class="text-start" data-i18n="cg2New">Non-Domestic Medium Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="cg3Old">Tariff H1 - Medium Voltage General Specific Agriculture
+                Tariff</td>
+              <td class="text-start" data-i18n="cg3New">Specific Agriculture Medium Voltage General Tariff</td>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="cg4Old">Tariff H2 - Medium Voltage Peak/Off-Peak Specific
+                Agriculture Tariff</td>
+              <td class="text-start" data-i18n="cg4New">Specific Agriculture Medium Voltage ToU Tariff</td>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="cg5Old">Tariff E3 - High Voltage Peak/Off-Peak Industrial Tariff
+              </td>
+              <td class="text-start" data-i18n="cg5New">&bull; Non-Domestic High Voltage General Tariff<br />&bull;
+                Non-Domestic High Voltage ToU Tariff</td>
+            </tr>
+
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-subway text-primary me-2"></i><strong data-i18n="tractionTitle">Traction</strong>
+              </th>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="tractionOld"></td>
+              <td class="text-start" data-i18n="tractionNew">Traction Medium Voltage General Tariff<br />Traction
+                High Voltage General Tariff</td>
+            </tr>
+
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-box text-primary me-2"></i><strong data-i18n="bulkTitle">Bulk</strong>
+              </th>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="bulkOld">Tariff C2B - Medium Voltage Commercial Bulk<br />Tariff C4B
+                - High Voltage Commercial Bulk<br />Tariff E3B - High Voltage Industrial Bulk</td>
+              <td class="text-start" data-i18n="bulkNew">Bulk Medium Voltage Tariff<br />Bulk High Voltage Tariff
+              </td>
+            </tr>
+
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-battery-three-quarters text-primary me-2"></i><strong data-i18n="tesTitle">Thermal
+                  Energy Storage (TES)</strong>
+              </th>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="tesOld">Tariff C2TE - Medium Voltage Thermal Energy Storage</td>
+              <td class="text-start" data-i18n="tesNew">Thermal Energy Storage (TES) Medium Voltage Tariff</td>
+            </tr>
+
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-random text-primary me-2"></i><strong data-i18n="backfeedTitle">Backfeed</strong>
+              </th>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="backfeedOld">Tariff Backfeed</td>
+              <td class="text-start" data-i18n="backfeedNew">&bull; Backfeed Medium Voltage General
+                Tariff<br />&bull; Backfeed High Voltage General Tariff</td>
+            </tr>
+
+            <tr class="table-secondary">
+              <th colspan="3" class="text-center">
+                <i class="fas fa-plug text-primary me-2"></i><strong data-i18n="uhvTitle">Ultra High
+                  Voltage</strong>
+              </th>
+            </tr>
+            <tr>
+              <td class="text-start" data-i18n="uhvOld">N/A</td>
+              <td class="text-start" data-i18n="uhvNew">&bull; Ultra High Voltage Tariff<br />&bull; Bulk Ultra High
+                Voltage Tariff</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <!-- Notes Sections -->
+      <!--<div class="p-4 rounded" style="background-color: #e3f2ff">
+            <h6 class="fw-bold text-warning mb-3">
+              <i class="fas fa-info-circle me-2"></i>Notes
+            </h6>
+            <div
+              class="mb-2 p-3 bg-white rounded d-flex align-items-start gap-3 shadow-sm"
+            >
+              <span class="badge bg-warning text-dark">1</span>
+              <p class="mb-0 small">
+                Customer with current scheme tariff (<strong
+                  >OPTR, STR & ETOU</strong
+                >) will be terminated and migrated to
+                <strong>gazetted tariff based on voltage</strong>.
+              </p>
+            </div>
+            <div
+              class="p-3 bg-white rounded d-flex align-items-start gap-3 shadow-sm"
+            >
+              <span class="badge bg-warning text-dark">2</span>
+              <p class="mb-0 small">
+                Current and future customers in island will be consolidated
+                under new
+                <strong>gazetted tariff based on voltage</strong>.
+              </p>
+            </div>
+          </div>-->
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="content-fuel" class="card-content tab-content" style="display: none">
+      <!-- Heading -->
+      <h4 class="fw-bold mb-4 text-center">What is Fuel Adjustment?</h4>
+
+      <!-- Blue Info Box -->
+      <div class="p-3 rounded mb-4" style="background-color: #e6f0ff">
+        <p class="mb-0">
+          The base tariff is the standard electricity rate approved by the
+          Government. It includes a fixed fuel price used to calculate your
+          bill, based on expected average fuel costs at the time. However,
+          fuel prices can go up or down due to global market changes — and
+          that’s where the
+          <strong>Fuel Adjustment</strong> comes in.
+        </p>
+      </div>
+
+      <!-- Main Explanation Box -->
+      <div class="p-4 bg-white border rounded mb-4">
+        <p class="mb-3">
+          Fuel Adjustment is a component that accounts for fluctuations in
+          fuel prices used for electricity generation, based on the rates
+          set in the base tariff.
+        </p>
+
+        <!-- ICPT Box -->
+        <div class="p-3 bg-light border rounded mb-3">
+          <p class="mb-0 small">
+            Under RP3, this mechanism was known as the Imbalance
+            <strong> Cost Pass-Through (ICPT)</strong>, which was reviewed
+            and applied every six months. If the average fuel cost over the
+            six-month period was <strong>lower</strong> than the base tariff
+            rate, an <strong>ICPT rebate</strong> was credited to the
+            customer’s bill. If it was <strong>higher</strong>, an
+            <strong>ICPT surcharge</strong> was applied.​
+          </p>
+        </div>
+
+        <!-- Energy Adjustment Box -->
+        <div class="p-3 border rounded" style="background-color: #e9f8ef">
+          <p class="mb-0 small">
+            In RP4, the ICPT mechanism has been
+            <strong>replaced by the Fuel Adjustment</strong>. This new
+            approach is more responsive to fuel price fluctuations, as it is
+            <strong>updated monthly</strong>. The mechanism remains
+            similar:​ ​
+          </p>
+          <ul>
+            <li>
+              If the actual fuel cost is <strong>lower</strong> than the
+              base tariff, a <strong>rebate</strong> will be given.​
+            </li>
+            <li>
+              If the actual fuel cost is <strong>higher</strong>, a
+              <strong>surcharge</strong> will apply.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- External Link Note -->
+      <div class="border rounded p-3 d-flex align-items-center gap-2">
+        <i class="fas fa-external-link-alt text-primary"></i>
+        <p class="mb-0 small">
+          To view the monthly Energy Adjustment rate, please visit the
+          <a href="#" class="text-decoration-underline fw-semibold">Single Buyer website</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="content-tou" class="card-content" style="display: block">
+      <div class="text-center mb-4">
+        <h4 class="fw-bold" data-i18n="touTitle">ToU Tariff Expansion</h4>
+        <p class="text-muted mb-3" data-i18n="touSubtitle">Time-of-Use pricing for optimised electricity consumption
+        </p>
+      </div>
+
+      <!-- Info Box -->
+      <!-- <div class="p-3 rounded mb-4" style="background-color: #e6f0ff">
+              <p class="mb-0">
+                Time of Use (TOU) tariff scheme offers different tariff rates at
+                different times of the day. For example, tariff rates during
+                Off-Peak period will be lower than Peak period.
+              </p>
+            </div> -->
+
+      <!-- Toggle Buttons -->
+      <!--
+            <div class="d-flex justify-content-center mb-4">
+              <div class="btn-group w-100" role="group">
+                <button id="btn-rp3" class="btn btn-dark w-50">
+                  RP3 (Before 1 July 2025)
+                </button>
+                <button id="btn-rp4" class="btn btn-outline-secondary w-50">
+                  RP4 (1 July 2025 onwards)
+                </button>
+              </div>
+            </div>-->
+
+      <!-- RP3 Content -->
+      <div id="rp3-content" class="p-4 bg-white border rounded mb-4">
+        <div class="d-flex align-items-center gap-2 mb-2 text-danger fw-bold">
+          <!--<i class="fas fa-circle-exclamation"></i> RP3 (Before 1 July 2025)-->
+        </div>
+        <p class="mb-3" data-i18n="touIntro">
+          Time of Use (ToU) tariff scheme offers different tariff rates at
+          different times of the day. For example, tariff rates during
+          Off-Peak period will be lower than Peak period. In addition, for
+          Non-Domestic Medium Voltage and High Voltage customers, Maximum
+          Demand which occurs during Off-Peak period will not be charged.
+        </p>
+
+        <div class="p-4 rounded bg-light mb-3">
+          <p data-i18n="touZonesIntro">ToU scheme has 2 time zones (Peak and Off-Peak):</p>
+          <ul>
+            <li data-i18n="touWeekdays">
+              On Monday to Friday <br />
+              Peak : 2 PM to 10 PM <br />Off-Peak : 10 PM to 2 PM<br />
+            </li>
+            <li data-i18n="touWeekends">
+              On Saturday and Sunday<br />Off-Peak throughout the day (24 hours)
+            </li>
+          </ul>
+          <p data-i18n="touZonesNote"></p>
+          <!--<span class="small">
+                  *The 15 selected public holidays include New Year, the first and
+                  second days of Chinese New Year, the first and second days of
+                  Hari Raya Aidilfitri, Labour Day, Wesak Day, YDP Agong’s
+                  birthday, Hari Raya Aidiladha, Awal Muharram, Independence Day,
+                  Malaysia Day, Maulidur Rasul, Deepavali Day and Christmas Day.
+                </span>-->
+
+          <!-- <strong>
+                  Expansion to Domestic and Low Voltage Non-Domestic
+                  customers</strong
+                ><br /><br />
+
+                From 1 July 2025 onwards, Domestic and Non-Domestic Low Voltage
+                customers can opt in Time of Use (ToU) tariff scheme via myTNB
+                portal. ToU is offered to all customers installed with Smart
+                Meters and CT operated meters. ​Note: Off-Peak Tariff Rider
+                (OPTR), Sunday Tariff Rider (STR) & Enhanced Time of Use (ETOU)
+                customers will be terminated and charged under Peak/Off Peak
+                Tariff based on voltage level. <br />
+                <br /> -->
+
+        </div>
+
+        <!-- banner -->
+        <div class="tou-banner">
+          <div class="tou-content">
+            <h2 data-i18n="applyTouTitle"></h2><br>
+            <!-- <p data-i18n="applyTouDesc"></p> -->
+            <!-- <button class="apply-btn" data-i18n="applyTouBtn">Apply Now</button> -->
+            <div>
+              <button class="apply-btn" data-i18n="applyTouBtn">Download Now</button>
+              <button class="tutorial-btn" data-i18n="tutoTouBtn">Quick Guide</button>
+            </div>
+          </div>
+        </div>
+        <br>
+
+		<!-- Tutorial wrapper (hidden by default) -->
+		<div id="tutorialWrapper" style="display:none;">
+
+		  <!-- Pills -->
+		  <div class="nav nav-pills mb-3 d-flex"
+			  id="tabNav"
+			  role="tablist"
+			  style="border-radius: 50px; overflow: hidden; border: 1px solid #0d6efd;">
+
+			<button class="nav-link active flex-fill rounded-0"
+					id="left-tab"
+					type="button"
+					role="tab"
+					style="border-radius: 50px 0 0 50px;"
+					data-i18n="leftTOUPortalTab">
+			  myTNB portal
+			</button>
+
+			<button class="nav-link flex-fill rounded-0"
+					id="right-tab"
+					type="button"
+					role="tab"
+					style="border-radius: 0 50px 50px 0;"
+					data-i18n="rightTOUPortalTab">
+			  myTNB app
+			</button>
+		  </div>
+
+		  <!-- LEFT tab: original tutorial image -->
+		  <div id="leftContent" class="tou-tutorial" style="display:block;">
+			<div class="p-1rounded mb-3">
+			  <img data-i18n-img-src="TOU_UserGuide" alt="TOU User Guide" style="max-width:100%; height:auto;">
+			</div>
+		  </div>
+
+		  <div id="rightContent" class="tou-tutorial" style="display:none;">
+		  <div class="p-1rounded mb-3">
+			  <img data-i18n-img-src="TOU_UserGuideApp" alt="TOU User Guide App" style="max-width:100%; height:auto;">
+			</div>
+			<!-- <p data-i18n="touStep1">Step 1: Open your myTNB App and tap on "Time of Use" icon.</p> -->
+			<!-- <p><img alt="Open myTNB App and Tap on Time of Use icon" class="tou-guide-img" src="images/tou-on-mytnb-app/ToU on mytnb app-01.png" /></p> -->
+
+			<!-- <p data-i18n="touStep2">Step 2: Select your TNB Account that’s eligible for ToU application.</p> -->
+			<!-- <p><img alt="Select TNB account that's eligible for ToU application" class="tou-guide-img" src="images/tou-on-mytnb-app/ToU on mytnb app-02.png" /></p> -->
+
+			<!-- <p data-i18n="touStep3">Step 3: Tap on "Get Started" button.</p> -->
+			<!-- <p><img alt="Tap on Get Started button" class="tou-guide-img" src="images/tou-on-mytnb-app/ToU on mytnb app-03.png" /></p> -->
+
+			<!-- <p data-i18n="touStep4">Step 4: Review and confirm your contact details.</p> -->
+			<!-- <p><img alt="Review and confirm contact details" class="tou-guide-img" src="images/tou-on-mytnb-app/ToU on mytnb app-04.png" /></p> -->
+
+			<!-- <p data-i18n="touStep5">Step 5: Congratulations! Your ToU application has been successfully submitted.</p> -->
+			<!-- <p><img alt="ToU application submitted" class="tou-guide-img" src="images/tou-on-mytnb-app/ToU on mytnb app-05.png" /></p> -->
+		  </div>
+		</div>
+		<br>
+
+        <!-- Original TOU details -->
+        <div class="tou-details">
+          <!-- how to apply box -->
+          <div class="p-4 rounded mb-3" style="background-color: #e6f5fc">
+            <!-- <p data-i18n="applyToUIntro"></p> -->
+            <p data-i18n="applyToUIntro1" data-i18n-html></p>
+            <ul>
+              <li data-i18n="applyToUStep1"></li>
+              <!-- <li data-i18n="applyToUStep2"></li> -->
+              <li data-i18n="applyToUStep3"></li>
+              <li data-i18n="applyToUStep4"></li>
+            </ul>
+
+            <p data-i18n="whatYouNeedToUIntro"><strong></strong></p>
+
+            <ul>
+              <li data-i18n="whatYouNeedToUIntro1"></li>
+              <li data-i18n="whatYouNeedToUStep1"></li>
+              <li data-i18n="whatYouNeedToUStep2"></li>
+              <li data-i18n="whatYouNeedToUStep3"></li>
+            </ul>
+            <p data-i18n="whatYouNeedNote"><i></i></p>
+          </div>
+
+          <!-- Benefits Box -->
+          <div class="p-4 rounded bg-light mb-3">
+            <h6 class="fw-bold mb-3" data-i18n="touBenefitsTitle">
+              What are the benefits of switching to the Time of Use (ToU) tariff?
+            </h6>
+
+            <!-- Benefit 1 -->
+            <div class="d-flex gap-2 align-items-start mb-2">
+              <i class="fas fa-wallet text-primary mt-1"></i>
+              <div>
+                <p class="fw-bold mb-1" data-i18n="touBenefit1Title">Lower Monthly Electricity Bills</p>
+                <p class="mb-2" data-i18n="touBenefit1Desc">
+                  You can enjoy lower electricity rates when you shift your
+                  usage to Off-Peak hours — before 2 PM or after 10 PM on
+                  weekdays, and all day on Saturday and Sunday.
+                </p>
+                <p class="fst-italic small mb-0" data-i18n="touBenefit1Example">
+                  Example: A household that typically runs the washing
+                  machine, water heater and air conditioner in the evening can
+                  shift some usage to morning or late night to reduce their
+                  electricity bill.
+                </p>
+              </div>
+            </div>
+
+            <!-- Benefit 2 -->
+            <div class="d-flex gap-2 align-items-start mb-2 mt-4">
+              <i class="fas fa-industry text-primary mt-1"></i>
+              <div>
+                <p class="fw-bold mb-1" data-i18n="touBenefit2Title">Maximise Business Benefits</p>
+                <p class="mb-2" data-i18n="touBenefit2Desc">
+                  Flexible ToU rates allow businesses to optimise operations
+                  by shifting energy usage to Off-Peak hours, which helps
+                  lower operating costs.
+                </p>
+                <p class="fst-italic small mb-0" data-i18n="touBenefit2Example">
+                  Example: A factory that operates heavy machinery or runs
+                  large-scale production lines during the day can shift part
+                  of its operation to off-peak hours (before 2 PM or after 10
+                  PM) to take advantage of the lower rates.
+                </p>
+                <br />
+                <p class="fst-italic small mb-0" data-i18n="touBenefit2Note">
+                  *Note: Check your usage pattern and your ability to shift
+                  your consumption to the designated Off-Peak period before
+                  opting for ToU tariff scheme to enjoy full benefits of lower
+                  Off-Peak rates.
+                </p>
+              </div>
+            </div>
+            <!--<iframe>
+                  src="chart.html"
+                  style="height: 530px; width: 100%"
+                  scrolling="no"
+                  title="TOU time Zones"
+                  id="chartIframe"
+                </iframe> -->
+          </div>
+
+          <div class="p-4 rounded mb-3" style="background-color: #e6f5fc">
+            <!-- <p data-i18n="touEligibility">
+                    ToU is an opt-in service and only applies to customers already
+                    installed with Smart Meter or Current Transformer (CT) Operated
+                    Meter (RMR). To subscribe, please visit your nearest Kedai
+                    Tenaga.
+                  </p> -->
+            <p data-i18n="touEligibility2" data-i18n-html>
+              For more information on ToU, please refer the FAQ
+            </p>
+            <!-- <span class="small" data-i18n="touAutoSwitchNote">
+                    Note: For existing ToU customers under Tariff C2, E2, F2, H2,
+                    C4, & E3, the switch to the new ToU Tariff is automatic.
+                  </span> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="content-assistance" class="card-content" style="display: none">
+      <!-- Top Info Box -->
+
+      <div class="mb-4 text-center">
+        <h4 class="fw-bold mb-4 text-center" data-i18n="indexFeature1Point4">Incentives & Rebates</h4>
+      </div>
+      <div class="p-3 rounded mb-4" style="background-color: #e6f0ff">
+        <label class="mb-0" data-i18n="indexFeature1Point5"></label>
+      </div>
+
+      <!-- Accordion: Assistance Program -->
+      <div class="p-3 rounded border mb-3">
+        <div class="accordion mb-4" id="assistanceAccordion">
+          <!--<h5 class="fw-bold mb-3 text-uppercase text-primary">Domestic</h5>-->
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <span class="badge bg-primary me-2">1</span>
+                <label data-i18n="indexFeature1Point6"></label>
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#assistanceAccordion">
+              <div class="accordion-body" data-i18n="indexFeature1Point6Desc">
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <span class="badge bg-primary me-2">2</span>
+                <div data-i18n="indexFeature1Point7"></div>
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#assistanceAccordion">
+              <div class="accordion-body" data-i18n="indexFeature1Point7Desc">
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <span class="badge bg-primary me-2">3</span>
+                <div data-i18n="indexFeature1Point8"></div>
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#assistanceAccordion">
+              <div class="accordion-body">
+                <div><span data-i18n="indexFeature1Point8Desc"></span>
+                  <a href="https://semakanrebat.petra.gov.my" data-i18n="indexFeature1Point8DescClick" target="_blank">
+                  </a>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <span class="badge bg-primary me-2">4</span>
+                <div data-i18n="indexFeature1Point9"></div>
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#assistanceAccordion">
+              <div class="accordion-body">
+                <div data-i18n="indexFeature1Point9Desc"></div>
+
+                <div>
+                  <i class="text-muted"></i>
+
+                  <!--
+                        “Mining Consumer” refers to consumers whose electricity
+                        consumption is mostly for extracting minerals including
+                        dredging activities. Supporting document from Minerals
+                        and Geoscience Department, Ministry of Natural Resources
+                        and Environment is required.<br /><br />-->
+                  <div data-i18n="indexFeature1Point10"></div>
+                  <div data-i18n="indexFeature1Point10Desc"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Need More Info -->
+        <!-- <div class="p-3 rounded" style="background-color: #eef6ff">
+              <div class="d-flex align-items-start gap-2">
+                <i class="fas fa-question-circle text-primary mt-1"></i>
+                <div>
+                  <strong class="d-block text-primary"
+                    >Need more information?</strong
+                  >
+                  <small>
+                    Contact TNB Customer Service for detailed assistance program
+                    eligibility and application procedures.
+                  </small>
+                </div>
+              </div>
+            </div> -->
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- Tabbed Section for Residential & Business -->
+  <div data-include="sections/4. category.html" data-check></div>
+
+  <!-- Calculator Section -->
+  <div data-include="sections/5. calculator.html" data-check></div>
+
+  <!-- Manage Electricity Section -->
+  <div data-include="sections/6. manage-electricity.html" data-check></div>
+
+  <!-- FAQ Section -->
+  <div id="highlight-tou-faq"></div>
+  <div data-include="sections/7. faq.html" data-check></div>
+
+  <!-- Footer -->
+  <div data-include="components/footer.html" data-check></div>
+
+  <!-- Bill Calculator Modal -->
+  <div data-include="components/calculator-modal.html" data-check></div>
+
+  <!-- Calculator Button -->
+  <button id="CalcBtn" onclick="showCalc(event)" class="btn btn-primary rounded-circle shadow"
+    style="position: fixed; bottom: 80px; right: 30px; z-index: 999" data-bs-toggle="tooltip" data-bs-placement="left"
+    data-i18n-title="tooltipBillCalc" title="Bill Calculator">
+    <i class="fas fa-calculator"></i>
+  </button>
+
+  <!-- back to top -->
+  <!-- <button id="backToTopBtn" class="btn btn-primary rounded-circle shadow" style="
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: none;
+        z-index: 999;
+      ">
+      <i class="fas fa-arrow-up"></i>
+    </button> -->
+  <button id="backToTopBtn" class="btn btn-primary rounded-circle shadow btn-quad"
+    style="position: fixed; bottom: 30px; right: 30px; display: none; z-index: 999;" data-bs-toggle="tooltip"
+    data-bs-placement="left" title="Menu Tile Selection">
+    <!-- first one is the “highlighted” dot -->
+    <i class="fas fa-dot-circle"></i>
+    <!-- then the three un-highlighted ones -->
+    <i class="far fa-circle"></i>
+    <i class="far fa-circle"></i>
+    <i class="far fa-circle"></i>
+  </button>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="lib/bootstrap/bootstrap.bundle.min.js" type="text/javascript" data-check></script>
+  <!-- jQuery -->
+  <script src="lib/jquery/jquery-3.6.0.min.js" data-check></script>
+  <script src="lib/i18next/i18next.min.js" data-check></script>
+  <script src="js/script.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/rates.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-newDomestic.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-nonDomGen.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-domesticTOU.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-nonDomTOU.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-main.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/translation.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-domesticNEM.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-domesticTOUNEM.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-mainNEM.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-nonDomTOUNEM.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/calculator-nonDomGenNEM.js?v=1.1.69" type="text/javascript" data-check></script>
+	<script src="js/afaGraph.js?v=1.1.69" type="text/javascript" data-check></script>
+    <script src="js/search.js?v=1.1.69" type="text/javascript" data-check></script>
+    <!--
+      Last Dev - 1.1.26
+      Last Staging - 1.1.65
+      Last Prod - 1.1.65 -->
+
+  <script type="text/javascript">
+    /* Force Html Update by Changing the htmlVersionNew */
+    const htmlVersionNew = '1.1.71';
+    const urlParams = new URLSearchParams(window.location.search);
+    const htmlVersionCurrent = urlParams.get('v');
+    const currentHash = location.hash;
+    if (htmlVersionCurrent != htmlVersionNew) {
+      const currentLang = urlParams.get('lang') || 'bm';
+      urlParams.delete('lang');
+      urlParams.delete('v');
+      const orderedParams = new URLSearchParams();
+      orderedParams.set('lang', currentLang);
+      orderedParams.set('v', htmlVersionNew);
+      urlParams.forEach((value, key) => {
+        orderedParams.append(key, value);
+      });
+      location.replace(location.pathname + '?' + orderedParams.toString() + currentHash);
+    }
+    /*End of Force Html Update by Changing the htmlVersionNew */
+  </script>
+  <!-- start fetch new version development -->
+  <!-- <script type="text/javascript">
+      const version = '1.1.26';
+      const params  = new URLSearchParams(window.location.search);
+      const current = params.get('v');
+      const hash    = window.location.hash || '';
+
+      // If the ?v= on the URL isn’t the latest, reload with the correct version
+      if (current !== version) {
+        window.location.replace(`${location.pathname}?v=${version}${hash}`);
+        return;
+      }
+
+      // Once we’re on the correct version, remove ?v= from the bar (no reload)
+      if (params.has('v')) {
+        history.replaceState(null, '', `${location.pathname}${hash}`);
+      }
+    </script> -->
+
+  <!-- end -->
+
+  <!-- Google tag (gtag.js) -->
+  <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-3NWJ5R6MQ5"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-3NWJ5R6MQ5");
+    </script>
+  </div>
+</body>
+
+</html>

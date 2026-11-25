@@ -1,72 +1,82 @@
 id: TAR01_MY_TNB_RP4_MV_general
+category: Bukan Domestik Voltan Sederhana Am
 boundary: SOURCE_REPORTED
+schedule: Jadual Tarif Elektrik di Semenanjung Bagi Tempoh 1 Julai 2025 Hingga 31
+  Disember 2027
 billing_interval_minutes:
   value: 30
   unit: min
-  currency: null
-  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-  source_page_section: metering interval
-  access_date: '2026-11-25'
+  source_url: https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge
+  source_page_section: TNB MD definition page (refuses automated access)
   status: NOT_VERIFIED
+  note: 30-minute MD interval used as instructed by the project owner 2026-11-25;
+    not stated in the tariff schedule PDF
 interval_mode: aligned
 windows: []
+demand_eligible_periods: null
+md_rule: maximum demand over the whole month (Setiap kilowatt permintaan maksimum
+  sebulan)
+holidays:
+  value: null
+  status: NOT_VERIFIED
+  note: 'Public-holiday treatment is not stated in the schedule PDF or the tariff
+    page read; base: holidays follow the weekday rule; sensitivity: Malaysian 2019
+    public holidays (python holidays package) as off-peak.'
 energy_rates:
   normal:
     value: 0.2983
     unit: MYR/kWh
     currency: MYR
-    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage General energy
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Sederhana Am: Caj Tenaga - Untuk semua kWj 29.83
+      sen/kWj'
     access_date: '2026-11-25'
-    status: NOT_VERIFIED
+    status: VERIFIED
 demand_rates:
   capacity:
     value: 29.43
     unit: MYR/kW/month
     currency: MYR
-    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage General capacity
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Sederhana Am: Caj Kapasiti - Setiap kilowatt permintaan
+      maksimum sebulan 29.43 RM/kW'
     access_date: '2026-11-25'
-    status: NOT_VERIFIED
+    status: VERIFIED
   network:
     value: 59.84
     unit: MYR/kW/month
     currency: MYR
-    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage General network
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Sederhana Am: Caj Rangkaian - Setiap kilowatt permintaan
+      maksimum sebulan 59.84 RM/kW'
     access_date: '2026-11-25'
-    status: NOT_VERIFIED
+    status: VERIFIED
 fixed_fees:
   retail:
     value: 200
     unit: MYR/month
     currency: MYR
-    source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-    source_page_section: Medium Voltage General retail
+    source_url: https://myenergystats.st.gov.my/documents/d/guest/tariff-tnb-pdf-1?download=tariff.pdf
+    source_file: data/tariffs/sources/Tariff-TNB-pdf.pdf
+    source_sha256: e6634bbeec72c58c6d544c0d73953dda5616b742131453a73e889d307395a43e
+    source_page_section: p.2
+    quote: 'Bukan Domestik Voltan Sederhana Am: Caj Peruncitan 200.00 RM/bulan'
     access_date: '2026-11-25'
-    status: NOT_VERIFIED
+    status: VERIFIED
 export_rate:
-  value: null
-  unit: currency/kWh
-  currency: null
-  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-  source_page_section: export rule not established
-  access_date: '2026-11-25'
+  value: 0
   status: NOT_VERIFIED
+  note: no export compensation in the schedule; behind-the-meter netting assumed
 adjustments:
   value: null
-  unit: description
-  currency: null
-  source_url: https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf
-  source_page_section: taxes and adjustments not established
-  access_date: '2026-11-25'
   status: NOT_VERIFIED
-penalty:
-  value: null
-  unit: description
-  currency: null
-  source_url: https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf
-  source_page_section: 'section 4.2: 8.50 MYR/kW shortfall; reference depends on customer
-    history; excluded from bill'
-  access_date: '2026-11-25'
-  status: NOT_VERIFIED
+  note: RP4 monthly fuel adjustment (singlebuyer.com.my) and taxes not included
