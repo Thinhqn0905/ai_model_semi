@@ -1,0 +1,5 @@
+﻿# Run 4 demonstrator extension
+
+The file-backed dashboard provides facility load, tariff fields, incremental monthly charge estimates, and FIN comparison. Set `REGENATE_RESULTS` to the results directory and `REGENATE_DS07` to the DS07 zip, or enter its path in the page. Markdown export reflects the selected page.
+
+Facility demand is DERIVED from MEASURED DS07 using ASSUMED aligned 30-minute windows and 80% coverage. Facility/cell comparisons are SIM_DATA_PROFILE plus MEASURED, not synchronised. Tariff status is shown per field; estimates are NOT_VERIFIED and are not complete payable bills. The selected single energy rate is ASSUMED for all cell energy; time-of-use allocation, fixed fees, contract and excess charges, export credits, taxes and adjustments are excluded. FIN break-even values are DERIVED from the source annual_net_usd under ASSUMED constant net savings (including source operating costs); source boundaries must be checked. No live integration or new campaign results are implied.

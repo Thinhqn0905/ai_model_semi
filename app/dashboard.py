@@ -1,6 +1,7 @@
 ﻿"""Offline, evidence-labelled campaign viewer."""
 from pathlib import Path
 import sys
+import os
 from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
@@ -38,12 +39,18 @@ def append_decision(campaign, instance, method, decision, reason):
 def main():
     st.set_page_config(page_title='ReGenATE', layout='wide')
     st.title(TITLE)
-    campaigns = sorted(p for p in Path('runs').glob('*') if p.is_dir() and ((p / 'ladder.csv').exists() or (p / 'results.csv').exists()))
+    results_root = Path(os.environ.get('REGENATE_RESULTS', 'runs'))
+    campaigns = sorted(p for p in results_root.glob('*') if p.is_dir() and ((p / 'ladder.csv').exists() or (p / 'results.csv').exists()))
     default = campaigns.index(Path('runs/rolling_v1')) if Path('runs/rolling_v1') in campaigns else 0
     selected = st.sidebar.selectbox('Campaign', campaigns, index=default, format_func=str) if campaigns else None
     override = st.sidebar.text_input('Campaign folder override', '')
     campaign = Path(override) if override else selected
-    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance', 'AI forecasting', 'Pipeline run'])
+    page = st.sidebar.radio('Page', ['Overview', 'Baseline ladder', 'Schedule', 'Energy', 'Engineer approval', 'Finance', 'AI forecasting', 'Pipeline run', 'Facility load', 'Tariff selector', 'Monthly bill', 'FIN comparison'])
+    if page in ('Facility load', 'Tariff selector', 'Monthly bill', 'FIN comparison'):
+        from regenate.app.facility_view import render
+        render(page, results_root)
+        st.caption(FOOTER)
+        return
     if page == 'Pipeline run':
         import json
         runs = sorted(p for p in Path('runs/run3/demo').glob('*') if (p / 'summary.json').exists())

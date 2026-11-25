@@ -1,8 +1,6 @@
 # Tariff registry
 
-Boundary: SOURCE_REPORTED; geographical counterfactuals for DS07 Korean factories, not their actual tariffs. VN trial is TRIAL_NOT_PAYABLE. The engine excludes taxes, adjustments, reactive power, connected-load and standby penalties; incomplete inputs make totals unsuitable as payable bills. Null is missing, never verified zero.
-
-Malaysia schedule direct download returned HTTP 404; its fields remain NOT_VERIFIED. Malaysia TOU demand values previously in the registry were removed pending inspection of the original schedule. SG UOS excludes supply energy and GST; HT Large applicability depends on contract capacity. Vietnam actual is Decision 2892/QD-BCT and voltage above 1 kV to 35 kV.
+Boundary: SOURCE_REPORTED. These are geographical counterfactuals for DS07 Korean factories, not their actual tariffs. VN trial is TRIAL_NOT_PAYABLE. These incomplete calculations are not payable bills: taxes, adjustments, reactive power, connected-load and standby penalties are excluded. Null means missing. Aligned metering is an assumption. The TNB general tariff peak-only treatment follows the task instruction and is NOT_VERIFIED; the TNB source establishes peak-only MD for ToU.
 
 ## TAR01_MY_TNB_RP4_MV_general
 
@@ -16,8 +14,12 @@ Malaysia schedule direct download returned HTTP 404; its fields remain NOT_VERIF
 | export_rate | None | currency/kWh | None | NOT_VERIFIED | [export rule not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | adjustments | None | description | None | NOT_VERIFIED | [taxes and adjustments not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | penalty | None | description | None | NOT_VERIFIED | [section 4.2: 8.50 MYR/kW shortfall; reference depends on customer history; excluded from bill](https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf) |
+| tou_windows_status | Monday-Friday 14:00-22:00 peak; otherwise off-peak | description | None | VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
+| demand_eligibility_status | peak only | description | None | NOT_VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
+| fuel_adjustment_status | monthly fuel adjustment; rate not established | description | None | VERIFIED | [Energy Adjustment](https://www.mytnb.com.my/tariff) |
+| interval_mode_status | aligned assumed; documentation not established | description | None | NOT_VERIFIED | [metering alignment](https://www.mytnb.com.my/tariff) |
 
-Other configuration: `{'interval_mode': 'aligned', 'windows': []}`.
+Other configuration: `{'interval_mode': 'aligned', 'windows': [{'days': [0, 1, 2, 3, 4], 'start': '14:00', 'end': '22:00', 'period': 'peak'}, {'days': [0, 1, 2, 3, 4], 'start': '00:00', 'end': '14:00', 'period': 'offpeak'}, {'days': [0, 1, 2, 3, 4], 'start': '22:00', 'end': '24:00', 'period': 'offpeak'}, {'days': [5, 6], 'start': '00:00', 'end': '24:00', 'period': 'offpeak'}], 'demand_eligible_periods': ['peak']}`.
 
 ## TAR01_MY_TNB_RP4_MV_TOU
 
@@ -32,9 +34,12 @@ Other configuration: `{'interval_mode': 'aligned', 'windows': []}`.
 | export_rate | None | currency/kWh | None | NOT_VERIFIED | [export rule not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | adjustments | None | description | None | NOT_VERIFIED | [taxes and adjustments not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | penalty | None | description | None | NOT_VERIFIED | [section 4.2: 8.50 MYR/kW shortfall; reference depends on customer history; excluded from bill](https://www.tnb.com.my/assets/files/TNB_Connection_Charges_Book_2025_ENG.pdf) |
-| tou_windows_status | None | description | None | NOT_VERIFIED | [TOU windows not established](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| tou_windows_status | Monday-Friday 14:00-22:00 peak; otherwise off-peak | description | None | VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
+| demand_eligibility_status | peak only | description | None | VERIFIED | [Time of Use](https://www.mytnb.com.my/tariff) |
+| fuel_adjustment_status | monthly fuel adjustment; rate not established | description | None | VERIFIED | [Energy Adjustment](https://www.mytnb.com.my/tariff) |
+| interval_mode_status | aligned assumed; documentation not established | description | None | NOT_VERIFIED | [metering alignment](https://www.mytnb.com.my/tariff) |
 
-Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'demand_eligible_periods': ['peak']}`.
+Other configuration: `{'interval_mode': 'aligned', 'windows': [{'days': [0, 1, 2, 3, 4], 'start': '14:00', 'end': '22:00', 'period': 'peak'}, {'days': [0, 1, 2, 3, 4], 'start': '00:00', 'end': '14:00', 'period': 'offpeak'}, {'days': [0, 1, 2, 3, 4], 'start': '22:00', 'end': '24:00', 'period': 'offpeak'}, {'days': [5, 6], 'start': '00:00', 'end': '24:00', 'period': 'offpeak'}], 'demand_eligible_periods': ['peak']}`.
 
 ## TAR02_VN_actual
 
@@ -76,4 +81,4 @@ Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'tariff_status
 
 Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'contract_rule': 'HT Large: contract is input; UCC applies to excess for normal consumers without embedded generation. Other schemes require additional rules.'}`.
 
-Vietnam rates were found in the official decision, but remain NOT_VERIFIED until the exact page and quotation are checked against the saved PDF. Malaysia TOU windows, MD alignment, AFA, and connected-load applicability remain unresolved. Singapore supply energy, reactive, standby and export remain unverified or unimplemented.
+Malaysia RP4 schedule and MD interval remain NOT_VERIFIED; the schedule URL returned 404. AFA replaces ICPT and changes monthly, but the rate is not established. Connected-load applicability and taxes remain unresolved. Vietnam rates remain NOT_VERIFIED pending exact page and quotation. Singapore supply energy, reactive, standby and export remain unverified or unimplemented. Source copies and SHA-256 hashes are in [sources](../../data/tariffs/sources/README.md).
