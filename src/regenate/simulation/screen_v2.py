@@ -21,11 +21,15 @@ def residuals(inst, sch, prm):
     return supply - own, demand - own
 
 
-def screen(proc, run_dirs, afe=20.0, link_a=80.0):
+def screen(proc, run_dirs, afe=20.0, link_a=80.0, methods=None, max_inst=None):
     cyc, arrs = load_proc(proc); prm = ElecParams(); rows = []
     tp = TwinParams(p_afe_max_kw=afe, i_link_max_a=link_a, p_link_max_kw=link_a * TwinParams().v_nom / 1000)
     for d in run_dirs:
         sch = pd.read_parquet(Path(d) / "schedules.parquet")
+        if methods:
+            sch = sch[sch.method.isin(methods)]
+        if max_inst:
+            sch = sch[sch.instance_id.isin(sorted(sch.instance_id.unique(), key=lambda x: int(x.rsplit("s", 1)[1]))[:max_inst])]
         for iid, g in sch.groupby("instance_id"):
             m = re.match(r"v2_(\w+)_n(\d+)_s(\d+)", iid); split, n_jobs, seed = m.group(1), int(m.group(2)), int(m.group(3))
             inst = make_instance(cyc, arrs, seed, n_jobs=n_jobs, n_stations=8, split=split)
@@ -43,8 +47,9 @@ def screen(proc, run_dirs, afe=20.0, link_a=80.0):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--proc", required=True); ap.add_argument("--runs", nargs="+", required=True)
     ap.add_argument("--out", required=True); ap.add_argument("--afe", type=float, default=20.0); ap.add_argument("--link_a", type=float, default=80.0)
+    ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--max_inst", type=int, default=None)
     a = ap.parse_args()
-    d = screen(a.proc, a.runs, a.afe, a.link_a); d.to_csv(a.out, index=False)
+    d = screen(a.proc, a.runs, a.afe, a.link_a, a.methods, a.max_inst); d.to_csv(a.out, index=False)
     print(d.groupby(["run", "method"]).agg(n=("approved", "size"), approved=("approved", "mean"), peak_sink=("peak_sink_kw", "mean"),
                                            max_step=("max_step_kw", "mean")).round(3).to_string())
 
