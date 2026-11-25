@@ -81,3 +81,16 @@ Per facility (B2 -> P0-E1-Peak mean kW): Forge_1 7.08 -> 4.14, Metal_1 6.16 -> 2
 Metal_3 2.64 -> -0.95, Cement_2 3.10 -> 1.74, Steel_1 3.55 -> 2.87, Paper 3.14 -> 2.58; Cement_1 0.12 -> 1.05 and Steel_2
 1.24 -> 1.37 are worse (zero/negative-benefit facility cases kept). With the peak-only MD rule the E1 + peak level becomes significant
 and perfect cycle information now has a significant billing value (+0.59 kW), unlike energy (Run 3) -> a candidate AI opportunity.
+
+## Billing-aware headroom (ORACLE-BILL) — WP-J gate before any facility-load AI
+One-shot oracle per block (true cycles + true facility background; lexicographic TT -> energy within e_tol -> billed demand of
+facility + cell above the month's background MD floor; off-window intervals masked). Drive `ai_runs/run4/fac_bill_{,tnb_}*`.
+(a) All-hours MD (first sweep, Forge_1/Forge_2/Steel_1 x 2019-05/07, n = 6): MD increment ORACLE-E1-Peak 2.90 kW mean ->
+ORACLE-BILL 2.90 (e_tol 1e-4) -> 1.21 (e_tol 0.01, +3.4 kWh/month) -> 0.31 kW (e_tol 0.05, +9.7 kWh/month).
+(b) TNB peak-period MD (Forge_2/Steel_1 x 2019-05/07, n = 4): ORACLE-E1-Peak -0.91 kW mean -> ORACLE-BILL (e_tol 0.02, +5.7 kWh/month)
+-1.10 kW; per case 0.00 -> 0.00, 0.57 -> -2.53, -0.02 -> -0.02, -4.18 -> -1.86 (one case worse: the block-wise floor objective does
+not reward pushing the increment below zero, and blocks interact through the monthly maximum).
+Reading: under an all-hours MD rule billing-aware scheduling with perfect background knowledge has real headroom (~1.7-2.6 kW at
++1-3 % cell energy); under the TNB peak-only rule the coordinated cell already adds little to the billed peak and the headroom is
+small and unstable (n = 4, INCONCLUSIVE). Causal P0-BILL (persistence / historical-profile / oracle background) is running; AI
+facility-load forecasting is NOT started unless P0-BILL with oracle background shows a stable gain over P0-E1-Peak (WP-J rule).
