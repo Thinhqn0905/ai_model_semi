@@ -73,7 +73,7 @@ def place(blocks, traces_min, index):
     return out
 
 
-def solve_bill_block(inst, bg_slots, prm, time_limit=10.0, interval_slots=2, floor=0.0):
+def solve_bill_block(inst, bg_slots, prm, time_limit=10.0, interval_slots=2, floor=0.0, e_tol=1e-4):
     """ORACLE-BILL for one block: one-shot DC MILP on TRUE profiles, lexicographic TT -> energy -> billed demand of (bg + cell)."""
     from regenate.evaluation.v2_campaign import milp_jobs
     from regenate.data.bench_v2 import fifo
@@ -84,7 +84,7 @@ def solve_bill_block(inst, bg_slots, prm, time_limit=10.0, interval_slots=2, flo
     K = max(j.latest + j.dur for j in jobs) + 1
     bg = np.r_[bg_slots, np.zeros(max(0, K - len(bg_slots)))][:K]
     res = solve(jobs, S, K, "DC", prm, sl, time_limit=time_limit, peak_stage=True, peak_bg=np.nan_to_num(bg),
-                peak_floor=floor, peak_avg_slots=interval_slots)
+                peak_floor=floor, peak_avg_slots=interval_slots, e_tol=e_tol)
     if not res.starts:
         return None
     ids = list(inst["jobs"].job_id); stn = assign_stations(res.starts, [j.dur for j in jobs], S)
@@ -101,6 +101,7 @@ def main():
     ap.add_argument("--block_h", type=float, default=0.0, help="0 = smallest whole hour >= longest cell trace")
     ap.add_argument("--n_cells", type=int, default=1); ap.add_argument("--interval_min", type=int, default=30)
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--bill", action="store_true", help="also ORACLE-BILL re-solve")
+    ap.add_argument("--bill_etol", type=float, nargs="+", default=[1e-4], help="energy tolerance of the billing level (sweep)")
     ap.add_argument("--prm", default='{"P_afe_max": 20, "P_bus_max": 32, "dP_step_max": 10}'); ap.add_argument("--out", required=True)
     a = ap.parse_args(); prm = ElecParams(**json.loads(a.prm)); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     cyc, arrs = load_proc(a.proc)
@@ -124,14 +125,16 @@ def main():
             cand = {m: [[traces[(i, m)] for i in dr] for dr in draws] for m in methods}
             if a.bill:
                 bgs = bg.resample(f"{SLOT_MIN}min").mean().ffill()
-                cand["ORACLE-BILL"] = []
-                for dr in draws:
-                    tr = []
-                    for t, i in zip(blocks, dr):
-                        s_ = solve_bill_block(insts[i], bgs[t:t + pd.Timedelta(hours=block_h)].values, prm, floor=md0,
-                                              interval_slots=a.interval_min // SLOT_MIN)
-                        tr.append(to_minutes(cell_net_slots(insts[i], s_, prm)) if s_ is not None else traces[(i, "ORACLE@v2_e1_peak")] if (i, "ORACLE@v2_e1_peak") in traces else traces[(i, "ORACLE")])
-                    cand["ORACLE-BILL"].append(tr)
+                for et in a.bill_etol:
+                    key = "ORACLE-BILL" if et == 1e-4 else f"ORACLE-BILL@etol{et:g}"; cand[key] = []
+                    for dr in draws:
+                        tr = []
+                        for t, i in zip(blocks, dr):
+                            s_ = solve_bill_block(insts[i], bgs[t:t + pd.Timedelta(hours=block_h)].values, prm, floor=md0,
+                                                  interval_slots=a.interval_min // SLOT_MIN, e_tol=et)
+                            fb = (i, "ORACLE@v2_e1_peak") if (i, "ORACLE@v2_e1_peak") in traces else (i, "ORACLE")
+                            tr.append(to_minutes(cell_net_slots(insts[i], s_, prm)) if s_ is not None else traces[fb])
+                        cand[key].append(tr)
             for m, per_cell in cand.items():
                 cell = sum(place(blocks, tr, idx) for tr in per_cell)
                 md, tmd = billed_demand(bg + cell, a.interval_min)
