@@ -42,8 +42,11 @@ def safe_initial(inst, flex, sl, plan_prm, fa, fs, time_limit, score_prm=None):
     res = solve(jobs, len(inst["stations"]), K, "DC", plan_prm, sl, time_limit=time_limit)
     if not res.starts and score_prm is not None and score_prm is not plan_prm:      # margin infeasible -> hard limits without margin
         res = solve(jobs, len(inst["stations"]), K, "DC", score_prm, sl, time_limit=time_limit); kind = "milp_e1_nomargin"
-    if not res.starts:
-        return {j: (fa[j], fs[j]) for j in fa}, "fifo_unscreened"
+    if not res.starts:                                  # last resort: FIFO, but screened on the recipe profiles with the hard limits
+        from regenate.electrical.ledger import ledger
+        from regenate.data.bench_v2 import render_traces
+        L = ledger(*render_traces(inst, fa, fs, sl, truth=False), sl, "DC", score_prm or plan_prm)
+        return {j: (fa[j], fs[j]) for j in fa}, ("fifo_screened_ok" if L["afe_violation_steps"] == 0 else "fifo_screened_FAIL")
     ids = list(inst["jobs"].job_id); stn = assign_stations(res.starts, [j.dur for j in jobs], len(inst["stations"]))
     starts = execute(inst, dict(zip(ids, stn)), {i: t * sl for i, t in zip(ids, res.starts)})
     return {j: (int(s), starts[j]) for j, s in zip(ids, stn)}, kind
