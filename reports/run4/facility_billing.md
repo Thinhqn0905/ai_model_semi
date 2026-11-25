@@ -94,3 +94,20 @@ Reading: under an all-hours MD rule billing-aware scheduling with perfect backgr
 +1-3 % cell energy); under the TNB peak-only rule the coordinated cell already adds little to the billed peak and the headroom is
 small and unstable (n = 4, INCONCLUSIVE). Causal P0-BILL (persistence / historical-profile / oracle background) is running; AI
 facility-load forecasting is NOT started unless P0-BILL with oracle background shows a stable gain over P0-E1-Peak (WP-J rule).
+
+## Official TNB rule mapping and FACTORY-CLUSTERED confidence intervals (supersede the month-level CIs above)
+Official schedule (data/tariffs/sources/Tariff-TNB-pdf.pdf, p.2, sha256 e6634bbe...): MV/HV **General** bill "Setiap kilowatt
+permintaan maksimum sebulan" (whole-month MD, any hour) -> the all-hours grid; MV/HV **ToU** bill "... sebulan semasa tempoh puncak"
+(peak-period MD only, Mon-Fri 14:00-22:00) -> the TNB-window grid. 30-min interval: owner-confirmed, not in the PDF (NOT_VERIFIED
+documentarily); public holidays: base case follows the weekday rule (treatment not documented).
+CIs below resample whole factories (cluster bootstrap over 10 DS07 factories, all 7 months of a drawn factory kept;
+`regenate.evaluation.stats.cluster_paired_ci`). 1 cell, n = 70 factory-months.
+| Comparison (MD increment reduction, kW) | MV General rule | factories won | MV ToU rule | factories won |
+|---|---|---|---|---|
+| B2 -> P0-E1-Peak (FIN-B software) | **+2.12 [+0.86, +3.32]** | 9/10 | **+1.73 [+0.73, +2.68]** | 8/10 |
+| B1p-OPT -> P0-E1-Peak | +1.86 [+0.83, +2.79] | 9/10 | +1.06 [-0.22, +2.30] n.s. | 8/10 |
+| B2 -> P0 | +1.89 [+0.73, +3.02] | 9/10 | +1.21 [+0.41, +2.03] | 7/10 |
+| P0 -> P0-E1-Peak | +0.23 [-0.11, +0.61] n.s. | 4/10 | +0.52 [+0.08, +0.96] | 7/10 |
+| P0-E1-Peak -> ORACLE-E1-Peak | +0.22 [-0.02, +0.48] n.s. | 7/10 | +0.59 [+0.09, +1.03] | 7/10 |
+With factory clustering the FIN-B software effect stays significant under both TNB rules; B1p-OPT -> P0-E1-Peak under the ToU rule
+is no longer significant (negative result kept).
