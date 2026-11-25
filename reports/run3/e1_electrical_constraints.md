@@ -49,3 +49,9 @@ Mean max slot step of net residual demand: ORACLE 8.5 -> 7.6 kW, P0 11.2 -> 10.2
 ## Limitations
 dP_step_max = 10 kW is an assumed proxy, not derived from a measured AFE bandwidth; the twin uses boundary windows (+-2 s) and
 lumped parameters; DS05 module powers are scaled (25 modules/station); n = 50.
+
+## Product configuration: P0 + E1 limits + peak level (`v2_e1_peak`, same 50 instances)
+Peak level on top of E1 (paired vs E1 energy-only): ORACLE -0.224 kW [0.055, 0.500] at +0.0002 kWh; P0 -0.301 kW [-0.029, +0.679]
+(n.s.) at -0.003 kWh (n.s.). Peak vs B1p-OPT (optimised in-rack, 14.32 kW mean): P0 -3.67 kW [2.51, 4.78] (-25.6 %), wins 40/50.
+P0 tardiness 0.235 h vs 0.174 h for one-shot methods (rolling P0 is not given the true durations); FIFO B2 has 3 AFE-shortfall
+violations in 50 instances, all optimised plans 0.

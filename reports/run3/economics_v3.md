@@ -23,3 +23,30 @@ The following eta_AFE sensitivity converts the existing S3 paired gain from B1p-
 | 0.98 | 1,137 [1,090, 1,176] |
 
 Water: qualitative only; cooling-loop and water metering are required.
+
+## DS06 (measured-cycle bench v2) — lead rerun with `fin_options.build`, Colab
+Source: Drive `MyDrive/semiexpo/ai_runs/run3/fin_v3_ds06.csv`; inputs `ai_runs/v2_flex025_n100.csv` (n=100) and the peak-aware
+run `ai_runs/v2_peak/results.csv` (P0 relabelled P0-peak, n=50 subset). Boundary **SIM_DATA_PROFILE**; annualisation ASSUMED:
+6,000 h/year, 1 cell, instance = mean P0 makespan 9.66 h; flat USD 0.0852/kWh; alpha=1 base; 10 y, 8 %. Cell size: 8 stations x
+25 modules x 0.24 kW = 48 kW rated (ASSUMED scaling of DS05 modules). Missing cost items (installation, requalification,
+annual support) excluded -> results OPTIMISTIC. Pairs with unequal tardiness excluded (n shown).
+
+| Option | Pair | n | physical kWh/instance [CI] | peak kW [CI] | annual net USD (no demand charge) | break-even CAPEX USD | payback (y) at 0 / 4 / 10 USD/kW-month |
+|---|---|---|---|---|---|---|---|
+| FIN-A | B1 -> B1-OPT | 100 | 0.000 | 0.55 [-0.20, 1.29] | 0 | 0 | not reached / 160 / 64 |
+| FIN-B | B2 -> P0 | 90 | 0.244 [0.213, 0.275] | 3.34 [2.59, 4.08] | 12.9 | 87 | 327 / 24 / 10.2 |
+| FIN-B | B2 -> P0-peak | 43 | 0.242 [0.194, 0.290] | 3.73 [2.62, 4.84] | 12.8 | 86 | 330 / 22 / 9.2 |
+| FIN-C | B1 -> P0 | 90 | 3.111 [2.993, 3.228] | 3.95 [3.19, 4.71] | 164.6 | 1,105 | 185 / 86 / 48 |
+NPV (10 y, 8 %) is negative for every option and tariff case above (best: FIN-B P0-peak at 10 USD/kW-month, NPV -1,130 USD
+against the ESTIMATE CAPEX of 4,220 USD).
+
+Reading:
+- Energy alone never pays back at this cell size: the physical saving per 9.7 h instance is 3.1 kWh (FIN-C) or 0.24 kWh (FIN-B).
+- The demand charge dominates: FIN-B (software + meters on an existing shared DC bus) reaches ~9-10 y payback at 10 USD/kW-month
+  and the peak-aware level helps (P0-peak 9.2 y vs P0 10.2 y). Peak savings count only if the site tariff has a demand charge.
+- FIN-A (scheduling on regen-to-AC with behind-the-meter netting) has zero energy value by physics (1:1 netting) and only a small,
+  non-significant peak effect.
+- Scale: both kWh and kW savings scale with station power; DS06's 6 kW stations are small for burn-in/power-cycling racks. A linear
+  scaling to larger stations is an ASSUMPTION, not a result; the break-even CAPEX per cell must be recomputed with site traces.
+Status M16: **FAIL at the DS06 cell size for all options** (no positive NPV); FIN-B is the only option that approaches payback,
+conditional on a demand charge and on complete (currently MISSING) installation/requalification costs.
