@@ -141,3 +141,10 @@ topology + optimisation, never AI or software-only.
 4. 30-minute MD interval officially confirmed by TNB (https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge).
 5. Close Run 4: AFE twin validation, final reports, claims audit, M01-M16 traceability; experimental validation reported separately from
    industrial site acceptance. No scope expansion.
+
+## D019 (user, 2026-11-25) — Final freeze
+Reference cell (Chroma 17020-type, 48 kW/cell) and final architecture (P0-E1-Peak default; AI = ETA + advisory) FROZEN. Reference electrical
+configuration AFE 20 kW / bus 32 kW; cost-optimised candidate AFE 20 kW / bus 16 kW (same 30 instances: 0 violations, twin approval 100 %,
+energy and tardiness unchanged; reports/run3/e1_electrical_constraints.md). M12: AI evaluation is COMPLETE, AI scheduling benefit is NOT
+shown (FAIL) - evaluation done != benefit passed. AI-BILL is the last AI experiment; if it fails no more models are trained. Simulation
+acceptance is reported separately from industrial site acceptance. No scope expansion.
