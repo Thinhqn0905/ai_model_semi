@@ -244,8 +244,16 @@ Per facility-month MD increment, kW (P0-E1-Peak / P0-BILL ai / P0-BILL oracle): 
 Paper Aug 2.85/6.12/-0.16, Sep 9.76/8.64/3.01; Steel_1 Aug 1.06/2.68/0.00, Sep 0.00/4.57/0.31.
 Earlier months (2019-05/07, 12 facility-months, reports/run4/facility_billing.md): P0-BILL hist -0.57 [-2.56, +0.89], oracle +0.94 [-0.80, +2.96] vs
 P0-E1-Peak (n.s.); 5-cell P0-BILL worse than P0-E1-Peak by ~6 kW.
-Forecaster accuracy table: NOT AVAILABLE - the metrics phase of facility_load.py failed ("cannot reindex on an axis with duplicate labels",
-Colab runtime 2 log) after the model was trained; not repaired per D019/D020 (no further AI work). Unresolved defect.
+Forecaster accuracy (test months Aug-Sep, 10 factories, decision stride 2 h, metrics re-exported with `--reuse` after the duplicate-column fix,
+no retraining; Drive `MyDrive/semiexpo/ai_runs/run4/facility_load_metrics/metrics.csv`), mean over factories:
+| Horizon (15-min slots) | LightGBM skill vs hist | persistence skill vs hist | Q-LightGBM P50 skill | LightGBM peak recall | P10-P90 coverage |
+|---|---|---|---|---|---|
+| 1-4 | +0.32 | +0.66 | +0.30 | 0.08 | 0.62 |
+| 5-16 | +0.29 | +0.34 | +0.27 | 0.07 | 0.60 |
+| 17-32 | +0.24 | +0.04 | +0.24 | 0.07 | 0.60 |
+| 33-60 | +0.19 | -0.23 | +0.20 | 0.06 | 0.60 |
+MAE improves on the historical profile, but peak-event recall is <= 0.13 and intervals are under-covered (0.60 vs 0.80): the forecast does
+not locate the facility peaks that drive the bill, which explains the downstream NO-GO.
 
 **Go/No-Go: AI-BILL = NO-GO.** The learned facility-load forecast is indistinguishable from the historical-profile forecast (+0.10 kW, 1/12) and
 does not beat the default engine. A perfect background forecast would give a significant billing gain in the test months (+2.56 kW vs
