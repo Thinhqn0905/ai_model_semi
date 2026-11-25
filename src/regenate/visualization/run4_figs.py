@@ -50,6 +50,8 @@ def paired(df, method, metric, path, base='P0', equal_tt=False):
     if base not in w or method not in w:
         raise Blocked(f"{path}: missing method {base} or {method}")
     w = w[[base, method]].dropna()
+    if not np.isfinite(w.to_numpy(dtype=float)).all():
+        raise Blocked(f"{path}: non-finite metric values")
     if equal_tt:
         t = d.pivot(index='instance_id', columns='method', values='TT_h').reindex(w.index)
         w = w.loc[(t[base] - t[method]).abs() <= 1e-6]
@@ -130,9 +132,9 @@ def generate(number, root):
                     raise Blocked(f"invalid manifest: {manifest}: {exc}") from exc
             if settings[0] != settings[1]:
                 raise Blocked(f"campaign settings differ: {manifests}")
-            comparisons = [('B0 ? B1', 'B0', 'B1'), ('B1p-OPT ? B2', 'B1p-OPT', 'B2'),
-                           ('B1p-OPT ? B3', 'B1p-OPT', 'B3'), ('B2 ? B3', 'B2', 'B3'),
-                           ('B3 ? P0', 'B3', 'P0')]
+            comparisons = [('B0 -> B1', 'B0', 'B1'), ('B1p-OPT -> B2', 'B1p-OPT', 'B2'),
+                           ('B1p-OPT -> B3', 'B1p-OPT', 'B3'), ('B2 -> B3', 'B2', 'B3'),
+                           ('B3 -> P0', 'B3', 'P0')]
             stats = [paired(frames[0], target, 'net_kwh', files[0], base=base, equal_tt=True)
                      for _, base, target in comparisons]
             for frame, file in zip(frames[1:], files[1:]):
@@ -144,7 +146,7 @@ def generate(number, root):
             peak['method'] = 'P0-E1-Peak'
             stats.append(paired(pd.concat([e1, peak]), 'P0-E1-Peak', 'net_kwh',
                                 str(files[1:]), base='P0', equal_tt=True))
-            names = [x[0] for x in comparisons] + ['P0-E1 ? P0-E1-Peak']
+            names = [x[0] for x in comparisons] + ['P0-E1 -> P0-E1-Peak']
             fig, ax = plt.subplots(figsize=(10, 5))
             ax.bar(range(len(names)), [r['mean'] for r in stats],
                    yerr=[[r['mean']-r['lo'] for r in stats], [r['hi']-r['mean'] for r in stats]], capsize=3)

@@ -1,22 +1,12 @@
-# NeedtoDo (living list — updated 2026-11-25 by lead, Run 3 in progress; md deliverables only, no slides)
-
-Run 3 plan: `docs/run3_plan.md`. Heavy compute runs on Colab only (user machine is weak): `semiexpo_ai.ipynb` cells 26-39,
-outputs Drive `MyDrive/semiexpo/ai_runs/run3/`.
-
-## Run 3 findings so far (evidence in reports/run3/)
-- Reproducibility: local DS05 rebuild = Colab (14,755 cycles, 2 errors); DS06 P0/B1p-OPT/ORACLE/B1 reproduce Run 2 to 3 decimals;
-  all 200 one-shot MILPs optimal, gap 0.
-- Root cause of the AI failure (`root_cause_analysis.md`): rolling oracle TR_ALL == one-shot ORACLE (P0 -> ORACLE gap is pure
-  information, 0.094 kWh = 1.1 %); queued-job information = 52 % of it, running-job = 26 %; the Run 2 integration fed PERFECT
-  forecasts captures 0 % or loses (P1*..P4*) -> integration failure, not model failure.
-- P5/P5s phase-aligned recipe: no gain (P5 worse, CI excludes 0). AI14: recipe already predicts most transitions exactly.
-- Cycle-level queued-job model with AI18 gate: duration skill +0.60 on held-out test; downstream PQ/PQ5 pending (partial: no gain).
-- E1: AFE/bus/step limits are hard MILP constraints (brute-force tested); DS06 run with limits queued on Colab.
-- AI-G10 bug found by R3_FAIL (NaN accepted when engine claims valid) -> fixed in ai_engine.py.
+# NeedtoDo ? Run 4 open work
 
 ## Open
-- [ ] PQ/PQ5/PQ* final, E1 limits campaign, Branch C retrain reproducibility (Colab queue).
-- [ ] Twin v2 post-collapse screening + sizing (R3_TWIN), demonstrator bench v2 check (R3_DEMO), audit DS06 rows (R3_AUDIT),
-      economics rerun on DS06 (R3_ECON --results), final mentor compliance audit (R3_COMPLY).
-- [ ] USER: confirm target cell (storage / bidirectional power-module cycling vs converter burn-in NO-GO).
-- [ ] USER/MENTOR: site data request (station traces, start windows, converter curves, tariff with demand charge).
+- [ ] Reconcile raw matched comparisons, configuration and tardiness; preserve negative results and paired uncertainty (`reports/run3/metric_audit_v3.md`).
+- [ ] Complete facility FIN-A/B/C economics, sensitivities and confidence intervals; verify full costs and actual billing rules (`reports/run4/economics_run4.md`, `reports/run4/tariff_registry.md`).
+- [ ] Complete causal P0-BILL evaluation and decide whether facility forecast AI is justified (`reports/run4/facility_billing.md`).
+- [ ] Resolve ETA report pending placeholder and retain held-out accuracy versus downstream failure; monitoring remains advisory (`reports/run4/ai_eta.md`, `reports/run4/ai_production_planning.md`, `reports/run4/ai_monitoring.md`).
+- [ ] Confirm target application with mentor; collect synchronized station/cell/facility power, allowed windows, quality records, converter curves, tariff, costs and vendor interfaces (`reports/run4/mentor_data_request.md`).
+- [ ] Validate independent protection, hardware and shadow operation, test integrity and engineer acceptance; obtain water-loop measurements before water claims (`reports/run3/electrical_feasibility.md`, `reports/run3/mentor_compliance_audit.md`).
+
+## Done history
+Reference cell and simulated P0/E1 engine documented; information and AI negative results retained; DS07 counterfactual billing and tariff registry prepared. See `docs/decisions.md` and `reports/final/report_run4.md` for boundaries.

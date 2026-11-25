@@ -114,3 +114,14 @@ self_use_kwh, recoverable_kwh, dump_kwh, loss_kwh, solve_s, mip_gap, boundary.
 `runs/<campaign>/timeseries.parquet`: instance_id, method, t_h, p_import_kw, p_export_kw,
 direct_kw, self_use_kw, recoverable_kw, dump_kw.
 `runs/<campaign>/manifest.json`: config, git-free code hash (sha256 of src/), command, timestamps.
+
+
+## Run 4
+
+P0-BILL extends the lexicographic P0 engine with facility-plus-cell billed demand as the final level after tardiness and energy tolerance; background information may be persistence, historical profile or oracle. The causal evaluation is pending; perfect-background headroom is not deployable performance. Source: `reports/run4/p0_architecture.md`, `reports/run4/facility_billing.md`.
+
+E1 assumes AFE import 20 kW, bus throughput 32 kW and slot step 10 kW; the dynamic twin is an assumed-parameter screen, not protection qualification. Boundary SIM_DATA_PROFILE, hardware NOT_VERIFIED. Source: `reports/run3/e1_electrical_constraints.md`, `reports/run3/electrical_feasibility.md`.
+
+Facility billing adds a simulated DS06 cell to measured DS07 facility load without synchronization. Tariffs are geographic counterfactuals; the registry distinguishes TNB ToU peak eligibility from the unverified general-tariff rule and records missing interval, export and adjustment details. Source: `reports/run4/facility_billing.md`, `reports/run4/tariff_registry.md`.
+
+AI path A provides advisory cycle ETA and availability; path B provides advisory deviation monitoring; path C tests production planning with forecast durations. ETA accuracy does not establish downstream value; monitoring and WP-C acceptance failed, so automatic scheduling remains optimization-only. Source: `reports/run4/ai_eta.md`, `reports/run4/ai_monitoring.md`, `reports/run4/ai_production_planning.md`.

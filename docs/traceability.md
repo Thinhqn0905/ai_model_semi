@@ -72,3 +72,27 @@ Command: `rg -c PENDING reports/final/report_draft.md reports/final/slides_outli
 ```text
 reports/final/slides_outline.md:2
 ```
+
+
+## Run 3 and Run 4 evidence index
+
+Evidence paths are pointers; site readiness and unresolved matching are NOT_VERIFIED.
+
+| ID | Evidence paths |
+|---|---|
+| M01 | `reports/run3/mentor_compliance_audit.md`; `reports/run4/vendor_reference.md` |
+| M02 | `docs/decisions.md`; `reports/run4/industrial_use_case_matrix.md` |
+| M03 | `reports/run3/root_cause_analysis.md`; `reports/run4/p0_architecture.md` |
+| M04 | `reports/run3/metric_audit_v3.md`; `reports/run4/contribution_decomposition.md` |
+| M05 | `reports/run3/e1_electrical_constraints.md`; `reports/run4/facility_billing.md` |
+| M06 | `reports/run3/mentor_compliance_audit.md`; `reports/run4/ai_production_planning.md` |
+| M07 | `reports/run3/electrical_feasibility.md`; `reports/run4/demonstrator_v2.md` |
+| M08 | `reports/run3/ai_run3.md`; `reports/run4/ai_eta.md` |
+| M09 | `reports/run3/root_cause_analysis.md`; `reports/run4/p0_architecture.md` |
+| M10 | `reports/run3/metric_audit_v3.md`; `reports/run4/contribution_decomposition.md` |
+| M11 | `reports/run3/cross_dataset_benchmark.md`; `reports/run4/dataset_registry.md` |
+| M12 | `reports/run3/e1_electrical_constraints.md`; `reports/run4/ai_production_planning.md` |
+| M13 | `reports/run3/failure_injection_v2.md`; `reports/run4/ai_monitoring.md` |
+| M14 | `reports/run3/economics_v3.md`; `reports/run4/economics_run4.md` |
+| M15 | `reports/run3/mentor_compliance_audit.md`; `reports/run4/mentor_data_request.md` |
+| M16 | `reports/run3/mentor_compliance_audit.md`; `reports/run4/mentor_data_request.md` |
