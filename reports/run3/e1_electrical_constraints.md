@@ -72,3 +72,13 @@ Energy is unchanged across feasible configurations (ORACLE 8.43 kWh, P0 8.53 kWh
 the coordinated plans need ~15-20 kW of AFE (FIFO B2 fails below 20 kW); bus throughput >= 16 kW never binds after local reuse; a 10 kW
 AFE makes 10 % of workloads infeasible. Feasibility target (>= 90 % within the envelope) met for AFE >= 15 kW (100 %) and borderline at
 10 kW (90 %). AFE sizing changes hardware cost (not included in FIN-B, which assumes existing infrastructure). Simulation only.
+
+## Default engine P0-E1-Peak at n = 100 (seeds 0-49 runtime 1 + 50-99 runtime 2; Drive `ai_runs/run4_rt2/v2_e1_peak100` / `run4/v2_e1_peak_b`)
+| Comparison | kWh saved [95 % CI] | wins | peak reduction kW [CI] |
+|---|---|---|---|
+| B1p-OPT -> ORACLE-E1-Peak (kill test, E1 limits) | 1.092 [1.035, 1.145] | 100/100 | 5.04 [4.29, 5.77] (-35.4 %) |
+| B1p-OPT -> P0-E1-Peak | 0.999 [0.940, 1.056] | 100/100 | 3.52 [2.68, 4.36] (-24.7 %) |
+| B2 -> P0-E1-Peak (software on existing shared DC) | 0.160 [0.080, 0.229] | 87/100 | 3.66 [2.94, 4.38] (-25.5 %) |
+| B1 -> P0-E1-Peak | 3.077 [2.967, 3.186] | 100/100 | 4.54 [3.76, 5.31] (-29.8 %) |
+Violations over 100 instances: B2 (FIFO) 13 (AFE shortfall under the 20 kW cap), P0-E1-Peak 1, optimised one-shot 0. Mean tardiness:
+one-shot 0.14 h, P0 0.18 h (rolling P0 does not know true durations).
