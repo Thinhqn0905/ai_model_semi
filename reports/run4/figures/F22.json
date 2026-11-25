@@ -1,0 +1,14 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run3/screen_e1.csv",
+      "sha256": "e6e20e83e9f1fa5c06b6e05a23cd3ad60212d34264d28c850530b091dca2effe"
+    },
+    {
+      "path": "/content/run4_root/run4_rt3/screen_sizing_summary.csv",
+      "sha256": "39d033f4da4c6f8b6b24f6540a9cff233f100abcca9823da476f66f69dd9510d"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE"
+}

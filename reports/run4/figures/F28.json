@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run4/fac_grid_tnb/facility_md.csv",
+      "sha256": "dd3ded7dbdac9347a38afa5b2433be837e9bb7ddb33b93a1895c06e8fce5caf8"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE cell + MEASURED DS07 facility (not synchronised)"
+}

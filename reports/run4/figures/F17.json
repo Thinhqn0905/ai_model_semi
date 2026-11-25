@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run4/eta/predictions_T1.parquet",
+      "sha256": "f45554a30887965570d22b0fdbadc17f2ecc755ac9c99b237b56a6cdf5ec9f8c"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "NOT_VERIFIED"
+}

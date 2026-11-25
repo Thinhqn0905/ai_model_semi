@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run3/v2_diag/results.csv",
+      "sha256": "4a8d6b74b0c8a154cec2b49b38f8d506ca1ca5b8500d41c589b632482240ec55"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE(DS05 MEASURED shapes; scaling+timing ASSUMED)"
+}

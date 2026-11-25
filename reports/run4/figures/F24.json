@@ -1,0 +1,26 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/v2_flex025_n100.csv",
+      "sha256": "5a97158f145ea3b57263c0ed53163c8c4af621c83513034ac4045c817fc084c5"
+    },
+    {
+      "path": "/content/run4_root/run3/v2_e1/results.csv",
+      "sha256": "6fec39385077a926dc82e21ba57ca1506a9b5535ef4f195f49d1944caa6cf1cb"
+    },
+    {
+      "path": "/content/run4_root/run3/v2_e1_peak/results.csv",
+      "sha256": "6f56722501fa87703fea87abc7b90a1094253a171d898b23f903730df1d2ae08"
+    },
+    {
+      "path": "/content/run4_root/run3/v2_e1/manifest.json",
+      "sha256": "6d9f144ee776d4122e3308bcdd24ef58ad730b775bd288101b497ae54901f7de"
+    },
+    {
+      "path": "/content/run4_root/run3/v2_e1_peak/manifest.json",
+      "sha256": "bbabec76858527b6d1e811019be1432573b031ed642f7d3c6eaad4069b4177f2"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE(DS05 MEASURED shapes; scaling+timing ASSUMED)"
+}

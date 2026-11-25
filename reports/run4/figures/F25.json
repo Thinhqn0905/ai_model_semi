@@ -1,0 +1,18 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run3/fin_v3_ds06.csv",
+      "sha256": "f6b3eb5d7e574b19a20c9a8ff87cf6d137e972376cfd8fc5dbbfd91648c4c1a8"
+    },
+    {
+      "path": "/content/run4_root/run4/fin_fac_gen_fx0.21/clustered_summary.csv",
+      "sha256": "cea2e596bb8a3176872ec28d49d6bb381d098f77881871211f391e8f7fb5938c"
+    },
+    {
+      "path": "/content/run4_root/run4/fin_fac_tou_fx0.21/clustered_summary.csv",
+      "sha256": "4371d9b7cc2d2ce12ab7af6158b4c2dc970ea8f90e98e3672595458aff1ed7a1"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE(DS05 MEASURED shapes; scaling+timing ASSUMED)"
+}

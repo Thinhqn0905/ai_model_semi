@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run4/eta/metrics_T2.csv",
+      "sha256": "dd0ffe0bcfc5bf79a4e8e79a3901dce0170c90abde7b951a14207de59f8c156d"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "NOT_VERIFIED_INPUT_DATA"
+}

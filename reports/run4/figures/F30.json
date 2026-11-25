@@ -1,0 +1,62 @@
+{
+  "inputs": [
+    {
+      "path": "/content/run4_root/run4/fac_bill_tnb_Forge_2/facility_md.csv",
+      "sha256": "066b9866bf68c202ee9790eb05ef9921ac43374fab37c032564a35fbd4247643"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_bill_tnb_Steel_1/facility_md.csv",
+      "sha256": "95ccaca730e349b6d2caafe98397471903ab836ca31cdaa5964e2dfab6512b70"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Forge_1/facility_md.csv",
+      "sha256": "3f97864bb2ec186f07f65965a2012e4f8ebbce089d8c4aaf735c04feb943bee3"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Forge_2/facility_md.csv",
+      "sha256": "f9b5e7b8b693a63d3beada09647ec54faa962ac037d1fa862be6ac86148f2530"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Metal_1/facility_md.csv",
+      "sha256": "443e386bcd40e3ea94f7667f7675df398c5fb0bbb0f2925f46569981597a2ab5"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Metal_3/facility_md.csv",
+      "sha256": "400720c6687e201c61059b410ebcd028c4b4f8befa31d4b1d5d5b12f124f14a6"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Paper/facility_md.csv",
+      "sha256": "469be4dda373688baf48e090f7c1ec3dae830cc5e8f61f4b87e9362994842261"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_p0bill_Steel_1/facility_md.csv",
+      "sha256": "fb2731ddee25e47aa29b1c9dd6a179bae5482e77e0d0e8e9b275bcdd674edd69"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Forge_1/facility_md.csv",
+      "sha256": "d5c17ac752de3c3e4d71a4d2ea06a820131ec246c35d16c59d54c76ea418caa1"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Forge_2/facility_md.csv",
+      "sha256": "193dee6686d0c3496ac3b413fc47ad9de6eeb34d8b173461d19c3e054fc9d512"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Metal_1/facility_md.csv",
+      "sha256": "8fb2e9eb157cede880c536998c37a57d0428f87757934fa0f09dc61a33b4aec1"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Metal_3/facility_md.csv",
+      "sha256": "048ce99c6c28b4c0c9139f68be519b7064f6188e0dfc512fcd8c6954d57df25b"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Paper/facility_md.csv",
+      "sha256": "aa8e1ec721c1481d39c4e7d20151aa6961bfe3f36901c413c0c6e027a8e7dba6"
+    },
+    {
+      "path": "/content/run4_root/run4/fac_aibill_Steel_1/facility_md.csv",
+      "sha256": "14b70d37e99b44bae965862407816af2305a9648bfe06bfb30470c0a9ecfee1f"
+    }
+  ],
+  "command": "/usr/bin/python3 -m regenate.visualization.run4_figs --runs /content/run4_root --out /content/ai_runs/run4/figures",
+  "boundary": "SIM_DATA_PROFILE cell + MEASURED DS07 facility (not synchronised)"
+}
