@@ -38,8 +38,7 @@ def billed_demand(p_1min, interval_min=30, min_cov=0.8, md_window=None):
     m, c = g.mean(), g.count() / interval_min
     m = m[c >= min_cov]
     if md_window is not None:
-        days, h0, h1 = md_window; hr = m.index.hour + m.index.minute / 60
-        m = m[m.index.weekday.isin(days) & (hr >= h0) & (hr < h1)]
+        m = m[window_mask(m.index, md_window)]
     return (float(m.max()), m.idxmax()) if len(m) else (np.nan, None)
 
 
@@ -124,7 +123,10 @@ def window_mask(index, mdw):
     if mdw is None:
         return np.ones(len(index), bool)
     hr = index.hour + index.minute / 60
-    return np.asarray(index.weekday.isin(mdw[0]) & (hr >= mdw[1]) & (hr < mdw[2]))
+    mask = index.weekday.isin(mdw[0]) & (hr >= mdw[1]) & (hr < mdw[2])
+    if len(mdw) > 3:
+        mask &= ~np.isin(index.date, list(mdw[3]))
+    return np.asarray(mask)
 
 
 def run_p0bill_block(inst, prm, bg15, t_block, kind, floor, mdw, interval_slots=2, time_limit=20.0, e_tol=0.02):
@@ -158,6 +160,7 @@ def main():
     ap.add_argument("--block_h", type=float, default=0.0, help="0 = smallest whole hour >= longest cell trace")
     ap.add_argument("--n_cells", type=int, default=1); ap.add_argument("--interval_min", type=int, default=30)
     ap.add_argument("--md_window", default="", help='e.g. "0,1,2,3,4:14:22" = Mon-Fri 14-22 h (TNB RP4 MV peak); empty = all hours')
+    ap.add_argument("--holidays", choices=["none", "MY"], default="none")
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--bill", action="store_true", help="also ORACLE-BILL re-solve")
     ap.add_argument("--p0bill", nargs="*", default=[], help="causal P0-BILL with background forecast kinds: oracle persist hist")
     ap.add_argument("--p0bill_etol", type=float, default=0.02)
@@ -165,9 +168,16 @@ def main():
     ap.add_argument("--bill_etol", type=float, nargs="+", default=[1e-4], help="energy tolerance of the billing level (sweep)")
     ap.add_argument("--prm", default='{"P_afe_max": 20, "P_bus_max": 32, "dP_step_max": 10}'); ap.add_argument("--out", required=True)
     a = ap.parse_args(); prm = ElecParams(**json.loads(a.prm)); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    holiday_dates = set()
+    if a.holidays == "MY":
+        from regenate.economics.billing import my_public_holidays
+        for year in {int(month[:4]) for month in a.months}:
+            holiday_dates.update(my_public_holidays(year))
     mdw = None
     if a.md_window:
         d_, h0, h1 = a.md_window.split(":"); mdw = ([int(x) for x in d_.split(",")], float(h0), float(h1))
+        if holiday_dates:
+            mdw += (holiday_dates,)
     cyc, arrs = load_proc(a.proc)
     sch = {}
     for d in a.runs:                                                    # method label = run dir tag + method
@@ -193,9 +203,7 @@ def main():
             if a.bill:
                 bgs = bg.resample(f"{SLOT_MIN}min").mean().ffill()
                 if mdw is not None:                                   # off-window intervals are never billed -> never bind
-                    hr = bgs.index.hour + bgs.index.minute / 60
-                    ok = bgs.index.weekday.isin(mdw[0]) & (hr >= mdw[1]) & (hr < mdw[2])
-                    bgs = bgs.where(ok, -1e6)
+                    bgs = bgs.where(window_mask(bgs.index, mdw), -1e6)
                 for et in a.bill_etol:
                     key = "ORACLE-BILL" if et == 1e-4 else f"ORACLE-BILL@etol{et:g}"; cand[key] = []
                     for dr in draws:
@@ -228,7 +236,8 @@ def main():
                                  cell_kwh=float(cell.sum() / 60), cell_peak_kw=float(cell.max()),
                                  coverage=float(bg.notna().mean()), boundary="SIM_DATA_PROFILE cell + MEASURED DS07 facility (not synchronised)"))
             pd.DataFrame(rows).to_csv(out / "facility_md.csv", index=False); print(fac, month, flush=True)
-    (out / "manifest.json").write_text(json.dumps(dict(args=vars(a), block_h=block_h, n_instances=len(ids), methods=methods), indent=1))
+    (out / "manifest.json").write_text(json.dumps(dict(args=vars(a), block_h=block_h, n_instances=len(ids), methods=methods,
+                                                        holidays=sorted(d.isoformat() for d in holiday_dates)), indent=1))
 
 
 if __name__ == "__main__":

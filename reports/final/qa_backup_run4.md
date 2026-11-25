@@ -8,7 +8,7 @@ DS06 uses measured battery-cycle profiles with assumed scaling and windows; site
 
 **EN:** Learned forecasts have not demonstrated downstream gains over the non-AI optimizer; they remain advisory.
 
-Boundary: SIM_DATA_PROFILE. Source: `reports/run3/ai_run3.md`.
+Boundary: SIM_DATA_PROFILE. Sources: `reports/run3/ai_run3.md`, `reports/run4/ai_production_planning.md`, `reports/run4/ai_monitoring.md`; WP-C fails downstream and monitoring fails automatic detection.
 
 ### 2. Is this just battery testing?
 
@@ -40,7 +40,7 @@ Boundary: SIM_DATA_PROFILE + MEASURED, unsynchronised. Source: `reports/run4/fac
 
 **EN:** Site payback is not established; modeled results exclude missing installation, requalification and support costs.
 
-Boundary: SIM_DATA_PROFILE; financial inputs ASSUMED; site NOT_VERIFIED. Source: `reports/run3/economics_v3.md`.
+Boundary: SIM_DATA_PROFILE; financial inputs ASSUMED; site NOT_VERIFIED. Source: `reports/run4/economics_run4.md`. The FIN-B five-cell General/ToU estimates are 3.0/3.3 years on known USD 4,220 CAPEX only, excluding missing costs; these are optimistic break-even conditions. Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised, ASSUMED finance; run `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`.
 
 ### 6. What is the primary KPI?
 
@@ -142,9 +142,9 @@ Boundary: site NOT_VERIFIED. Source: `reports/run4/ds07_quality.md`.
 
 **VI:** Kh?ng; t?i nh? m?y v? cell kh?ng ??ng b?, bi?u gi? l? k?ch b?n ??a l? v? c?n thi?u quy t?c.
 
-**EN:** No; the facility and cell are unsynchronised, and tariff rules remain incomplete.
+**EN:** No; the facility and cell are unsynchronised, and site billing details remain incomplete; General and ToU demand rules are verified in the official schedule.
 
-Boundary: SIM_DATA_PROFILE + MEASURED counterfactual; tariff rule NOT_VERIFIED. Source: `reports/run4/facility_billing.md`.
+Boundary: SIM_DATA_PROFILE + MEASURED counterfactual; tariff rule NOT_VERIFIED. Sources: `reports/run4/facility_billing.md`, `reports/run4/tariff_registry.md`.
 
 ### 19. What is the deployment gate?
 
@@ -163,4 +163,12 @@ Boundary: site NOT_VERIFIED. Source: `reports/run3/mentor_compliance_audit.md`.
 Boundary: site NOT_VERIFIED. Source: `reports/run3/mentor_compliance_audit.md`.
 
 
-Document gate ? LOCAL_RUN: PASS: files, bilingual questions, cited paths and quantitative decomposition row labels checked; underlying findings not revalidated.
+Earlier document gate is superseded; underlying findings require their cited run evidence.
+
+### Why five or more cells?
+
+**EN:** Sharing site-level costs can improve modeled payback, but demand savings are not linear and five is not a universal cutoff: three cells reach an optimistic four-year General payback. At five cells the General three-year ceiling is USD 4,164 against USD 4,220 known CAPEX, leaving no room for missing costs. Boundary: SIM_DATA_PROFILE + MEASURED unsynchronised, ASSUMED finance; sources `reports/run4/economics_run4.md`, `reports/run4/facility_billing.md`; run `ai_runs/run4/fin_fac_{gen,tou}_fx{0.21,0.24}/`.
+
+### Is the TNB rate verified?
+
+**EN:** The later official schedule verification supports the rates and General whole-month versus ToU peak-period demand rules. The registry retains stale conflicting entries; interval alignment, holidays and the actual site contract remain NOT_VERIFIED. Boundary: SOURCE_REPORTED; sources `reports/run4/facility_billing.md`, `reports/run4/economics_run4.md`, `reports/run4/tariff_registry.md`.

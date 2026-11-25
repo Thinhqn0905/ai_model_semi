@@ -28,6 +28,19 @@ def test_md_window_ignores_offpeak():
     assert billed_demand(p, 30, md_window=([0, 1, 2, 3, 4], 14, 22))[0] == 300.0
 
 
+def test_holiday_peak_is_offpeak():
+    from regenate.economics.billing import my_public_holidays
+    from regenate.evaluation.facility import window_mask
+    idx = pd.date_range("2019-05-01 14:00", periods=24 * 60 + 30, freq="min")
+    p = pd.Series(100.0, index=idx); p.iloc[:30] = 900.0
+    mdw = ([0, 1, 2, 3, 4], 14, 22)
+    holidays = set(my_public_holidays(2019))
+    assert billed_demand(p, md_window=mdw)[0] == 900.0
+    assert billed_demand(p, md_window=mdw + (holidays,))[0] == 100.0
+    assert not window_mask(idx[:30], mdw + (holidays,)).any()
+    assert window_mask(idx[:30], mdw).all()
+
+
 def test_bg_forecast_is_causal():
     from regenate.evaluation.facility import bg_forecast
     idx = pd.date_range("2019-03-01", periods=4 * 24 * 35, freq="15min")
