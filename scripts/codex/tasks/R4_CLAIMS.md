@@ -6,3 +6,6 @@ Contract: one JSON line per headline number in report_run4.md with fields claim_
 local path as written in the source report), profile, command (if stated), script, limitations. Do not recompute; copy from the reports.
 claims_index.md: a table of claim_id -> report section. Flag numbers in report_run4.md that have no source in reports/ as NOT_VERIFIED.
 Gate: jsonl loads; every claim has a boundary; index lists all claims.
+
+## Run 2 (lead)
+Add claims for every number of reports/run4/economics_run4.md "Results" + "Verdict" (incl. 10-cell payback 1.2-1.4 y and the missing-cost allowances) and the new sizing twin table in reports/run3/e1_electrical_constraints.md; then re-check that every headline number in reports/final/report_run4.md has a claim id. Return ALL_PASS.

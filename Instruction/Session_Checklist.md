@@ -38,3 +38,14 @@ tasks, justified). Accounts: default, A, B, C, E. Never codex-D.
 
 Timeline target (plan IX): 25/11 data audit, 26/11 electrical, 27/11 bench v1, 28/11 oracle Go/No-Go,
 29/11 P0/P end-to-end, 30/11 main experiments, 01/12 integration, 02/12 freeze.
+
+## Run 4 continuation
+
+| Work | Owner | Status | Gate / evidence |
+|---|---|---|---|
+| Billing extension, multi-cell, robustness and holiday sensitivity | lead | done | `reports/run4/facility_billing.md`; SIM_DATA_PROFILE + unsynchronized MEASURED |
+| MILP sizing and default engine | lead | done | `reports/run3/e1_electrical_constraints.md`; SIM_DATA_PROFILE |
+| AI-BILL and sizing twin screening | lead | blocked | Outputs absent locally; Drive retrieval pending: `docs/handoff_run4.md`; SIM_DATA_PROFILE |
+| Finance reconciliation and site data | lead / mentor | blocked | `reports/run4/economics_run4.md`, `reports/run4/mentor_data_request.md`; site NOT_VERIFIED |
+
+Run 4 closure: documentation updated; claims registry gaps and absent Drive outputs remain NOT_VERIFIED (`reports/final/report_run4.md`, `docs/handoff_run4.md`).

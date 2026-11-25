@@ -134,11 +134,9 @@ Cell energy +5.3 to +6.1 kWh/month vs P0-E1-Peak for every P0-BILL variant. Even
 better than P0-E1-Peak here: the block-wise billing level with a month-to-date floor and 2 % energy slack moves load in ways that can
 raise the month's peak later. Extension to 8 more facility-months and a 5-cell coordinated case is running.
 
-## AI on facility billing
-- Learned duration (PQd, default engine) at facility level (ToU, 1 cell): P0-E1-Peak -> PQd -0.27 kW [-0.64, +0.04] (2/10 factories
-  better) -> no billing value; perfect duration (PQd*) -0.07 [-0.36, +0.36] n.s.
-- AI-BILL (learned facility-load forecast in P0-BILL) is only meaningful if P0-BILL with a perfect background beats P0-E1-Peak; so far it
-  does not (above). Forecaster code is being prepared (R4_LOADAI); it will be run only if the extended P0-BILL oracle shows a gain.
+## AI-BILL
+
+PENDING: final output is absent locally (`runs/run4/run4_final_summary.md`); expected Drive output `MyDrive/semiexpo/ai_runs/run4_final_summary.md`. Boundary: SIM_DATA_PROFILE + unsynchronized MEASURED, site NOT_VERIFIED. Adopt only if P0-BILL:ai beats both P0-BILL:hist and P0-E1-Peak with factory-clustered confidence intervals excluding zero; otherwise FAIL and stop AI scheduling. Until evaluated, no adoption or failure is claimed (`docs/handoff_run4.md`; `docs/decisions.md` D017-D018).
 
 ## Robustness: 100-instance pool (default engine seeds 0-99; runtime 2; Drive `ai_runs/run4_rt2/fac_{gen,tou}_1cell_n100`)
 Same facility-months, block draw from 100 instead of 50 instances, factory-clustered CIs, 1 cell:

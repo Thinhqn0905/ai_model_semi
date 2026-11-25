@@ -6,7 +6,7 @@ Boundary: SOURCE_REPORTED. These are geographical counterfactuals for DS07 Korea
 
 | Field | Value | Unit | Currency | Status | Source and section |
 |---|---|---|---|---|---|
-| billing_interval_minutes | 30 | min | None | NOT_VERIFIED | [metering interval](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| billing_interval_minutes | 30 | min | None | VERIFIED | [TNB maximum demand calculation](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge); `docs/decisions.md` D018 |
 | energy_rates.normal | 0.2983 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage General energy](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | demand_rates.capacity | 29.43 | MYR/kW/month | MYR | NOT_VERIFIED | [Medium Voltage General capacity](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | demand_rates.network | 59.84 | MYR/kW/month | MYR | NOT_VERIFIED | [Medium Voltage General network](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
@@ -25,7 +25,7 @@ Other configuration: `{'interval_mode': 'aligned', 'windows': [{'days': [0, 1, 2
 
 | Field | Value | Unit | Currency | Status | Source and section |
 |---|---|---|---|---|---|
-| billing_interval_minutes | 30 | min | None | NOT_VERIFIED | [metering interval](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
+| billing_interval_minutes | 30 | min | None | VERIFIED | [TNB maximum demand calculation](https://www.tnb.com.my/commercial-industrial/maximum-demand/how-do-you-calculate-md-charge); `docs/decisions.md` D018 |
 | energy_rates.peak | 0.3132 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage ToU peak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | energy_rates.offpeak | 0.2723 | MYR/kWh | MYR | NOT_VERIFIED | [Medium Voltage ToU offpeak](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
 | demand_rates.capacity | None | MYR/kW/month | MYR | NOT_VERIFIED | [MV TOU rate requires review of original PDF; previous number removed](https://www.mytnb.com.my/tariff/PDF/Jadual%20Tarif%20Elektrik%20Semenanjung%20Jul%202025%20-%20Dis%202027.pdf) |
@@ -81,4 +81,4 @@ Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'tariff_status
 
 Other configuration: `{'interval_mode': 'aligned', 'windows': [], 'contract_rule': 'HT Large: contract is input; UCC applies to excess for normal consumers without embedded generation. Other schemes require additional rules.'}`.
 
-Malaysia RP4 schedule and MD interval remain NOT_VERIFIED; the schedule URL returned 404. AFA replaces ICPT and changes monthly, but the rate is not established. Connected-load applicability and taxes remain unresolved. Vietnam rates remain NOT_VERIFIED pending exact page and quotation. Singapore supply energy, reactive, standby and export remain unverified or unimplemented. Source copies and SHA-256 hashes are in [sources](../../data/tariffs/sources/README.md).
+Malaysia RP4 schedule fields retain their individual statuses; the MD interval is VERIFIED by TNB (D018); meter alignment remains NOT_VERIFIED. AFA replaces ICPT and changes monthly, but the rate is not established. Connected-load applicability and taxes remain unresolved. Vietnam rates remain NOT_VERIFIED pending exact page and quotation. Singapore supply energy, reactive, standby and export remain unverified or unimplemented. Source copies and SHA-256 hashes are in [sources](../../data/tariffs/sources/README.md).

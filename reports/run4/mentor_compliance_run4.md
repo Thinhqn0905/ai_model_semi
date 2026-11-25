@@ -1,6 +1,6 @@
-# Run 4 mentor compliance audit ? draft
+# Run 4 mentor compliance audit ? final evidence assessment
 
-M01?M16 use the Run 3 internal mapping; this draft integrates the Run 4 reports. Results are CONCEPT-LEVEL only; no site validation or shadow-mode dataset exists. CI intervals below are 95%. Remote Drive campaigns are reported by their local summaries and are NOT_VERIFIED by independent local raw-data reconciliation. Status grades each requirement at its stated boundary, not a deployment authorization.
+M01?M16 use the Run 3 internal mapping; this final assessment integrates the Run 4 reports. Results are CONCEPT-LEVEL only; no site validation or shadow-mode dataset exists. CI intervals below are 95%. Remote Drive campaigns are reported by their local summaries and are NOT_VERIFIED by independent local raw-data reconciliation. Status grades each requirement at its stated boundary, not a deployment authorization.
 
 | ID | Requirement | Status |
 |---|---|---|
@@ -157,7 +157,7 @@ M01?M16 use the Run 3 internal mapping; this draft integrates the Run 4 reports.
 
 **Implemented module:** `src/regenate/forecasting/ai_engine.py`. **Supporting experiment:** DS06 paired AI comparison. **Evidence file:** `reports/run3/ai_run3.md`.
 **Result:** Energy AI did not demonstrate incremental benefit over P0; P0 remains the default.
-**Remaining limitation:** SIM_DATA_PROFILE; paired comparisons need raw reconciliation. P0-BILL extension is PENDING; AI-BILL is PENDING and conditional on a stable oracle-background gain. Expected output files are not specified in `reports/run4/facility_billing.md`.
+**Remaining limitation:** SIM_DATA_PROFILE; paired comparisons need raw reconciliation. Extended P0-BILL shows no stable default-engine gain; AI-BILL remains PENDING with adoption criteria and expected output specified in `docs/handoff_run4.md`.
 **Status:** PASS.
 
 ## M13 - Sensitivity and paired statistics
@@ -212,15 +212,15 @@ These are evidence assessments, not new campaign results. PASS is limited to the
 | Gate | Status | Evidence and boundary |
 |---|---|---|
 | G01 Reference cell | PARTIAL | `docs/decisions.md`: ASSUMED reference; site eligibility NOT_VERIFIED. |
-| G02 Physics / kill test | PASS | `docs/decisions.md`: analytic and unit-test boundary. |
+| G02 Physics / kill test | PARTIAL | `docs/decisions.md`: analytic and unit-test boundary; run output path NOT_VERIFIED. |
 | G03 Matched comparisons | PARTIAL | `reports/run3/metric_audit_v3.md`: SIM_DATA_PROFILE; matching NOT_VERIFIED. |
-| G04 Information headroom | PASS | `reports/run3/root_cause_analysis.md`: SIM_DATA_PROFILE, descriptive where tardiness differs. |
+| G04 Information headroom | PARTIAL | `reports/run4/p0_architecture.md`: SIM_DATA_PROFILE; exact run output path NOT_VERIFIED. |
 | G05 Energy AI | FAIL | `reports/run3/ai_run3.md`: SIM_DATA_PROFILE; no demonstrated gain. |
-| G06 ETA accuracy | PASS | `reports/run4/ai_eta.md`: MEASURED held-out DS05 accuracy only; conflicting placeholder remains. |
+| G06 ETA accuracy | PASS | `reports/run4/ai_eta.md`: MEASURED held-out DS05 accuracy only; run `MyDrive/semiexpo/ai_runs/run4/eta/`; older placeholder superseded. |
 | G07 Production AI | FAIL | `reports/run4/ai_production_planning.md`: SIM_DATA_PROFILE downstream. |
-| G08 Electrical constraints | PASS | `reports/run3/e1_electrical_constraints.md`: SIM_DATA_PROFILE simulation only. |
+| G08 Electrical constraints | PASS | `reports/run3/e1_electrical_constraints.md`: SIM_DATA_PROFILE simulation only; run `MyDrive/semiexpo/ai_runs/run3/v2_e1/results.csv`. |
 | G09 Twin / protection | PARTIAL | `reports/run3/electrical_feasibility.md`: simulated screening; hardware NOT_VERIFIED. |
-| G10 Facility billing | PARTIAL | `reports/run4/facility_billing.md`: SIM_DATA_PROFILE plus unsynchronized MEASURED facility; P0-BILL PENDING and AI-BILL conditional PENDING, expected files unspecified. |
+| G10 Facility billing | PARTIAL | `reports/run4/facility_billing.md`: SIM_DATA_PROFILE plus unsynchronized MEASURED facility; P0-BILL extension shows no stable gain; AI-BILL PENDING (`docs/handoff_run4.md`). |
 | G11 Economics | PARTIAL | `reports/run4/economics_run4.md`: FIN-B simulated break-even conditions reported; missing costs and inconsistent 3-cell verdict; site NOT_VERIFIED. |
 | G12 Site acceptance | BLOCKED | `reports/run4/mentor_data_request.md`: SHADOW_SITE NOT_VERIFIED. |
 
@@ -229,5 +229,8 @@ These are evidence assessments, not new campaign results. PASS is limited to the
 1. **User / mentor:** confirm target application and residual station source/sink phases; provide vendor and timing evidence.
 2. **User / mentor:** obtain synchronized station, cell and facility measurements, windows, converter curves and quality records; agree shadow acceptance criteria.
 3. **Lead:** reconcile raw matched comparisons, profile, bus limits and realized tardiness, including paired uncertainty.
-4. **Lead:** finish the P0-BILL extension and, only if justified, AI-BILL; expected output files are not specified in `reports/run4/facility_billing.md`. Reconcile the FIN-B three-cell verdict, tariff interval and full site costs.
-5. **Lead / mentor:** complete electrical sizing validation, independent protection, FMEA and vendor support; physical evidence and engineer approval close the pilot gate.
+4. **Lead:** retrieve and evaluate pending AI-BILL outputs from the location in `docs/handoff_run4.md`. Reconcile the FIN-B three-cell verdict, tariff interval and full site costs.
+5. **Lead / mentor:** retrieve pending sizing twin screening (`docs/handoff_run4.md`); complete electrical sizing validation, independent protection, FMEA and vendor support; physical evidence and engineer approval close the pilot gate.
+
+Evidence update: the larger-pool ToU peak-level and perfect-information effects are WITHDRAWN, and holiday sensitivity weakens the single-cell result (`reports/run4/facility_billing.md`; SIM_DATA_PROFILE + unsynchronized MEASURED; `ai_runs/run4_rt2/`). FIN-B remains an optimistic conditional case; the source three-cell verdict contradicts its table (`reports/run4/economics_run4.md`). Sizing twin screening remains PENDING (`docs/handoff_run4.md`).
+
