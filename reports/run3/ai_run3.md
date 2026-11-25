@@ -64,3 +64,10 @@ AI18 gate halves the damage of the ungated model but cannot make it positive.
 - What would be needed for AI to matter (not done, stated as future work): a within-cycle phase-level trajectory forecaster
   for queued jobs whose errors are smaller than the recipe's, and a site where recipes deviate more than DS05's programmed
   cycles. Upper bound of the prize on DS06: 0.094 kWh/instance (1.1 % of P0) energy, 1.1 kW peak.
+
+## Where forecasting could still matter: tardiness (research lead, not a claim)
+Rolling P0 has higher mean tardiness than the one-shot methods that know true durations (DS06 n=100: 0.188 h vs 0.140 h;
+E1 n=50: 0.235-0.250 h vs 0.174 h). PQ* (perfect cycle-level duration/energy for queued jobs) removes all of that gap (+0.048 h,
+10/100 instances better, 0 worse), so accurate next-cycle DURATION has throughput value even where it has no energy value. The
+real AI18-gated model does not realise it yet (PQ: -0.005 h). Next experiment: a duration-only queued-job variant (warp length
+only for jobs whose gated prediction deviates, keep recipe energy) evaluated on TT first, energy second. Status: OPEN.
