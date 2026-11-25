@@ -282,3 +282,15 @@ Status is based on index evidence only; PASS requires inspection and is not infe
 | F32 | figure and source data not recorded; `reports/run4/figures/INDEX.md`; Drive transfer pending | MISSING |
 
 DOCUMENT CHECK: six required sections present; missing metrics and raw source bindings explicitly flagged. Boundary: NOT_VERIFIED.
+
+### Final figure status (Colab rerun 2026-11-25; files on Drive `MyDrive/semiexpo/ai_runs/run4/figures/` PNG+PDF+SVG+provenance JSON)
+| Figure | Status | Note |
+|---|---|---|
+| F01, F02, F11 | MISSING | no matched per-sample prediction export for the Run 2 power forecaster in the collected inputs |
+| F03-F10, F12-F15 | PASS (Run 2 files) | reports/figures/ (local repo) |
+| F16, F19 | BLOCKED | generator requires identical P0 rows across campaign files; the numbers exist in reports/run4/p0_architecture.md and ai_production_planning.md |
+| F17, F18 | GENERATED | ETA probabilistic band and error vs cycle progress (MEASURED DS05 test split) |
+| F20, F23, F29, F31 | MISSING | not implemented (monitoring trade-off, AFE/link trade-off, energy vs demand cost split, payback heatmap); data in the cited reports |
+| F21, F22, F24, F25, F27, F28, F30, F32 | GENERATED | SIM_DATA_PROFILE (+ MEASURED DS07 for F27/F28/F30) |
+| F26 | BLOCKED | facility background differs between the General and ToU MD rules in the collected files |
+Dashboard screenshots (16 pages, headless Chromium via Playwright): reports/run4/screenshots/ (local repo).
