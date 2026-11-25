@@ -109,6 +109,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ds07', required=True); ap.add_argument('--out', required=True)
     ap.add_argument('--stride_min', type=int, default=15, help='decision-time spacing for training/evaluation rows (block starts always kept)')
+    ap.add_argument('--reuse', action='store_true', help='load the saved predictor instead of training (export/metrics only)')
+    ap.add_argument('--export_workers', type=int, default=3, help='parallel factories in the export phase (memory bound)')
     args = ap.parse_args(); out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(args.ds07) as z:
         names = sorted(Path(n).stem for n in z.namelist() if n.startswith('Data_list/Factories/') and n.endswith('.csv'))
@@ -121,16 +123,23 @@ def main():
         raise ValueError('Each factory needs a positive training median')
     from concurrent.futures import ProcessPoolExecutor
     _G.update(series=series, ids=ids, scales=scales, stride=args.stride_min)   # fork-shared state for the worker processes
-    with ProcessPoolExecutor() as ex:                                          # one factory per core (feature loops are pure Python)
+    if args.reuse:
+        predictor = joblib.load(out / 'facility_predictor.joblib'); models = predictor.models
+    else:
+      with ProcessPoolExecutor() as ex:                                        # one factory per core (feature loops are pure Python)
         batches = list(ex.map(_train_rows, names))
-    X = np.concatenate([b[0] for b in batches]); y = np.concatenate([b[1] for b in batches])
-    models = build_models()
-    for model in models.values():
-        model.fit(X, y)
-    predictor = FacilityPredictor(models, series, scales, ids)
-    joblib.dump(predictor, out / 'facility_predictor.joblib')
+      X = np.concatenate([b[0] for b in batches]); y = np.concatenate([b[1] for b in batches])
+      models = build_models()
+      for model in models.values():
+          model.fit(X, y)
+      predictor = FacilityPredictor(models, series, scales, ids)
+      joblib.dump(predictor, out / 'facility_predictor.joblib')
+    for m in models.values():                          # one thread per model inside each export worker (memory/CPU bound)
+        for k in ('n_jobs', 'randomforestregressor__n_jobs'):
+            try: m.set_params(**{k: 1})
+            except (ValueError, AttributeError): pass
     _G.update(models=models)
-    with ProcessPoolExecutor() as ex:
+    with ProcessPoolExecutor(max_workers=args.export_workers) as ex:
         records = [r for part in ex.map(_export_rows, names) for r in part]
     df = pd.DataFrame(records)
     block_starts = {t for month in ('2019-07', '2019-08', '2019-09') for t in month_blocks(month, 15)}
