@@ -134,6 +134,10 @@ def main():
             cand = {m: [[traces[(i, m)] for i in dr] for dr in draws] for m in methods}
             if a.bill:
                 bgs = bg.resample(f"{SLOT_MIN}min").mean().ffill()
+                if mdw is not None:                                   # off-window intervals are never billed -> never bind
+                    hr = bgs.index.hour + bgs.index.minute / 60
+                    ok = bgs.index.weekday.isin(mdw[0]) & (hr >= mdw[1]) & (hr < mdw[2])
+                    bgs = bgs.where(ok, -1e6)
                 for et in a.bill_etol:
                     key = "ORACLE-BILL" if et == 1e-4 else f"ORACLE-BILL@etol{et:g}"; cand[key] = []
                     for dr in draws:
