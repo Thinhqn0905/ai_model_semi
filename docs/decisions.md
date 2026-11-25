@@ -154,3 +154,10 @@ Learned facility-load forecast in P0-BILL: +0.10 kW [0.00, +0.30] vs historical 
 (test months 2019-08/09, 6 factories, factory-clustered CI; reports/final/parts/aibill.md). Perfect background would gain +2.56 kW [0.90, 4.34] in
 these months (not in May/July): research lead requiring real facility meters. AI retained only for ETA and engineer advisory; no further AI
 scheduling experiments; forecaster-metrics defect left unresolved and recorded.
+
+## D021 (user, 2026-11-25) — Run 4 architecture and models frozen; release packaging
+No Run 5 and no additional AI training. Safety closure: rolling methods start from (and fall back to) an E1-screened nominal MILP plan;
+FIFO is used only when that MILP is infeasible and is then recorded as `initial_plan=fifo_unscreened`; planning uses an AFE safety margin
+(plan 18 kW, score 20 kW) to absorb recipe-vs-actual profile deviation (verification: ai_runs/run4/v2_safe_p0). AI-BILL metrics-export bug
+(duplicate 'hist' column) fixed without retraining (--reuse); AI-BILL NO-GO (D020) unchanged. Release = reproducible code + data registry +
+dashboard demo + figures + presentation (md) + Q&A + mentor data request. Simulation acceptance and industrial site acceptance reported separately.
