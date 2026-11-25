@@ -55,3 +55,20 @@ Peak level on top of E1 (paired vs E1 energy-only): ORACLE -0.224 kW [0.055, 0.5
 (n.s.) at -0.003 kWh (n.s.). Peak vs B1p-OPT (optimised in-rack, 14.32 kW mean): P0 -3.67 kW [2.51, 4.78] (-25.6 %), wins 40/50.
 P0 tardiness 0.235 h vs 0.174 h for one-shot methods (rolling P0 is not given the true durations); FIFO B2 has 3 AFE-shortfall
 violations in 50 instances, all optimised plans 0.
+
+## Run 4 WP-E joint AFE / bus sizing inside the MILP (Colab runtime 3; Drive `ai_runs/run4_rt3/`, `sizing_summary.csv`)
+Same 30 DS06 instances (seeds 0-29), E1 step 10 kW, peak level on; (20, 32) = the E1 reference run. Violations = deadline misses +
+AFE-shortfall slots in the ledger (for FIFO B2 the AFE cap also removes imported energy, so its kWh is not comparable when violated).
+| AFE kW | bus kW | ORACLE solved | ORACLE peak kW | P0 violations | P0 peak kW | B2 violations |
+|---|---|---|---|---|---|---|
+| 10 | 32 | 27/30 (3 infeasible at the TT stage) | 7.87 | 15 | 8.85 | 66 |
+| 15 | 32 | 30/30 | 8.62 | 1 | 10.04 | 16 |
+| 15 | 24 | 30/30 | 8.62 | 1 | 10.07 | 16 |
+| 20 | 16 | 30/30 | 8.59 | 0 | 10.19 | 0 |
+| 20 | 24 | 30/30 | 8.81 | 0 | 10.23 | 0 |
+| 20 | 32 | 30/30 | 8.81 | 0 | 10.23 | 0 |
+| 30 | 32 | 30/30 | 8.81 | 0 | 10.23 | 0 |
+Energy is unchanged across feasible configurations (ORACLE 8.43 kWh, P0 8.53 kWh per instance). Reading: for this 48 kW-rated cell
+the coordinated plans need ~15-20 kW of AFE (FIFO B2 fails below 20 kW); bus throughput >= 16 kW never binds after local reuse; a 10 kW
+AFE makes 10 % of workloads infeasible. Feasibility target (>= 90 % within the envelope) met for AFE >= 15 kW (100 %) and borderline at
+10 kW (90 %). AFE sizing changes hardware cost (not included in FIN-B, which assumes existing infrastructure). Simulation only.
