@@ -97,6 +97,9 @@ def solve_bill_block(inst, bg_slots, prm, time_limit=10.0, interval_slots=2, flo
     return pd.DataFrame(dict(job_id=list(starts), station=[assign[j] for j in starts], start_h=[starts[j] for j in starts]))
 
 
+_AI = dict(pred=None, factory=None)     # learned facility-load predictor (forecasting/facility_load.py), set in main()
+
+
 def bg_forecast(bg15, t, n, kind):
     """Causal background forecast (kW per 15-min slot) for n slots from time t, using only data before t.
     oracle = true future (headroom only); persist = last valid slot; hist = mean of the same weekday/time over the previous 4 weeks."""
@@ -106,6 +109,10 @@ def bg_forecast(bg15, t, n, kind):
     past = bg15[:t - pd.Timedelta(minutes=1)].dropna()
     if kind == "persist":
         return np.full(n, past.iloc[-1] if len(past) else np.nan)
+    if kind == "ai":                                   # learned forecaster for the first 60 slots, 'hist' beyond its horizon
+        f = bg_forecast(bg15, t, n, "hist")
+        m = min(n, 60); f[:m] = _AI["pred"].predict(_AI["factory"], t, m)
+        return f
     if kind == "hist":
         lags = [bg15.reindex(idx - pd.Timedelta(weeks=w)).values for w in (1, 2, 3, 4)]
         f = np.nanmean(np.vstack(lags), axis=0) if len(lags) else np.full(n, np.nan)
@@ -154,6 +161,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--methods", nargs="+", default=None); ap.add_argument("--bill", action="store_true", help="also ORACLE-BILL re-solve")
     ap.add_argument("--p0bill", nargs="*", default=[], help="causal P0-BILL with background forecast kinds: oracle persist hist")
     ap.add_argument("--p0bill_etol", type=float, default=0.02)
+    ap.add_argument("--load_model", default=None, help="facility_predictor.joblib for P0-BILL kind 'ai'")
     ap.add_argument("--bill_etol", type=float, nargs="+", default=[1e-4], help="energy tolerance of the billing level (sweep)")
     ap.add_argument("--prm", default='{"P_afe_max": 20, "P_bus_max": 32, "dP_step_max": 10}'); ap.add_argument("--out", required=True)
     a = ap.parse_args(); prm = ElecParams(**json.loads(a.prm)); out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
@@ -172,8 +180,11 @@ def main():
     traces = {(i, m): to_minutes(cell_net_slots(insts[i], sch[(i, m)], prm, topo_of(m))) for i in ids for m in methods}
     block_h = a.block_h or float(np.ceil(max(len(v) for v in traces.values()) / 60))
     rows = []
+    if "ai" in a.p0bill:
+        import joblib
+        _AI["pred"] = joblib.load(a.load_model)
     for fac in a.facilities:
-        bg_all = load_ds07(a.ds07, fac)
+        bg_all = load_ds07(a.ds07, fac); _AI["factory"] = fac
         for month in a.months:
             blocks = month_blocks(month, block_h); idx = bg_all[month].index; bg = bg_all[month]
             md0, t0 = billed_demand(bg, a.interval_min, md_window=mdw)
