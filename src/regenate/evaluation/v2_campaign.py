@@ -18,7 +18,7 @@ from regenate.simulation.replay import Replay
 FIFO_M = {"B0": "B0", "B1": "B1", "B1p": "B1p", "B2": "DC"}
 ONESHOT = {"B1-OPT": ("B1", "truth"), "B1p-OPT": ("B1p", "truth"), "B3": ("DC", "nominal"), "ORACLE": ("DC", "truth")}
 ROLLING = ("P0", "P1", "P2", "P3", "P4")
-DIAG = ("P5", "P5s", "P1*", "P2*", "P3*", "P4*", "TR_RUN", "TR_Q", "TR_ALL")   # Run 3 information decomposition (no model needed)
+DIAG = ("P5", "P5s", "PQ", "PQ5", "P1*", "P2*", "P3*", "P4*", "TR_RUN", "TR_Q", "TR_ALL")   # Run 3 information decomposition (no model needed)
 
 
 def milp_jobs(inst, which, flex, fifo_starts, sl):
@@ -33,7 +33,7 @@ def milp_jobs(inst, which, flex, fifo_starts, sl):
     return out
 
 
-def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, peak_stage=False):
+def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, peak_stage=False, cycle_pred=None):
     from regenate.forecasting.ai_engine import make_profile_fn
     prm = prm or ElecParams(); sl = inst["dt_h"]; S = len(inst["stations"])
     methods = methods or (list(FIFO_M) + list(ONESHOT) + list(ROLLING))
@@ -58,7 +58,7 @@ def run_one(inst, engine, flex=0.25, time_limit=20.0, prm=None, methods=None, pe
             if m in ROLLING[1:] and engine is None:
                 continue
             topo = "DC"
-            rp = Replanner(inst, m, sl, prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl), peak_stage=peak_stage)
+            rp = Replanner(inst, m, sl, prm, flex, time_limit, profile_fn=make_profile_fn(inst, m, engine, sl, cycle_pred=cycle_pred), peak_stage=peak_stage)
             real, log = Replay(inst, {j: (fa[j], fs[j]) for j in fa}, rp, period_h=sl, max_solve_s=3 * time_limit).run()
             assign = {j: v[0] for j, v in real.items()}; starts = {j: v[1] for j, v in real.items()}
             extra = dict(n_replans=int((log.event == "replan").sum()),
@@ -80,12 +80,15 @@ def _init(proc, models, kw):
         from regenate.forecasting.ai_engine import AIEngine
         _G["eng"] = AIEngine.load(models)
     _G["kw"] = kw
+    _G["cpred"] = None
+    if kw.get("cycle_pred"):
+        _G["cpred"] = pd.read_parquet(kw["cycle_pred"]).set_index("cycle_file")[["r_dur", "r_ech", "r_eds"]].to_dict("index")
 
 
 def _task(seed):
     kw = _G["kw"]
     inst = make_instance(_G["cyc"], _G["arrs"], seed, n_jobs=kw["n_jobs"], n_stations=kw["n_stations"], split=kw["split"])
-    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], prm=ElecParams(**kw["prm"]), methods=kw["methods"], peak_stage=kw["peak"])
+    return run_one(inst, _G["eng"], kw["flex"], kw["time_limit"], prm=ElecParams(**kw["prm"]), methods=kw["methods"], peak_stage=kw["peak"], cycle_pred=_G["cpred"])
 
 
 def main():
@@ -96,9 +99,10 @@ def main():
     ap.add_argument("--flex", type=float, default=0.25); ap.add_argument("--time_limit", type=float, default=20.0)
     ap.add_argument("--workers", type=int, default=4); ap.add_argument("--peak", action="store_true")
     ap.add_argument("--prm", default="{}", help='JSON ElecParams overrides, e.g. {"P_afe_max":15}')
+    ap.add_argument("--cycle_pred", default=None, help="cycle_model.py cycle_pred.parquet (variants PQ, PQ5)")
     ap.add_argument("--methods", nargs="+", default=None, help="subset; default all FIFO/one-shot/P0..P4; DIAG names allowed")
     a = ap.parse_args()
-    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak, methods=a.methods, prm=json.loads(a.prm))
+    kw = dict(n_jobs=a.n_jobs, n_stations=a.n_stations, split=a.split, flex=a.flex, time_limit=a.time_limit, peak=a.peak, methods=a.methods, prm=json.loads(a.prm), cycle_pred=a.cycle_pred)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True); rows, schs = [], []
     with ProcessPoolExecutor(a.workers, initializer=_init, initargs=(a.proc, a.models, kw)) as ex:
         for k, (r, s) in enumerate(ex.map(_task, a.seeds), 1):

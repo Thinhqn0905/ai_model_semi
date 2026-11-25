@@ -19,6 +19,8 @@ Run 3 diagnostic variants (same rolling MILP; information decomposition, not dep
   P1*..P4*  the P1..P4 integration fed with PERFECT forecasts (true slot means / true remaining) -> integration loss
   P5        phase-aligned recipe for running jobs (AI15a, no learning): previous cycle aligned by phase, not elapsed time
   P5s       P5 only for use cases selected on the VALIDATION split (AI18 selective; others fall back to P0)
+  PQ        queued jobs: previous cycle time-warped/scaled by the cycle-level model (cycle_model.py); running jobs nominal
+  PQ5       PQ for queued jobs + P5 for running jobs
   TR_RUN    true full profile for running jobs only; TR_Q true profile for queued jobs only; TR_ALL rolling oracle
 """
 import numpy as np
@@ -89,7 +91,18 @@ def _perfect(trace, b, k):
 P5_USE_CASES = ("EFR", "PV", "PV-TOU")   # AI14 val split: aligned timing skill > 0.1 (runs/run3/ai14/ai14_val_summary.csv)
 
 
-def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_CASES):
+def _queued_pred(inst, jid, k, spm, r):
+    """Previous-cycle recipe warped to the predicted duration and scaled to the predicted charge/discharge energy."""
+    from regenate.data.bench_v2 import _bin
+    pch, pds = (np.asarray(x, float) for x in inst["nominal"][jid])
+    n = max(spm, int(round(len(pch) * r["r_dur"])))
+    wc, wd = _warp(pch, n), _warp(pds, n)
+    sc = r["r_ech"] * pch.sum() / max(wc.sum(), 1e-12); sd = r["r_eds"] * pds.sum() / max(wd.sum(), 1e-12)   # E = E_prev * r_e
+    pin, prec = _bin(wc * sc, spm), _bin(wd * sd, spm)
+    return pin, prec, np.zeros_like(pin)
+
+
+def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_CASES, cycle_pred=None):
     """profile_fn(jid, run_obs) for regenate.optimization.rolling.Replanner on a bench-v2 instance."""
     from regenate.data.bench_v2 import job_profile
     J = inst["jobs"].set_index("job_id"); k = inst["meta"]["modules_per_station"]
@@ -102,7 +115,12 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_C
         if variant.startswith("TR_"):
             use_truth = {"TR_ALL": True, "TR_RUN": run_obs is not None, "TR_Q": run_obs is None}[variant]
             return job_profile(inst, jid, dt_h, "truth") if use_truth else nom
-        if variant in ("P5", "P5s") and run_obs is not None:
+        if variant in ("PQ", "PQ5") and run_obs is None:
+            cf = J.loc[jid, "cycle_file"]
+            if cycle_pred is None or cf not in cycle_pred:
+                return nom
+            return _queued_pred(inst, jid, k, spm, cycle_pred[cf])
+        if variant in ("P5", "P5s", "PQ5") and run_obs is not None:
             if variant == "P5s" and J.loc[jid, "use_case"] not in p5_use_cases:
                 return nom
             from regenate.data.bench_v2 import _bin
@@ -114,7 +132,7 @@ def make_profile_fn(inst, variant, engine=None, dt_h=0.25, p5_use_cases=P5_USE_C
             fc, fd = (np.r_[o[:b], f] if len(f) else np.r_[o[:b], o[b - 1:b]] for o, f in ((ch_t, fc), (ds_t, fd)))
             pin, prec = _bin(fc, spm) * k, _bin(fd, spm) * k
             return pin, prec, np.zeros_like(pin)
-        if run_obs is None or base in ("P0", "P5", "P5s") or (engine is None and not perfect):
+        if run_obs is None or base in ("P0", "P5", "P5s", "PQ", "PQ5") or (engine is None and not perfect):
             return nom
         b = int(round(run_obs["elapsed_h"] / inst["trace_dt_h"]))          # minutes elapsed (observed telemetry)
         e = b // spm                                                       # whole slots elapsed

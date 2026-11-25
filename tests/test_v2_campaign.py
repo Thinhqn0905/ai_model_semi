@@ -83,3 +83,18 @@ def test_p5_phase_aligned_runs():
     assert len(pin) >= 4 and (pin >= 0).all() and (prec >= 0).all()
     rows, _ = run_one(inst, None, flex=0.5, time_limit=10, methods=["P0", "P5", "P5s"])
     assert all(r["violations"] == 0 for r in rows)
+
+
+def test_pq_queued_prediction_energy_and_length():
+    from regenate.forecasting.ai_engine import make_profile_fn
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 5, n_jobs=4, n_stations=2, split="train")
+    cf = inst["jobs"].set_index("job_id").loc[0, "cycle_file"]
+    nom = make_profile_fn(inst, "P0")(0, None)
+    pin, prec, _ = make_profile_fn(inst, "PQ", cycle_pred={cf: dict(r_dur=1.5, r_ech=1.2, r_eds=0.8)})(0, None)
+    e = lambda a: a.sum() * 0.25
+    assert abs(len(pin) - 1.5 * len(nom[0])) <= 1
+    tol = lambda a, b: 2 * 0.25 * max(a.max(), b.max())     # partial last slot of _bin is averaged over fewer minutes
+    assert abs(e(pin) - 1.2 * e(nom[0])) <= tol(pin, nom[0])
+    assert abs(e(prec) - 0.8 * e(nom[1])) <= tol(prec, nom[1])
+    assert np.allclose(make_profile_fn(inst, "PQ", cycle_pred={})(0, None)[0], nom[0])     # no prediction -> recipe
