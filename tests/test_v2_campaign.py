@@ -98,3 +98,13 @@ def test_pq_queued_prediction_energy_and_length():
     assert abs(e(pin) - 1.2 * e(nom[0])) <= tol(pin, nom[0])
     assert abs(e(prec) - 0.8 * e(nom[1])) <= tol(prec, nom[1])
     assert np.allclose(make_profile_fn(inst, "PQ", cycle_pred={})(0, None)[0], nom[0])     # no prediction -> recipe
+
+
+def test_pq_star_uses_true_length_and_nominal_when_running():
+    from regenate.data.bench_v2 import job_profile
+    from regenate.forecasting.ai_engine import make_profile_fn
+    cyc, arrs = synth()
+    inst = make_instance(cyc, arrs, 6, n_jobs=4, n_stations=2, split="train")
+    f = make_profile_fn(inst, "PQ*")
+    assert len(f(0, None)[0]) == len(job_profile(inst, 0, 0.25, "truth")[0])
+    assert np.allclose(f(0, dict(elapsed_h=1.0))[0], job_profile(inst, 0, 0.25, "nominal")[0])
